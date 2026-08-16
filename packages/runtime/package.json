@@ -1,0 +1,10 @@
+{
+  "name": "@parloq-flow/account-link-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": true,
+  "dependencies": {
+    "libphonenumber-js": "1.13.11"
+  }
+}

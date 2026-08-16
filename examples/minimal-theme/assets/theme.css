@@ -1,0 +1,15 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  --account-link-action-bg: #172033;
+  --account-link-action-color: #ffffff;
+  --account-link-focus: #315efb;
+  --account-link-field-border: #c9d1df;
+  --account-link-error: #b42318;
+  --account-link-success: #067647;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; background: #f7f8fa; }
+main { width: min(100% - 2rem, 32rem); margin: 0 auto; padding: clamp(1rem, 5vw, 3rem) 0; }
+account-link-flow { display: grid; gap: 1rem; }

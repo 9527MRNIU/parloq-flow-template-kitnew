@@ -1,0 +1,13 @@
+{
+  "name": "@parloq-flow/template-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "promotion-template": "src/index.mjs"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "fflate": "^0.8.2"
+  }
+}

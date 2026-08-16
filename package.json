@@ -1,0 +1,30 @@
+{
+  "name": "@parloq-flow/template-kit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "npm run build && node scripts/preview.mjs",
+    "validate": "node packages/cli/src/index.mjs validate themes/white-label-account-link",
+    "pack": "node packages/cli/src/index.mjs pack themes/white-label-account-link --out dist/themes/white-label-account-link.zip",
+    "check:scripts": "node --check scripts/build.mjs && node --check scripts/preview.mjs && node --check packages/cli/src/index.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test packages/cli/test/*.test.mjs",
+    "ci": "npm run check:scripts && npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "ajv": "^8.17.1",
+    "esbuild": "^0.25.9",
+    "fflate": "^0.8.2",
+    "libphonenumber-js": "1.13.11",
+    "typescript": "~5.7.2"
+  }
+}
