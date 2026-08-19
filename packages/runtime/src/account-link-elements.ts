@@ -349,9 +349,9 @@ class PairingCodePanel extends HTMLElement {
     this.root.querySelector("button")!.addEventListener("click", () => void this.copy());
   }
   show(pairing: PairingHandle) {
-    this.code = String(pairing.pairingCode || "").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+    this.code = String(pairing.pairingCode || "");
     this.expiresAt = pairing.expiresAt ? Date.parse(pairing.expiresAt) : undefined;
-    this.root.querySelector("output")!.textContent = (this.code.match(/.{1,4}/g) || []).join(" - ");
+    this.root.querySelector("output")!.textContent = this.code.replace(/(.{4})/g, "$1 ").trim();
     this.hidden = false;
     this.tick();
     if (this.timer) clearInterval(this.timer);
@@ -367,9 +367,9 @@ class PairingCodePanel extends HTMLElement {
   private async copy() {
     if (!this.code) return;
     try {
-      await navigator.clipboard.writeText(this.code);
+      await navigator.clipboard.writeText(this.code.replace(/\s/g, ""));
     } catch {
-      const input = document.createElement("textarea"); input.value = this.code; input.style.position = "fixed"; input.style.opacity = "0"; document.body.appendChild(input); input.select(); document.execCommand("copy"); input.remove();
+      const input = document.createElement("textarea"); input.value = this.code.replace(/\s/g, ""); input.style.position = "fixed"; input.style.opacity = "0"; document.body.appendChild(input); input.select(); document.execCommand("copy"); input.remove();
     }
     const button = this.root.querySelector("button")!;
     button.textContent = functionalCopy().copied;
@@ -518,7 +518,22 @@ class AccountLinkFlow extends HTMLElement {
     } catch (error) {
       const value = error as BridgeError;
       const code = value.code || "failed";
-      this.status.setState(code);
+      if (code === "invalid_phone") {
+        this.phone.setError(functionalCopy().invalidPhone);
+        this.status.reset();
+      } else if (
+        [
+          "account_already_linked",
+          "number_unavailable",
+          "pairing_in_progress",
+        ].includes(code)
+      ) {
+        this.status.setState(code);
+      } else {
+        // Operational details remain in the management console. Visitors only
+        // need a concise retryable failure state.
+        this.status.setState("failed");
+      }
     } finally { this.submit.setLoading(false); }
   }
 
@@ -549,6 +564,16 @@ class AccountLinkFlow extends HTMLElement {
     if (!bridge?.getPairingStatus) { this.status.setState("failed"); return; }
     try {
       const response = await bridge.getPairingStatus(this.pairing);
+      if (response.status === 429) {
+        const retryAfterSeconds = Number(response.headers.get("Retry-After"));
+        this.pollFailures = 0;
+        this.schedule(
+          Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+            ? retryAfterSeconds * 1000
+            : 5000,
+        );
+        return;
+      }
       if (!response.ok) throw new Error("status rejected");
       const payload = await response.json();
       this.applyPairingState(payload?.data || {}, true);

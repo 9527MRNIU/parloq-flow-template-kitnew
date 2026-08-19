@@ -1,9 +1,10 @@
 {
-  "name": "@parloq-flow/template-cli",
+  "name": "@parloq-flow/promotion-cli",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "bin": {
+    "promotion-kit": "src/index.mjs",
     "promotion-template": "src/index.mjs"
   },
   "dependencies": {

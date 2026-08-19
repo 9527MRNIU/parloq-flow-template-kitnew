@@ -1,4 +1,4 @@
-# AI theme-generation prompt
+# AI promotion-template generation prompt
 
 Use this prompt as the fixed capability boundary when asking an AI design tool
 to create a new visual theme:
@@ -6,7 +6,7 @@ to create a new visual theme:
 ```text
 Create the presentation files for a static promotion-template/v2 landing-page
 theme. Preserve the exact standard account-link custom-element composition
-from examples/minimal-theme/index.html. Change only surrounding semantic HTML,
+from examples/promotion-template-minimal/index.html. Change only surrounding semantic HTML,
 CSS variables, ::part() styling, local relative media, and customer-facing
 copy. The platform injects account-link-elements/v1 and exposes
 window.PromotionBridge; do not write pairing requests, status polling,

@@ -2,43 +2,53 @@
 
 ## Repository boundary
 
-This repository owns portable presentation capabilities:
+This repository publishes two sibling artifact classes whose names match the
+mother project:
 
-1. a browser runtime made of custom elements;
-2. theme HTML, CSS, media, and localized copy;
-3. manifest and bridge type definitions;
-4. validation and packaging tools;
-5. reference themes and authoring guidance.
+1. `PromotionTemplate`: static landing-page presentation, assets and localized
+   copy composed around the platform account-link elements.
+2. `PromotionIntegration`: managed script or iframe behavior packaged as a ZIP
+   and attached to templates by the control plane.
 
-The Parloq Flow repository remains authoritative for server behavior:
+It also owns the portable contract types, JSON Schemas, validators, deterministic
+packaging, reference bundles and authoring guidance for those artifacts.
 
-1. channel and domain resolution;
-2. protocol-node and fallback-pool routing;
-3. account-group and fixed-proxy assignment;
-4. public start/status/cancel authentication;
-5. pairing-attempt persistence and account admission;
-6. analytics, conversion delivery, and background metadata synchronization.
+The control plane remains authoritative for channel/domain resolution,
+protocol-node routing, account assignment, pairing authentication, integration
+source-domain validation, injection order, iframe session issuance, analytics
+persistence and account storage.
 
-Themes receive `window.PromotionBridge`. They never construct an endpoint,
-select a protocol, read a status token, or persist a phone number.
+Templates receive `window.PromotionBridge`. They never construct an endpoint,
+select a protocol, read a status token, or persist a phone number. Feedback-
+enabled iframes receive `window.PromotionIntegrationBridge`; they report only
+events declared in `integration.json` and do not read or message the parent
+template.
 
 ## Build flow
 
 ```text
-runtime TypeScript ──bundle──> account-link-elements.js ──pin──> control plane
-contract schemas ─────copy───> versioned JSON schemas ────────> uploader/CI
-theme source ──validate/build/pack──> deterministic ZIP ──────> template registry
+account-link runtime ──bundle/pin──────────────> control plane
+contract schemas ──────copy/pin────────────────> uploader and CI
+template source ───────validate/build/pack─────> template registry
+integration source ────validate/pack───────────> integration registry
 ```
 
-`manifest.requirements.componentKit` tells the platform which pinned runtime to
-inject. Runtime code is intentionally absent from the theme ZIP, so all visual
-themes share one audited pairing implementation.
+`manifest.requirements.componentKit` tells the platform which pinned account-
+link runtime to inject. Runtime code stays outside template ZIPs so visual
+templates share one audited pairing implementation.
+
+An integration ZIP may contain either ordered `.js`/`.mjs` entries or one iframe
+HTML entry with relative assets. The platform hosts those assets on the verified
+source domain and injects scripts before iframes. Authentication and feedback
+transport stay in the platform-injected iframe bridge, not in the ZIP.
 
 ## Compatibility
 
-- Patch releases may fix copy, accessibility, validation, or styling without
-  changing the public state machine.
-- Minor releases may add optional elements, parts, or manifest properties.
-- Breaking runtime, bridge, or manifest behavior receives a new contract name.
-- A theme ZIP declares the versions it requires and is rejected when the
-  target platform cannot provide them.
+- Patch releases may fix copy, accessibility, validation or styling without
+  changing a public state machine.
+- Minor releases may add optional manifest properties or bridge fields.
+- Breaking template, integration, bridge or runtime behavior receives a new
+  contract version.
+- Existing command names and template aliases remain available during the
+  transition from the template-only kit to the promotion kit.
+- The control plane rejects bundles that require unsupported contract versions.

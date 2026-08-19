@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "type": "script",
+  "version": "1.0.0",
+  "entries": [
+    "scripts/bootstrap.js",
+    { "path": "scripts/runtime.mjs", "scriptType": "module" }
+  ]
+}

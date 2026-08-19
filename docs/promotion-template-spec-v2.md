@@ -117,6 +117,9 @@ exposed `::part()` names but should not remove them from the manual fallback.
 The runtime may reject a new start with `account_already_linked`,
 `number_unavailable`, `pairing_in_progress` or `rate_limited`. Templates must
 not infer tenant or account details from these categories.
+When a status response is `429`, the standard runtime waits for the
+`Retry-After` response header before polling again. Theme code must not replace
+that behavior or increase the polling frequency.
 
 After verified pairing, `initializationStatus` can be `pending`, `syncing`,
 `ready`, `failed` or `unsupported`. Initialization failure never changes a

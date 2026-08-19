@@ -1,6 +1,6 @@
-# Creating a theme
+# Creating a promotion template
 
-Copy `examples/minimal-theme` or `themes/white-label-account-link`. Keep the
+Copy `examples/promotion-template-minimal` or `themes/white-label-account-link`. Keep the
 canonical element tree in `index.html` and change only layout, CSS variables,
 `::part()` rules, bundled media, and customer-facing copy.
 
@@ -36,9 +36,9 @@ The baseline component copy supports `en`, `zh-CN`, `hi`, `id`, `pt-BR`, `es`,
 ## Validate and package
 
 ```bash
-node packages/cli/src/index.mjs validate path/to/theme
-node packages/cli/src/index.mjs build path/to/theme --out dist/themes/my-theme
-node packages/cli/src/index.mjs pack dist/themes/my-theme --out dist/themes/my-theme.zip
+node packages/cli/src/index.mjs template validate path/to/theme
+node packages/cli/src/index.mjs template build path/to/theme --out dist/themes/my-theme
+node packages/cli/src/index.mjs template pack dist/themes/my-theme --out dist/themes/my-theme.zip
 ```
 
 Validation checks the manifest Schema, required components, locale coverage,
