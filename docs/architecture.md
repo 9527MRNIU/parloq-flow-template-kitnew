@@ -12,6 +12,8 @@ mother project:
 
 It also owns the portable contract types, JSON Schemas, validators, deterministic
 packaging, reference bundles and authoring guidance for those artifacts.
+`artifacts/catalog.json` owns each downloadable package's permanent four-digit
+sequence; build filenames derive their version from the package manifest.
 
 The control plane remains authoritative for channel/domain resolution,
 protocol-node routing, account assignment, pairing authentication, integration

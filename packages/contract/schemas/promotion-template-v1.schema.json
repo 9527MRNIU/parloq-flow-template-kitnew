@@ -24,6 +24,15 @@
       "minLength": 1,
       "maxLength": 40
     },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
     "entry": {
       "const": "index.html"
     },

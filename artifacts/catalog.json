@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "artifacts": [
+    {
+      "sequence": "0001",
+      "kind": "template",
+      "slug": "white-label-account-link",
+      "source": "themes/white-label-account-link",
+      "manifest": "manifest.json",
+      "outputDirectory": "themes"
+    },
+    {
+      "sequence": "0002",
+      "kind": "integration",
+      "slug": "promotion-integration-script-demo",
+      "source": "examples/promotion-integration-script-demo",
+      "manifest": "integration.json",
+      "outputDirectory": "integrations"
+    },
+    {
+      "sequence": "0003",
+      "kind": "integration",
+      "slug": "promotion-integration-feedback-demo",
+      "source": "examples/promotion-integration-feedback-demo",
+      "manifest": "integration.json",
+      "outputDirectory": "integrations"
+    }
+  ]
+}

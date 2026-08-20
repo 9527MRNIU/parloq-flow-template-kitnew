@@ -28,10 +28,7 @@ jobs:
       - name: Package release artifacts
         run: |
           archive="promotion-kit-${GITHUB_REF_NAME}.zip"
-          (
-            cd dist
-            zip -qr "../${archive}" .
-          )
+          node scripts/pack-release.mjs dist "$archive"
           find dist -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
           sha256sum "$archive" >> SHA256SUMS.txt
 
@@ -45,8 +42,7 @@ jobs:
             --generate-notes \
             --latest \
             "promotion-kit-${GITHUB_REF_NAME}.zip#Complete promotion kit" \
-            "dist/themes/white-label-account-link.zip#White-label account-link template" \
-            "dist/integrations/promotion-integration-script-demo.zip#Ordered script integration example" \
-            "dist/integrations/promotion-integration-feedback-demo.zip#Iframe feedback integration example" \
+            dist/themes/*.zip \
+            dist/integrations/*.zip \
             "dist/artifacts.json#Artifact manifest" \
             "SHA256SUMS.txt#SHA-256 checksums"

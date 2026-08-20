@@ -1,6 +1,8 @@
 {
   "schema": "promotion-template/v2",
   "version": "0.1.0",
+  "name": "最小推广模板示例",
+  "description": "演示使用标准账号关联组件和中英文语言包创建最小推广模板。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],

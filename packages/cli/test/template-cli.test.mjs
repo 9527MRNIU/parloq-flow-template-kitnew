@@ -7,6 +7,7 @@ import { buildTheme, packTheme, validateTheme } from "../src/index.mjs";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
 const defaultTheme = resolve(repoRoot, "themes/white-label-account-link");
+const minimalTemplate = resolve(repoRoot, "examples/promotion-template-minimal");
 
 async function copiedTheme() {
   const root = await mkdtemp(resolve(tmpdir(), "promotion-template-test-"));
@@ -19,6 +20,39 @@ test("the default white-label theme satisfies the v2 contract", async () => {
   const result = await validateTheme(defaultTheme);
   assert.equal(result.manifest.schema, "promotion-template/v2");
   assert.equal(result.locales.length, 15);
+  assert.equal(result.manifest.name, "白标账号关联模板");
+  assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
+});
+
+test("the minimal template example carries Chinese import metadata", async () => {
+  const result = await validateTheme(minimalTemplate);
+  assert.equal(result.manifest.name, "最小推广模板示例");
+  assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
+});
+
+test("template import metadata remains optional in the public contract", async () => {
+  const { theme } = await copiedTheme();
+  const manifestPath = resolve(theme, "manifest.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  delete manifest.name;
+  delete manifest.description;
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  await validateTheme(theme);
+});
+
+test("template import metadata respects its length limits", async () => {
+  for (const metadata of [
+    { name: "" },
+    { name: "名".repeat(121) },
+    { description: "说".repeat(2001) },
+  ]) {
+    const { theme } = await copiedTheme();
+    const manifestPath = resolve(theme, "manifest.json");
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    Object.assign(manifest, metadata);
+    await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await assert.rejects(validateTheme(theme), /manifest validation failed/);
+  }
 });
 
 test("validation rejects control-plane branding in public copy", async () => {

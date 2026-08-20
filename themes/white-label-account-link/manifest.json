@@ -1,6 +1,8 @@
 {
   "schema": "promotion-template/v2",
   "version": "1.4.0",
+  "name": "白标账号关联模板",
+  "description": "标准白标账号关联落地页，使用平台注入的账号关联组件并提供十五种语言。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],

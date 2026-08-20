@@ -16,6 +16,8 @@ keeping the package names and contracts aligned with the mother project:
   feedback TypeScript contracts plus JSON Schemas.
 - `packages/cli`: validation and deterministic ZIP packaging for both artifact
   classes.
+- `artifacts/catalog.json`: the stable repository sequence assigned to every
+  downloadable template or integration ZIP.
 - `themes/white-label-account-link`: the default capability-only template.
 - `examples/promotion-template-minimal`: a small two-language template example.
 - `examples/promotion-integration-script-demo`: ordered classic/module scripts.
@@ -63,10 +65,24 @@ creating a real account.
 - `dist/schemas/promotion-template-v1.schema.json`
 - `dist/schemas/promotion-template-v2.schema.json`
 - `dist/schemas/promotion-integration-v1.schema.json`
-- `dist/themes/white-label-account-link.zip`
-- `dist/integrations/promotion-integration-script-demo.zip`
-- `dist/integrations/promotion-integration-feedback-demo.zip`
-- `dist/artifacts.json` with byte sizes and SHA-256 digests
+- `dist/themes/0001-white-label-account-link-1.4.0.zip`
+- `dist/integrations/0002-promotion-integration-script-demo-1.0.0.zip`
+- `dist/integrations/0003-promotion-integration-feedback-demo-1.0.0.zip`
+- `dist/artifacts.json` with each artifact's sequence, own version, byte size,
+  and SHA-256 digest
+
+Official ZIP names use `0001-lowercase-hyphenated-name-version.zip`. The
+four-digit sequence is permanent; it comes from `artifacts/catalog.json` and
+does not change when a package is renamed internally or receives a new version.
+New downloadable artifacts take the next sequence. The filename version always
+comes from that package's `manifest.json` or `integration.json`, never from the
+root package version.
+
+Template manifests may provide `name` and `description`. Integration manifests
+may additionally provide `integrationKey`. The control plane can use these
+fields to prefill ZIP import forms. They remain optional for third-party
+contracts, but every official/example package in this repository supplies a
+natural Chinese display name and internal description.
 
 ## Release boundary
 
@@ -84,6 +100,10 @@ this repository's moving branch at request time.
 
 Breaking behavior creates a new contract version. Existing versions remain
 buildable for channels that have not migrated.
+
+Tagged releases also contain a deterministic summary archive named
+`promotion-kit-vX.Y.Z.zip`. That kit-level archive is not part of the numbered
+single-artifact sequence.
 
 ## White-label rule
 

@@ -24,6 +24,8 @@ new pairing attempts; the template contract does not change.
 {
   "schema": "promotion-template/v2",
   "version": "2.0.0",
+  "name": "标准账号关联模板",
+  "description": "用于演示标准账号关联流程的中文内部说明。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],
@@ -43,10 +45,19 @@ new pairing attempts; the template contract does not change.
 }
 ```
 
+`name` and `description` are optional import-prefill metadata. `name` contains
+1–120 characters; `description` contains at most 2000 characters. Official and
+example packages in this repository must provide natural Chinese values even
+though third-party v2 manifests may omit both fields.
+
 The ZIP and localization constraints are unchanged from v1: one `index.html`,
 self-contained relative assets, no source maps or external scripts, ZIP at most
 20 MB, expanded content at most 50 MB, at most 500 files and at most 5 MB per
 file.
+
+Official release filenames use the permanent sequence in
+`artifacts/catalog.json` and this manifest's own `version`, not the repository
+package version. Existing artifacts keep their sequence across version changes.
 
 ## Runtime bridge
 

@@ -8,3 +8,7 @@ The scripts do not construct platform URLs or own template pairing behavior.
 node packages/cli/src/index.mjs integration validate examples/promotion-integration-script-demo
 node packages/cli/src/index.mjs integration pack examples/promotion-integration-script-demo
 ```
+
+The repository build publishes this package as
+`0002-promotion-integration-script-demo-1.0.0.zip`. Sequence `0002` is permanent;
+the final segment follows `integration.json.version`.

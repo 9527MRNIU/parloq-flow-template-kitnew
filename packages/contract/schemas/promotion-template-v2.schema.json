@@ -19,6 +19,8 @@
   "properties": {
     "schema": { "const": "promotion-template/v2" },
     "version": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "maxLength": 2000 },
     "entry": { "const": "index.html" },
     "format": { "enum": ["static-bundle", "vite-dist"] },
     "capabilities": {

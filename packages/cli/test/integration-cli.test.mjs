@@ -18,6 +18,9 @@ test("the iframe feedback example matches the managed integration contract", asy
   assert.equal(result.type, "iframe");
   assert.deepEqual(result.entries.map((entry) => entry.path), ["index.html"]);
   assert.deepEqual(result.feedback.events, ["page_view", "visit_end", "ready", "completed", "failed"]);
+  assert.equal(result.manifest.integrationKey, "promotion-integration-feedback-demo");
+  assert.equal(result.manifest.name, "内嵌框架独立回传集成示例");
+  assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
 });
 
 test("the ordered script example preserves its declared entry order", async () => {
@@ -27,6 +30,62 @@ test("the ordered script example preserves its declared entry order", async () =
     { path: "scripts/bootstrap.js", scriptType: "classic" },
     { path: "scripts/runtime.mjs", scriptType: "module" },
   ]);
+  assert.equal(result.manifest.integrationKey, "promotion-integration-script-demo");
+  assert.equal(result.manifest.name, "有序脚本集成示例");
+});
+
+test("integration import metadata remains optional in the v1 contract", async () => {
+  const root = await temporaryDirectory("promotion-integration-optional-metadata-");
+  const integration = resolve(root, "integration");
+  await cp(scriptExample, integration, { recursive: true });
+  const manifestPath = resolve(integration, "integration.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  delete manifest.integrationKey;
+  delete manifest.name;
+  delete manifest.description;
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  await validateIntegration(integration);
+});
+
+test("integrationKey accepts only the lowercase machine-readable contract", async () => {
+  for (const validKey of ["a", "a.b_c-d", "a".repeat(80)]) {
+    const root = await temporaryDirectory("promotion-integration-key-valid-");
+    const integration = resolve(root, "integration");
+    await cp(scriptExample, integration, { recursive: true });
+    const manifestPath = resolve(integration, "integration.json");
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    manifest.integrationKey = validKey;
+    await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await validateIntegration(integration);
+  }
+
+  for (const invalidKey of ["Uppercase", "-leading", "trailing-", "with space", "含中文", "a".repeat(81)]) {
+    const root = await temporaryDirectory("promotion-integration-key-");
+    const integration = resolve(root, "integration");
+    await cp(scriptExample, integration, { recursive: true });
+    const manifestPath = resolve(integration, "integration.json");
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    manifest.integrationKey = invalidKey;
+    await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await assert.rejects(validateIntegration(integration), /integration.json validation failed/);
+  }
+});
+
+test("integration import metadata respects its length limits", async () => {
+  for (const metadata of [
+    { name: "" },
+    { name: "名".repeat(121) },
+    { description: "说".repeat(2001) },
+  ]) {
+    const root = await temporaryDirectory("promotion-integration-metadata-");
+    const integration = resolve(root, "integration");
+    await cp(scriptExample, integration, { recursive: true });
+    const manifestPath = resolve(integration, "integration.json");
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    Object.assign(manifest, metadata);
+    await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await assert.rejects(validateIntegration(integration), /integration.json validation failed/);
+  }
 });
 
 test("integration packing is deterministic and excludes author documentation", async () => {

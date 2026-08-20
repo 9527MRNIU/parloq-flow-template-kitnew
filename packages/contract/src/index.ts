@@ -40,6 +40,8 @@ export interface PromotionBridgeV2 {
 export interface PromotionTemplateManifestV2 {
   schema: typeof TEMPLATE_SCHEMA_V2;
   version: string;
+  name?: string;
+  description?: string;
   entry: "index.html";
   format: "static-bundle" | "vite-dist";
   capabilities: ["phone-pairing"];
@@ -73,6 +75,9 @@ export interface PromotionIntegrationManifestV1 {
   schemaVersion?: typeof PROMOTION_INTEGRATION_MANIFEST_V1 | "1";
   type?: PromotionIntegrationType;
   version?: string;
+  integrationKey?: string;
+  name?: string;
+  description?: string;
   entry?: string;
   entries?: Array<string | PromotionIntegrationEntrypointV1>;
   feedback?: {

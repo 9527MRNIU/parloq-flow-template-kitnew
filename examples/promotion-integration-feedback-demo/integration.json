@@ -2,6 +2,9 @@
   "schemaVersion": 1,
   "type": "iframe",
   "version": "1.0.0",
+  "integrationKey": "promotion-integration-feedback-demo",
+  "name": "内嵌框架独立回传集成示例",
+  "description": "演示内嵌框架在不读取主模板的情况下获取运行上下文并回传声明事件。",
   "entry": "index.html",
   "feedback": {
     "enabled": true,

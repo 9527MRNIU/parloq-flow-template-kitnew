@@ -4,6 +4,22 @@ Copy `examples/promotion-template-minimal` or `themes/white-label-account-link`.
 canonical element tree in `index.html` and change only layout, CSS variables,
 `::part()` rules, bundled media, and customer-facing copy.
 
+## Import metadata
+
+`manifest.json` may include:
+
+```json
+{
+  "name": "中文展示名称",
+  "description": "供管理端识别用途和差异的中文内部说明。"
+}
+```
+
+`name` contains 1–120 characters. `description` contains at most 2000
+characters. The control plane may use both to prefill its ZIP import form. They
+are optional for third-party templates, but official and example packages in
+this repository must provide non-empty natural Chinese values.
+
 ## Required composition
 
 ```html
@@ -44,3 +60,8 @@ node packages/cli/src/index.mjs template pack dist/themes/my-theme --out dist/th
 Validation checks the manifest Schema, required components, locale coverage,
 file limits, white-label output, external asset references, source maps, and
 direct platform/gateway integration.
+
+Repository release artifacts are built with `npm run build`. Their stable
+four-digit sequence comes from `artifacts/catalog.json`, and the filename
+version comes from the template's own `manifest.json`. Do not manually renumber
+an existing artifact when its version changes.

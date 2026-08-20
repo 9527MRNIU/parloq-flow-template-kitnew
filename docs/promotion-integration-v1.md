@@ -45,6 +45,9 @@ Ordered script package:
   "schemaVersion": 1,
   "type": "script",
   "version": "2.0.0",
+  "integrationKey": "ordered-script-demo",
+  "name": "有序脚本集成示例",
+  "description": "演示按照清单顺序加载普通脚本与模块脚本。",
   "entries": [
     "scripts/bootstrap.js",
     { "path": "scripts/runtime.mjs", "scriptType": "module" }
@@ -59,6 +62,9 @@ Feedback-enabled iframe package:
   "schemaVersion": 1,
   "type": "iframe",
   "version": "1.0.0",
+  "integrationKey": "feedback-frame-demo",
+  "name": "独立回传集成示例",
+  "description": "演示内嵌框架独立获取运行上下文并回传声明事件。",
   "entry": "index.html",
   "feedback": {
     "enabled": true,
@@ -75,6 +81,13 @@ Rules:
 - iframe integrations declare exactly one `.html`/`.htm` entry;
 - `version` contains at most 40 letters, digits, dots, underscores or hyphens;
 - without `version`, the platform derives a stable value from the ZIP digest;
+- `integrationKey` contains 1–80 lowercase ASCII letters, digits, dots,
+  underscores or hyphens, and starts and ends with a letter or digit;
+- `name` contains 1–120 characters and `description` at most 2000 characters;
+- `integrationKey`, `name`, and `description` are optional contract fields that
+  the control plane may use to prefill the ZIP import form;
+- official and example packages in this repository provide a machine-readable
+  `integrationKey` plus non-empty natural Chinese `name` and `description`;
 - feedback is available only to iframe integrations;
 - `page_view` and `visit_end` are built in and should not be declared;
 - at most 32 custom event names are allowed, using lowercase letters, digits,
@@ -114,6 +127,11 @@ current retry loop and wait for that interval.
   WOFF/WOFF2/TTF fonts, text and WebAssembly;
 - absolute paths, traversal, duplicates, symbolic links and unsupported file
   extensions are rejected.
+
+Official downloadable ZIPs use the permanent sequence recorded in
+`artifacts/catalog.json` and the package's own manifest version, for example
+`0002-promotion-integration-script-demo-1.0.0.zip`. A package keeps its sequence
+when its version changes; new packages take the next number.
 
 ## Injection behavior
 

@@ -16,6 +16,8 @@ Keep every asset relative and local, support 360x800, 390x844, 768x1024, and
 1440x900 without overflow, preserve keyboard/focus accessibility, and preserve
 RTL layout. Visible phone numbers must not show a leading plus sign. Return a
 manifest.json, index.html, assets/, and one JSON file for every declared locale.
+For an official or example package, include a natural Chinese manifest `name`
+and `description`; keep the JSON field names in English.
 ```
 
 After generation, run the repository validator. AI output is not accepted by

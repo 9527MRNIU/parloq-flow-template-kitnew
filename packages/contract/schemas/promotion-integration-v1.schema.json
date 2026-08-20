@@ -15,6 +15,21 @@
       "type": "string",
       "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9._-]{0,39})$"
     },
+    "integrationKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9](?:[a-z0-9._-]{0,78}[a-z0-9])?$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
     "entry": { "$ref": "#/$defs/path" },
     "entries": {
       "type": "array",

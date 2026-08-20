@@ -51,6 +51,8 @@ locales/
 {
   "schema": "promotion-template/v1",
   "version": "1.0.0",
+  "name": "标准推广模板",
+  "description": "用于管理端导入自动回填的中文内部说明。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],
@@ -72,6 +74,8 @@ locales/
 | --- | --- |
 | `schema` | 固定为 `promotion-template/v1` |
 | `version` | 模板自己的语义版本，建议使用 `x.y.z` |
+| `name` | 可选；1–120 字符，管理端可用于导入名称自动回填 |
+| `description` | 可选；最多 2000 字符，管理端可用于导入说明自动回填 |
 | `entry` | 固定为 `index.html` |
 | `format` | `static-bundle` 或 `vite-dist` |
 | `capabilities` | v1 必须包含且只能包含 `phone-pairing` |

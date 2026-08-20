@@ -12,6 +12,10 @@ node packages/cli/src/index.mjs integration validate examples/promotion-integrat
 node packages/cli/src/index.mjs integration pack examples/promotion-integration-feedback-demo
 ```
 
+The repository build publishes this package as
+`0003-promotion-integration-feedback-demo-1.0.0.zip`. Sequence `0003` is
+permanent; the final segment follows `integration.json.version`.
+
 The bridge is injected only when the imported integration is bound to an
 enabled template and rendered through an enabled channel. Opening `index.html`
 directly therefore shows the expected "runtime unavailable" state.

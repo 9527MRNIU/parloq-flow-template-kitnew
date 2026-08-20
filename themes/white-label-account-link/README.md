@@ -10,3 +10,7 @@ runtime declared by `requirements.componentKit`.
 Locale files provide page-level theme copy. Functional states and official
 phone-linking guidance are supplied by the shared component runtime and may be
 overridden through platform-provided localized copy when required.
+
+The repository build publishes this package as
+`0001-white-label-account-link-1.4.0.zip`. Sequence `0001` is permanent; the
+final segment follows `manifest.json.version`.

@@ -2,6 +2,9 @@
   "schemaVersion": 1,
   "type": "script",
   "version": "1.0.0",
+  "integrationKey": "promotion-integration-script-demo",
+  "name": "有序脚本集成示例",
+  "description": "演示按照清单顺序加载普通脚本与模块脚本的推广集成资源包。",
   "entries": [
     "scripts/bootstrap.js",
     { "path": "scripts/runtime.mjs", "scriptType": "module" }
