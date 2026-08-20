@@ -18,5 +18,5 @@ jobs:
       - run: npm run ci
       - uses: actions/upload-artifact@v4
         with:
-          name: template-kit-dist
+          name: promotion-kit-dist
           path: dist/

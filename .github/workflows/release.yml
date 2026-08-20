@@ -1,0 +1,52 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run ci
+
+      - name: Verify tag matches package version
+        run: |
+          expected="v$(node -p "require('./package.json').version")"
+          test "$GITHUB_REF_NAME" = "$expected"
+
+      - name: Package release artifacts
+        run: |
+          archive="promotion-kit-${GITHUB_REF_NAME}.zip"
+          (
+            cd dist
+            zip -qr "../${archive}" .
+          )
+          find dist -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+          sha256sum "$archive" >> SHA256SUMS.txt
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --verify-tag \
+            --title "Promotion Kit $GITHUB_REF_NAME" \
+            --generate-notes \
+            --latest \
+            "promotion-kit-${GITHUB_REF_NAME}.zip#Complete promotion kit" \
+            "dist/themes/white-label-account-link.zip#White-label account-link template" \
+            "dist/integrations/promotion-integration-script-demo.zip#Ordered script integration example" \
+            "dist/integrations/promotion-integration-feedback-demo.zip#Iframe feedback integration example" \
+            "dist/artifacts.json#Artifact manifest" \
+            "SHA256SUMS.txt#SHA-256 checksums"
