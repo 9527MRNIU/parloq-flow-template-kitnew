@@ -14,3 +14,10 @@ Official downloadable packages are assigned permanent sequences in
 the next number. Every example manifest provides English JSON field names with
 a natural Chinese `name` and `description`; integrations also provide a
 lowercase machine-readable `integrationKey`.
+
+The integration examples intentionally cover three distinct package modes:
+
+- `promotion-integration-script-demo`: ordered classic and module scripts;
+- `promotion-integration-iframe-demo`: a standalone iframe without feedback;
+- `promotion-integration-feedback-demo`: an iframe using the optional event
+  feedback bridge.

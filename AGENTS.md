@@ -22,6 +22,8 @@
 - Numbered downloadable ZIP sequences are permanent in
   `artifacts/catalog.json`. New artifacts take the next sequence; version
   suffixes come from each artifact's own manifest.
+- Public GitHub Releases attach only numbered template/integration ZIPs. Build
+  manifests and aggregate archives remain internal CI outputs.
 - Keep the 15 baseline locales complete and preserve RTL behavior for Arabic,
   Persian, and Urdu.
 - Run `npm run ci` before committing a change that affects runtime, contracts,

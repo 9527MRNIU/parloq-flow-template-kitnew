@@ -144,4 +144,5 @@ source domain and a valid current package are distributed.
 See the runnable source examples:
 
 - [`promotion-integration-script-demo`](../examples/promotion-integration-script-demo)
+- [`promotion-integration-iframe-demo`](../examples/promotion-integration-iframe-demo)
 - [`promotion-integration-feedback-demo`](../examples/promotion-integration-feedback-demo)

@@ -21,6 +21,8 @@ keeping the package names and contracts aligned with the mother project:
 - `themes/white-label-account-link`: the default capability-only template.
 - `examples/promotion-template-minimal`: a small two-language template example.
 - `examples/promotion-integration-script-demo`: ordered classic/module scripts.
+- `examples/promotion-integration-iframe-demo`: a standalone iframe integration
+  without event feedback.
 - `examples/promotion-integration-feedback-demo`: an independently reporting
   iframe copied from the current mother-project flow and made white-label.
 - `docs`: architecture, authoring, contracts, AI generation, and copy sources.
@@ -47,6 +49,7 @@ npm run build
 npm run preview
 node packages/cli/src/index.mjs template validate examples/promotion-template-minimal
 node packages/cli/src/index.mjs integration validate examples/promotion-integration-script-demo
+node packages/cli/src/index.mjs integration validate examples/promotion-integration-iframe-demo
 node packages/cli/src/index.mjs integration pack examples/promotion-integration-feedback-demo
 ```
 
@@ -68,6 +71,7 @@ creating a real account.
 - `dist/themes/0001-white-label-account-link-1.4.0.zip`
 - `dist/integrations/0002-promotion-integration-script-demo-1.0.0.zip`
 - `dist/integrations/0003-promotion-integration-feedback-demo-1.0.0.zip`
+- `dist/integrations/0004-promotion-integration-iframe-demo-1.0.0.zip`
 - `dist/artifacts.json` with each artifact's sequence, own version, byte size,
   and SHA-256 digest
 
@@ -101,9 +105,11 @@ this repository's moving branch at request time.
 Breaking behavior creates a new contract version. Existing versions remain
 buildable for channels that have not migrated.
 
-Tagged releases also contain a deterministic summary archive named
-`promotion-kit-vX.Y.Z.zip`. That kit-level archive is not part of the numbered
-single-artifact sequence.
+Tagged GitHub Releases attach only the numbered template and integration ZIPs.
+`dist/artifacts.json` remains available in the CI build artifact for automated
+verification, but it is not attached to the public Release. GitHub adds source
+archives to tagged Releases automatically; those platform-generated links are
+not product artifacts.
 
 ## White-label rule
 

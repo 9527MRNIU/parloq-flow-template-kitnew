@@ -24,6 +24,14 @@
       "source": "examples/promotion-integration-feedback-demo",
       "manifest": "integration.json",
       "outputDirectory": "integrations"
+    },
+    {
+      "sequence": "0004",
+      "kind": "integration",
+      "slug": "promotion-integration-iframe-demo",
+      "source": "examples/promotion-integration-iframe-demo",
+      "manifest": "integration.json",
+      "outputDirectory": "integrations"
     }
   ]
 }

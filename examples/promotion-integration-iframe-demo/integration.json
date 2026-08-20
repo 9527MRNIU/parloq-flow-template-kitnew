@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "type": "iframe",
+  "version": "1.0.0",
+  "integrationKey": "promotion-integration-iframe-demo",
+  "name": "内嵌框架集成示例",
+  "description": "演示通过单个 HTML 入口加载独立内嵌框架行为且不启用事件回传。",
+  "entry": "index.html"
+}

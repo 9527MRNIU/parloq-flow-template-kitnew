@@ -7,6 +7,7 @@ import { packIntegration, validateIntegration } from "../src/index.mjs";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
 const feedbackExample = resolve(repoRoot, "examples/promotion-integration-feedback-demo");
+const iframeExample = resolve(repoRoot, "examples/promotion-integration-iframe-demo");
 const scriptExample = resolve(repoRoot, "examples/promotion-integration-script-demo");
 
 async function temporaryDirectory(prefix) {
@@ -20,6 +21,16 @@ test("the iframe feedback example matches the managed integration contract", asy
   assert.deepEqual(result.feedback.events, ["page_view", "visit_end", "ready", "completed", "failed"]);
   assert.equal(result.manifest.integrationKey, "promotion-integration-feedback-demo");
   assert.equal(result.manifest.name, "内嵌框架独立回传集成示例");
+  assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
+});
+
+test("the standalone iframe example does not require the feedback bridge", async () => {
+  const result = await validateIntegration(iframeExample);
+  assert.equal(result.type, "iframe");
+  assert.deepEqual(result.entries.map((entry) => entry.path), ["index.html"]);
+  assert.equal(result.feedback, null);
+  assert.equal(result.manifest.integrationKey, "promotion-integration-iframe-demo");
+  assert.equal(result.manifest.name, "内嵌框架集成示例");
   assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
 });
 
