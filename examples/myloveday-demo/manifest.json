@@ -1,0 +1,22 @@
+{
+  "schema": "promotion-template/v2",
+  "version": "1.0.5",
+  "name": "Myloveday 场景化落地页",
+  "description": "参考 Myloveday 风格的社交推广落地页，含滚动背景、缩略图展示与标准 WhatsApp 账号关联流程。",
+  "entry": "index.html",
+  "format": "static-bundle",
+  "capabilities": ["phone-pairing"],
+  "runtime": "promotion-browser-bridge/v2",
+  "requirements": {
+    "pairingContract": "promotion-public-pairing/v1",
+    "componentKit": "account-link-elements/v1"
+  },
+  "interactionProtection": "platform",
+  "defaultLocale": "en",
+  "supportedLocales": ["en", "zh-CN", "hi", "id", "pt-BR", "es", "ru", "ur", "de", "tr", "ar", "fa", "bn", "it", "fr"],
+  "i18n": {
+    "mode": "bundled",
+    "path": "locales/{locale}.json",
+    "fallbackLocale": "en"
+  }
+}

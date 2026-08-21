@@ -3,7 +3,7 @@ import { readFile, stat } from "node:fs/promises";
 import { extname, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const themeRoot = resolve(root, "dist/themes/white-label-account-link");
+const themeRoot = resolve(root, process.env.TEMPLATE_PREVIEW_THEME || "dist/themes/white-label-account-link");
 const port = Number.parseInt(process.env.TEMPLATE_PREVIEW_PORT || "4174", 10);
 const locales = ["en", "zh-CN", "hi", "id", "pt-BR", "es", "ru", "ur", "de", "tr", "ar", "fa", "bn", "it", "fr"];
 const states = ["input", "code_issued", "waiting_phone", "reconnecting", "verified_syncing", "verified_ready", "failed", "expired", "cancelled"];
