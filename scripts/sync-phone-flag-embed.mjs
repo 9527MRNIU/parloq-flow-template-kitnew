@@ -11,6 +11,7 @@ const css = readFileSync(cssPath, "utf8");
 const payload = JSON.stringify({
   sheet: "assets/phone-flags/sprite-positions.css",
   css,
+  countryPicker: "search",
 });
 const embed = `${marker}\n    <script type="application/json" id="phone-flag-sprite">${payload}</script>`;
 let html = readFileSync(indexPath, "utf8");

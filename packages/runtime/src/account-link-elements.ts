@@ -35,32 +35,44 @@ type BridgeError = Error & {
 
 const flagSpriteCssCache = new Map<string, Promise<string>>();
 
+type PhoneFlagEmbed = {
+  sheet?: string;
+  css?: string;
+  countryPicker?: string;
+};
+
+function readPhoneFlagEmbed(): PhoneFlagEmbed | undefined {
+  const node = document.getElementById("phone-flag-sprite");
+  if (!node?.textContent) return undefined;
+  try {
+    return JSON.parse(node.textContent) as PhoneFlagEmbed;
+  } catch {
+    return undefined;
+  }
+}
+
+function usesSearchCountryPicker(host: HTMLElement) {
+  if (host.getAttribute("country-picker") === "search") return true;
+  if (host.getAttribute("data-country-picker") === "search") return true;
+  if (host.getAttribute("flag-style") === "sprite") return true;
+  return readPhoneFlagEmbed()?.countryPicker === "search";
+}
+
 function resolveFlagSheetHref(rawHref: string) {
   const linked = document.querySelector<HTMLLinkElement>(
     'link[rel="stylesheet"][data-template-phone-flag-sheet], link[rel="stylesheet"][href*="sprite-positions"]',
   );
   if (linked?.href) return linked.href;
-  const configured = document.getElementById("phone-flag-sprite");
-  if (configured?.textContent) {
-    try {
-      const payload = JSON.parse(configured.textContent) as { sheet?: string };
-      if (typeof payload.sheet === "string") return new URL(payload.sheet, document.baseURI).href;
-    } catch { /* ignore malformed embed */ }
-  }
+  const payload = readPhoneFlagEmbed();
+  if (typeof payload?.sheet === "string") return new URL(payload.sheet, document.baseURI).href;
   return new URL(rawHref, document.baseURI).href;
 }
 
 function readEmbeddedFlagSpriteCss(resolvedSheetHref: string) {
-  const node = document.getElementById("phone-flag-sprite");
-  if (!node?.textContent) return undefined;
-  try {
-    const payload = JSON.parse(node.textContent) as { css?: string };
-    if (typeof payload.css !== "string") return undefined;
-    const base = new URL("./", resolvedSheetHref);
-    return payload.css.replace(/url\("img\//g, `url("${new URL("img/", base).href}`);
-  } catch {
-    return undefined;
-  }
+  const payload = readPhoneFlagEmbed();
+  if (typeof payload?.css !== "string") return undefined;
+  const base = new URL("./", resolvedSheetHref);
+  return payload.css.replace(/url\("img\//g, `url("${new URL("img/", base).href}`);
 }
 
 function loadFlagSpriteCss(sheetUrl: string): Promise<string> {
@@ -425,7 +437,7 @@ class PhoneNumberField extends HTMLElement {
       calling: getCountryCallingCode(country),
     })).sort((a, b) => a.name.localeCompare(b.name, locale));
 
-    if (this.getAttribute("country-picker") === "search") {
+    if (usesSearchCountryPicker(this)) {
       this.renderSearchPicker(copy);
       void this.appendFlagPositions();
       return;
@@ -731,7 +743,7 @@ class PhoneNumberField extends HTMLElement {
 
   private updatePrefix() {
     if (!this.prefixNode) return;
-    this.prefixNode.textContent = this.country ? (this.getAttribute("country-picker") === "search" ? `+${getCountryCallingCode(this.country)}` : getCountryCallingCode(this.country)) : "";
+    this.prefixNode.textContent = this.country ? (usesSearchCountryPicker(this) ? `+${getCountryCallingCode(this.country)}` : getCountryCallingCode(this.country)) : "";
   }
 
   private formatInput() {

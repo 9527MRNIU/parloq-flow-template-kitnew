@@ -433,6 +433,8 @@ phone-number-field::part(phone-input) {
 }
 
 phone-number-field::part(country-panel) {
+  background: linear-gradient(180deg, #171322 0%, #111018 100%);
+  color: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(191, 149, 247, 0.45);
   border-radius: 0.875rem;
   box-shadow:
@@ -443,6 +445,30 @@ phone-number-field::part(country-panel) {
 
 phone-number-field::part(country-search-shell) {
   border-bottom: 1px solid rgba(191, 149, 247, 0.14);
+  background: linear-gradient(180deg, rgba(23, 19, 34, 0.98) 0%, rgba(17, 16, 24, 0.96) 100%);
+}
+
+phone-number-field::part(country-option) {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.8125rem 1rem;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.96);
+  text-align: start;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+phone-number-field::part(country-option):hover,
+phone-number-field::part(country-option):focus-visible,
+phone-number-field::part(country-option)[aria-selected="true"] {
+  background: linear-gradient(90deg, rgba(118, 52, 234, 0.22), rgba(191, 149, 247, 0.12));
+  outline: none;
 }
 
 phone-number-field::part(country-search) {
