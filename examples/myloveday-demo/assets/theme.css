@@ -1,12 +1,11 @@
-/* Myloveday scenario landing page — presentation only; platform injects account-link runtime. */
+/* Myloveday scenario theme — white-label composition with campaign presentation. */
 :root {
   color-scheme: dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --primary: #bf95f7;
   --purple-border: rgba(191, 149, 247, 0.4);
   --btn-gradient: linear-gradient(135deg, #7634ea, #b04ef6);
   --brand-pink: #fe4e60;
-  --gold: #ffd700;
-  --error-red: #ff4d4d;
   --account-link-action-bg: #7634ea;
   --account-link-action-color: #ffffff;
   --account-link-focus: #bf95f7;
@@ -19,11 +18,15 @@
   --account-link-field-radius: 0.5rem;
   --account-link-secondary-radius: 999px;
   --account-link-locale-radius: 999px;
+  --account-link-select-option-bg: #141414;
+  --account-link-select-option-color: #f8fafc;
+  --account-link-select-color: #fff;
+  --account-link-input-color: #fff;
+  --account-link-prefix-color: #e9d5ff;
+  --account-link-prefix-opacity: 1;
 }
 
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
 }
 
@@ -31,7 +34,6 @@ body {
   margin: 0;
   background: #1a1a1a;
   color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
 }
 
@@ -40,20 +42,18 @@ img {
   max-width: 100%;
 }
 
-.page-shell {
-  position: relative;
-  min-height: 100vh;
-  padding: 15px;
+.scene-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .main-image-section {
-  position: fixed;
-  inset: 0 auto auto 0;
-  width: 100%;
+  position: absolute;
+  inset: 0;
   height: 200vh;
-  z-index: 0;
   overflow: hidden;
-  pointer-events: none;
 }
 
 .scrolling-images {
@@ -66,7 +66,7 @@ img {
 .scrolling-image {
   width: 100%;
   height: 50%;
-  background-image: url("images/changtu.jpg");
+  background-image: url("./images/changtu.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -81,70 +81,11 @@ img {
   }
 }
 
-.left-container {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(calc(-50% + 5px));
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
-  width: min(100% - 2rem, 22rem);
-}
-
-.title-text {
-  width: 100%;
-  margin: 0;
-  color: var(--brand-pink);
-  font-style: italic;
-  font-size: clamp(2rem, 8vw, 2.625rem);
-  font-weight: 900;
-  text-align: center;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
-  letter-spacing: 0.08em;
-}
-
-.left-image-text-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  padding-inline: 0.25rem;
-}
-
-.left-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.left-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.text-label {
-  margin: 0;
-  color: #fff;
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-style: italic;
-  font-family: "Comic Sans MS", "Comic Sans", cursive;
-  line-height: 1.4;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
 .thumbnails {
-  position: fixed;
-  bottom: 65px;
+  position: absolute;
+  bottom: 0;
   left: 0;
   width: 100%;
-  z-index: 2;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -177,170 +118,122 @@ img {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
 }
 
-.download-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
+.theme-shell {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2rem, 30rem);
+  margin: 0 auto;
+  padding: 1.25rem 0 17rem;
+}
+
+.campaign-header {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.title-text {
+  margin: 0;
+  color: var(--brand-pink);
+  font-style: italic;
+  font-size: clamp(2rem, 8vw, 2.625rem);
+  font-weight: 900;
+  text-align: center;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.08em;
+}
+
+.left-image-text-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: min(300px, calc(100% - 2rem));
-  height: 4.75rem;
-  padding: 0 1.5rem;
-  border: 0;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--brand-pink), var(--brand-pink));
+  gap: 15px;
+}
+
+.left-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.left-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.text-label {
+  margin: 0;
   color: #fff;
-  font-size: 1.5rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.35);
-  animation: pulse-button 2s infinite;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-style: italic;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+  line-height: 1.4;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.download-button:hover,
-.download-button:focus-visible {
-  transform: translateX(-50%) scale(1.03);
-  outline: 2px solid rgba(255, 255, 255, 0.35);
-  outline-offset: 3px;
-}
-
-@keyframes pulse-button {
-  0%,
-  100% {
-    transform: translateX(-50%) scale(1);
-  }
-  50% {
-    transform: translateX(-50%) scale(1.04);
-  }
-}
-
-.account-link-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  align-items: safe center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.88);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  overflow-y: auto;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
-.account-link-overlay:target {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.account-link-panel {
-  position: relative;
-  width: min(100%, 560px);
-  overflow: visible;
-  padding: 1.25rem 0.5rem 0.5rem;
-}
-
-.overlay-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 999px;
-  color: #fff;
-  font-size: 1.75rem;
-  line-height: 1;
-  text-align: center;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.text-info {
+.campaign-copy {
   margin-bottom: 1rem;
   text-align: center;
 }
 
-.text-info h2 {
+.campaign-copy h2 {
   margin: 0 0 0.35rem;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
 }
 
-.text-info p {
+.campaign-copy p {
   margin: 0;
-  color: #fff;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
 }
 
-.link-flow {
+account-link-flow {
   display: grid;
   gap: 1rem;
   color-scheme: dark;
-  --account-link-select-option-bg: #141414;
-  --account-link-select-option-color: #f8fafc;
-  --account-link-select-color: #fff;
-  --account-link-input-color: #fff;
-  --account-link-prefix-color: #e9d5ff;
-  --account-link-prefix-opacity: 1;
 }
 
 account-link-locale-switcher {
   justify-self: end;
+}
+
+phone-number-field,
+account-link-locale-switcher {
   color-scheme: dark;
+}
+
+phone-number-field::part(phone-shell),
+account-link-locale-switcher::part(select),
+account-link-submit::part(button),
+pairing-code-panel::part(panel),
+app-launch-actions::part(panel),
+account-link-status::part(panel) {
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 account-link-locale-switcher::part(select) {
   border-color: var(--purple-border);
-  background: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.08);
   color: #fff;
   appearance: none;
   -webkit-appearance: none;
   padding-right: 1.75rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23bf95f7' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-image: url("./icons/chevron-down.svg");
   background-repeat: no-repeat;
   background-position: right 0.65rem center;
 }
 
-.login-box {
-  padding: 1.25rem 1rem;
-  border: 2px solid var(--purple-border);
-  border-radius: 16px;
-  background: linear-gradient(
-    135deg,
-    rgba(50, 20, 80, 0.6),
-    rgba(80, 40, 120, 0.55) 25%,
-    rgba(100, 60, 140, 0.5) 50%,
-    rgba(140, 100, 180, 0.45) 75%,
-    rgba(180, 150, 220, 0.4)
-  );
-  backdrop-filter: blur(10px);
-  overflow: visible;
-}
-
-phone-number-field {
-  color-scheme: dark;
-}
-
 phone-number-field::part(label) {
-  display: block;
-  margin-bottom: 0.75rem;
   color: #fff;
-  font-size: 1.1rem;
   font-weight: 700;
   text-align: center;
 }
 
 phone-number-field::part(phone-shell) {
-  min-height: 3.125rem;
+  min-height: 3rem;
   border: 2px solid rgba(191, 149, 247, 0.3);
-  border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
   color: #fff;
   overflow: visible;
@@ -356,7 +249,7 @@ phone-number-field::part(country-select) {
   padding-right: 1rem;
   font-size: 0.92rem;
   font-weight: 600;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23bf95f7' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-image: url("./icons/chevron-down.svg");
   background-repeat: no-repeat;
   background-position: right center;
 }
@@ -372,28 +265,22 @@ phone-number-field::part(country-prefix) {
 
 phone-number-field::part(phone-input) {
   color: #fff;
-  padding-inline: 0.85rem;
-  font-size: 1rem;
 }
 
 phone-number-field::part(error) {
   text-align: center;
 }
 
-account-link-submit {
-  margin-top: 1rem;
-}
-
 account-link-submit::part(button) {
-  min-height: 3.125rem;
+  min-height: 3rem;
   background: var(--btn-gradient);
-  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-pairing-code-panel::part(panel) {
+pairing-code-panel::part(panel),
+app-launch-actions::part(panel) {
   padding: 1rem;
   border: 2px solid var(--purple-border);
   border-radius: 16px;
@@ -402,7 +289,6 @@ pairing-code-panel::part(panel) {
 
 pairing-code-panel::part(title) {
   color: var(--primary);
-  font-size: 1.25rem;
 }
 
 pairing-code-panel::part(code) {
@@ -416,24 +302,6 @@ account-link-status::part(retry-button) {
   border-color: var(--primary);
   color: #fff;
   background: rgba(118, 52, 234, 0.25);
-}
-
-.tip-guide {
-  display: none;
-  width: min(100%, 18rem);
-  margin: 0 auto;
-  border-radius: 12px;
-}
-
-pairing-code-panel:not([hidden]) ~ .tip-guide {
-  display: block;
-}
-
-app-launch-actions::part(panel) {
-  padding: 1rem;
-  border: 2px solid var(--purple-border);
-  border-radius: 16px;
-  background: rgba(26, 26, 26, 0.85);
 }
 
 app-launch-actions::part(guide-steps) {
@@ -453,13 +321,19 @@ account-link-status::part(message) {
 }
 
 @media (min-width: 768px) {
+  .theme-shell {
+    width: min(100% - 2rem, 400px);
+  }
+
   .main-image-section {
     left: 50%;
     transform: translateX(-50%);
     width: 400px;
   }
 
-  .left-container {
+  .thumbnails {
+    left: 50%;
+    transform: translateX(-50%);
     width: 400px;
   }
 
@@ -471,29 +345,11 @@ account-link-status::part(message) {
     width: 70px;
     height: 70px;
   }
-
-  .text-label {
-    font-size: 1rem;
-  }
-
-  .thumbnails {
-    left: 50%;
-    transform: translateX(-50%);
-    width: 400px;
-    bottom: 80px;
-  }
-
-  .download-button {
-    min-width: 350px;
-    height: 5rem;
-    font-size: 1.75rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .scrolling-images,
-  .thumbnails-container,
-  .download-button {
+  .thumbnails-container {
     animation: none;
   }
 }

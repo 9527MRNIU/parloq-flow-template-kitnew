@@ -2,21 +2,16 @@
 
 Author-only notes. This file is excluded from generated ZIP packages.
 
-Visual reference: [myloveday.falan123.com](https://myloveday.falan123.com/?key=tlajvc4&pixelId=2109538159611068)
-
-## Local assets
-
-Images under `assets/images/` were downloaded from the reference CDN where accessible.
-`changtu.jpg`, `cs1.jpg`, and `og-image.jpg` fall back to sibling images when the CDN
-returned a block page during export.
+Follows the same composition as `themes/white-label-account-link`: the standard
+`account-link-flow` element tree is rendered directly on the page. Campaign
+imagery and copy wrap the flow; there is no overlay, hash link, or extra CTA.
 
 ## Validate and preview
 
 ```bash
 node packages/cli/src/index.mjs template validate examples/myloveday-demo
+node packages/cli/src/index.mjs template pack examples/myloveday-demo --out examples/myloveday-demo.zip
 npm run build
-npm run preview
+$env:TEMPLATE_PREVIEW_THEME = "dist/themes/myloveday-demo"
+node scripts/preview.mjs
 ```
-
-The landing CTA opens the account-link overlay through the `#account-link` hash.
-Pairing, polling, and runtime injection remain platform-owned.
