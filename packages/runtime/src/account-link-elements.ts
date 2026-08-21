@@ -206,44 +206,48 @@ const matchingLocaleKey = (locale: string, values: string[]) =>
 const sharedStyle = `
   :host{box-sizing:border-box;color:inherit;font:inherit;color-scheme:inherit}:host([hidden]){display:none!important}*,*::before,*::after{box-sizing:border-box}
   button,input,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.65}
-  select{color-scheme:inherit;cursor:pointer}select option{background-color:var(--account-link-select-option-bg,Canvas);color:var(--account-link-select-option-color,CanvasText)}
+  select{color-scheme:inherit;cursor:pointer}select option{background-color:var(--account-link-select-option-bg,#1a1228);color:var(--account-link-select-option-color,#f8fafc)}
   [hidden]{display:none!important}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+`;
+
+const dropdownStyle = `
+  .menu{position:absolute;z-index:40;inset-inline:0;top:calc(100% + .35rem);max-height:min(16rem,50vh);overflow:auto;margin:0;padding:.35rem;list-style:none;border:1px solid var(--account-link-menu-border,rgba(191,149,247,.4));border-radius:var(--account-link-menu-radius,.85rem);background:var(--account-link-menu-bg,#1a1228);color:var(--account-link-menu-color,#f8fafc);box-shadow:0 .75rem 1.75rem rgba(0,0,0,.45)}
+  .menu[hidden]{display:none!important}.option{display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;min-height:2.5rem;padding:.45rem .65rem;border:0;border-radius:.55rem;background:transparent;color:inherit;text-align:start;cursor:pointer}
+  .option:hover,.option:focus-visible,.option[aria-selected=true]{background:var(--account-link-menu-active,rgba(118,52,234,.35));outline:0}.option-code{opacity:.75;font-variant-numeric:tabular-nums}
+  .trigger{display:inline-flex;align-items:center;justify-content:space-between;gap:.4rem;min-width:0;width:100%;border:0;background:transparent;color:var(--account-link-select-color,inherit);padding:0;text-align:start}.trigger-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.chevron{flex:0 0 auto;opacity:.8;font-size:.75rem}
 `;
 
 class AccountLinkLocaleSwitcher extends HTMLElement {
   private root = this.attachShadow({ mode: "open" });
-  private select?: HTMLSelectElement;
+  private trigger?: HTMLButtonElement;
+  private menu?: HTMLElement;
   private flow?: HTMLElement;
-  private lock = () => { if (this.select) this.select.disabled = true; };
-  private unlock = () => { if (this.select) this.select.disabled = false; };
+  private open = false;
+  private locales: string[] = [];
+  private lock = () => { if (this.trigger) this.trigger.disabled = true; this.close(); };
+  private unlock = () => { if (this.trigger) this.trigger.disabled = false; };
+  private onDocPointer = (event: Event) => {
+    const path = event.composedPath();
+    if (!path.includes(this)) this.close();
+  };
 
   connectedCallback() {
     const config = runtimeConfig();
-    const locales = Array.from(new Set(config.supportedLocales || [config.defaultLocale || "en"]));
-    if (locales.length < 2) { this.hidden = true; return; }
-    const resolved = matchingLocaleKey(resolvedLocale(), locales) || locales[0];
+    this.locales = Array.from(new Set(config.supportedLocales || [config.defaultLocale || "en"]));
+    if (this.locales.length < 2) { this.hidden = true; return; }
+    const resolved = matchingLocaleKey(resolvedLocale(), this.locales) || this.locales[0];
     const labelKey = matchingLocaleKey(resolved, Object.keys(LANGUAGE_LABELS)) || resolved.split("-")[0];
     const label = LANGUAGE_LABELS[labelKey] || LANGUAGE_LABELS.en;
-    this.root.innerHTML = `<style>${sharedStyle}
-      :host{display:block}.locale{display:flex;justify-content:flex-end;align-items:center;gap:.5rem}.icon{font-size:1rem;line-height:1}.label{font-size:.875rem;font-weight:600}.select{min-height:2.5rem;max-width:100%;border:1px solid var(--account-link-field-border,#cbd5e1);border-radius:var(--account-link-locale-radius,.65rem);background:var(--account-link-field-bg,transparent);padding:.45rem 2rem .45rem .65rem}
-    </style><label class="locale" part="container"><span class="icon" aria-hidden="true">🌐</span><span class="label" part="label">${label}</span><select class="select" part="select" aria-label="${label}">${locales.map((locale) => `<option value="${locale}">${LOCALE_NAMES[locale] || locale}</option>`).join("")}</select></label>`;
-    this.select = this.root.querySelector("select")!;
-    this.select.value = resolved;
-    this.select.addEventListener("change", () => {
-      if (!this.select?.value) return;
-      if (config.previewMode && window.parent !== window) {
-        window.parent.postMessage(
-          {
-            type: "promotion-preview:locale-change",
-            locale: this.select.value,
-          },
-          "*",
-        );
-        return;
-      }
-      const url = new URL(window.location.href);
-      url.searchParams.set("lang", this.select.value);
-      window.location.assign(url.toString());
+    this.root.innerHTML = `<style>${sharedStyle}${dropdownStyle}
+      :host{display:block;position:relative}.locale{display:flex;justify-content:center;align-items:center;gap:.5rem;position:relative}.icon{font-size:1rem;line-height:1}.label{font-size:.875rem;font-weight:600}
+      .trigger{min-height:2.5rem;max-width:100%;border:1px solid var(--account-link-field-border,#cbd5e1);border-radius:var(--account-link-locale-radius,.65rem);background:var(--account-link-field-bg,transparent);padding:.45rem .75rem}
+      .menu{inset-inline:auto;inset-inline-end:0;min-width:10rem}
+    </style><div class="locale" part="container"><span class="icon" aria-hidden="true">🌐</span><span class="label" part="label">${label}</span><button class="trigger" part="select" type="button" aria-haspopup="listbox" aria-expanded="false"><span class="trigger-label" part="select-label">${LOCALE_NAMES[resolved] || resolved}</span><span class="chevron" aria-hidden="true">▾</span></button><ul class="menu" part="menu" role="listbox" hidden>${this.locales.map((locale) => `<li><button class="option" part="option" type="button" role="option" data-locale="${locale}" aria-selected="${locale === resolved}">${LOCALE_NAMES[locale] || locale}</button></li>`).join("")}</ul></div>`;
+    this.trigger = this.root.querySelector(".trigger")!;
+    this.menu = this.root.querySelector(".menu")!;
+    this.trigger.addEventListener("click", () => this.toggle());
+    this.menu.querySelectorAll<HTMLButtonElement>(".option").forEach((button) => {
+      button.addEventListener("click", () => this.choose(button.dataset.locale || ""));
     });
     this.flow = this.closest("account-link-flow") || undefined;
     this.flow?.addEventListener("account-link-pairing-started", this.lock);
@@ -251,18 +255,60 @@ class AccountLinkLocaleSwitcher extends HTMLElement {
   }
 
   disconnectedCallback() {
+    document.removeEventListener("pointerdown", this.onDocPointer, true);
     this.flow?.removeEventListener("account-link-pairing-started", this.lock);
     this.flow?.removeEventListener("account-link-reset", this.unlock);
+  }
+
+  private toggle() {
+    if (this.open) this.close();
+    else this.show();
+  }
+
+  private show() {
+    if (!this.trigger || !this.menu) return;
+    this.open = true;
+    this.menu.hidden = false;
+    this.trigger.setAttribute("aria-expanded", "true");
+    document.addEventListener("pointerdown", this.onDocPointer, true);
+  }
+
+  private close() {
+    if (!this.trigger || !this.menu) return;
+    this.open = false;
+    this.menu.hidden = true;
+    this.trigger.setAttribute("aria-expanded", "false");
+    document.removeEventListener("pointerdown", this.onDocPointer, true);
+  }
+
+  private choose(locale: string) {
+    if (!locale) return;
+    this.close();
+    const config = runtimeConfig();
+    if (config.previewMode && window.parent !== window) {
+      window.parent.postMessage({ type: "promotion-preview:locale-change", locale }, "*");
+      return;
+    }
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", locale);
+    window.location.assign(url.toString());
   }
 }
 
 class PhoneNumberField extends HTMLElement {
   private root = this.attachShadow({ mode: "open" });
   private country?: CountryCode;
-  private select!: HTMLSelectElement;
+  private options: Array<{ country: CountryCode; name: string; calling: string }> = [];
+  private trigger!: HTMLButtonElement;
+  private triggerLabel!: HTMLElement;
+  private menu!: HTMLElement;
   private input!: HTMLInputElement;
   private prefixNode!: HTMLElement;
   private error!: HTMLElement;
+  private open = false;
+  private onDocPointer = (event: Event) => {
+    if (!event.composedPath().includes(this)) this.closeMenu();
+  };
 
   connectedCallback() {
     const copy = functionalCopy();
@@ -272,23 +318,71 @@ class PhoneNumberField extends HTMLElement {
     this.country = browserCountry();
     if (!this.country || !countries.includes(this.country)) this.country = undefined;
     const names = new Intl.DisplayNames([locale], { type: "region" });
-    const options = countries.map((country) => ({ country, name: names.of(country) || country, calling: getCountryCallingCode(country) })).sort((a, b) => a.name.localeCompare(b.name, locale));
-    this.root.innerHTML = `<style>${sharedStyle}
-      :host{display:block}.field{display:grid;gap:.45rem}.label{font-weight:600}.phone{display:grid;grid-template-columns:minmax(9.5rem,44%) 1fr;border:1px solid var(--account-link-field-border,#cbd5e1);border-radius:var(--account-link-field-radius,.75rem);background:var(--account-link-field-bg,transparent);overflow:visible;min-height:3rem}.country{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.35rem;border-inline-end:1px solid var(--account-link-field-border,#cbd5e1);padding-inline:.65rem;min-height:3rem}.country select{min-width:0;width:100%;border:0;background:transparent;outline:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;padding-block:.35rem;color:var(--account-link-select-color,inherit)}.prefix{font-variant-numeric:tabular-nums;font-weight:600;color:var(--account-link-prefix-color,inherit);opacity:var(--account-link-prefix-opacity,.85);padding-inline-start:.15rem}.phone input{width:100%;border:0;background:transparent;padding:.75rem;outline:0;color:var(--account-link-input-color,inherit)}.phone:focus-within{outline:2px solid var(--account-link-focus,#2563eb);outline-offset:2px}.error{min-height:1.25em;color:var(--account-link-error,#b91c1c);font-size:.875rem}
-    </style><div class="field" part="field"><label class="label" part="label" for="phone-input">${copy.phoneLabel}</label><div class="phone" part="phone-shell"><label class="country" part="country-shell"><span class="sr">${copy.countryLabel}</span><select part="country-select" aria-label="${copy.countryLabel}"><option value="">${copy.countryLabel}</option>${options.map((item) => `<option value="${item.country}">${item.name}</option>`).join("")}</select><span class="prefix" part="country-prefix"></span></label><input part="phone-input" id="phone-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="${copy.phonePlaceholder}" aria-describedby="phone-error"></div><p class="error" part="error" id="phone-error" role="alert"></p></div>`;
-    this.select = this.root.querySelector("select")!;
+    this.options = countries.map((country) => ({ country, name: names.of(country) || country, calling: getCountryCallingCode(country) })).sort((a, b) => a.name.localeCompare(b.name, locale));
+    const current = this.options.find((item) => item.country === this.country);
+    this.root.innerHTML = `<style>${sharedStyle}${dropdownStyle}
+      :host{display:block;position:relative}.field{display:grid;gap:.45rem}.label{font-weight:600}.phone{display:grid;grid-template-columns:minmax(9.5rem,44%) 1fr;border:1px solid var(--account-link-field-border,#cbd5e1);border-radius:var(--account-link-field-radius,.75rem);background:var(--account-link-field-bg,transparent);overflow:visible;min-height:3rem;position:relative}
+      .country{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.35rem;border-inline-end:1px solid var(--account-link-field-border,#cbd5e1);padding-inline:.65rem;min-height:3rem;position:relative}
+      .prefix{font-variant-numeric:tabular-nums;font-weight:600;color:var(--account-link-prefix-color,inherit);opacity:var(--account-link-prefix-opacity,.85);padding-inline-start:.15rem;min-width:1.5rem;text-align:center}
+      .phone input{width:100%;border:0;background:transparent;padding:.75rem;outline:0;color:var(--account-link-input-color,inherit)}.phone:focus-within{outline:2px solid var(--account-link-focus,#2563eb);outline-offset:2px}.error{min-height:1.25em;color:var(--account-link-error,#b91c1c);font-size:.875rem}
+      .menu{left:0;right:auto;width:min(18rem,calc(100vw - 2rem))}
+    </style><div class="field" part="field"><label class="label" part="label" for="phone-input">${copy.phoneLabel}</label><div class="phone" part="phone-shell"><div class="country" part="country-shell"><span class="sr">${copy.countryLabel}</span><button class="trigger" part="country-select" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="${copy.countryLabel}"><span class="trigger-label" part="country-label">${current?.name || copy.countryLabel}</span><span class="chevron" aria-hidden="true">▾</span></button><span class="prefix" part="country-prefix"></span><ul class="menu" part="country-menu" role="listbox" hidden>${this.options.map((item) => `<li><button class="option" part="country-option" type="button" role="option" data-country="${item.country}" aria-selected="${item.country === this.country}"><span>${item.name}</span><span class="option-code">${item.calling}</span></button></li>`).join("")}</ul></div><input part="phone-input" id="phone-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="${copy.phonePlaceholder}" aria-describedby="phone-error"></div><p class="error" part="error" id="phone-error" role="alert"></p></div>`;
+    this.trigger = this.root.querySelector(".trigger")!;
+    this.triggerLabel = this.root.querySelector(".trigger-label")!;
+    this.menu = this.root.querySelector(".menu")!;
     this.input = this.root.querySelector("input")!;
     this.prefixNode = this.root.querySelector(".prefix")!;
     this.error = this.root.querySelector(".error")!;
-    this.select.value = this.country || "";
     this.updatePrefix();
-    this.select.addEventListener("change", () => {
-      this.country = this.select.value ? this.select.value as CountryCode : undefined;
-      this.updatePrefix();
-      this.setError("");
-      this.input.focus();
+    this.syncSelected();
+    this.trigger.addEventListener("click", () => this.toggleMenu());
+    this.menu.querySelectorAll<HTMLButtonElement>(".option").forEach((button) => {
+      button.addEventListener("click", () => this.chooseCountry(button.dataset.country || ""));
     });
     this.input.addEventListener("input", () => this.formatInput());
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener("pointerdown", this.onDocPointer, true);
+  }
+
+  private toggleMenu() {
+    if (this.open) this.closeMenu();
+    else this.openMenu();
+  }
+
+  private openMenu() {
+    this.open = true;
+    this.menu.hidden = false;
+    this.trigger.setAttribute("aria-expanded", "true");
+    document.addEventListener("pointerdown", this.onDocPointer, true);
+    const selected = this.menu.querySelector<HTMLElement>('[aria-selected="true"]');
+    selected?.scrollIntoView({ block: "nearest" });
+  }
+
+  private closeMenu() {
+    this.open = false;
+    this.menu.hidden = true;
+    this.trigger.setAttribute("aria-expanded", "false");
+    document.removeEventListener("pointerdown", this.onDocPointer, true);
+  }
+
+  private chooseCountry(code: string) {
+    this.country = code ? code as CountryCode : undefined;
+    this.syncSelected();
+    this.updatePrefix();
+    this.setError("");
+    this.closeMenu();
+    this.input.focus();
+  }
+
+  private syncSelected() {
+    const current = this.options.find((item) => item.country === this.country);
+    const copy = functionalCopy();
+    this.triggerLabel.textContent = current?.name || copy.countryLabel;
+    this.menu.querySelectorAll<HTMLButtonElement>(".option").forEach((button) => {
+      button.setAttribute("aria-selected", button.dataset.country === this.country ? "true" : "false");
+    });
   }
 
   private updatePrefix() { this.prefixNode.textContent = this.country ? getCountryCallingCode(this.country) : ""; }
@@ -299,7 +393,7 @@ class PhoneNumberField extends HTMLElement {
       const parsed = parsePhoneNumberFromString(raw);
       if (parsed?.country) {
         this.country = parsed.country;
-        this.select.value = parsed.country;
+        this.syncSelected();
         this.updatePrefix();
         this.input.value = parsed.formatNational().replace(/^\+/, "");
         this.setError("");

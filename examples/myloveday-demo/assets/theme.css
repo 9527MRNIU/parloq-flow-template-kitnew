@@ -26,6 +26,11 @@
   --account-link-input-color: #fff;
   --account-link-prefix-color: #e9d5ff;
   --account-link-prefix-opacity: 1;
+  --account-link-menu-bg: #1a1228;
+  --account-link-menu-color: #f8fafc;
+  --account-link-menu-border: rgba(191, 149, 247, 0.45);
+  --account-link-menu-radius: 0.85rem;
+  --account-link-menu-active: rgba(118, 52, 234, 0.42);
 }
 
 * {
@@ -253,15 +258,33 @@ account-link-status::part(panel) {
 }
 
 account-link-locale-switcher::part(select) {
-  border-color: var(--purple-border);
+  border: 1px solid var(--purple-border);
+  border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.08);
   color: #fff;
-  appearance: none;
-  -webkit-appearance: none;
-  padding-right: 1.75rem;
-  background-image: url("./icons/chevron-down.svg");
-  background-repeat: no-repeat;
-  background-position: right 0.65rem center;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.85rem;
+}
+
+account-link-locale-switcher::part(menu),
+phone-number-field::part(country-menu) {
+  border: 1px solid var(--account-link-menu-border);
+  border-radius: var(--account-link-menu-radius);
+  background: var(--account-link-menu-bg);
+  color: var(--account-link-menu-color);
+  box-shadow: 0 0.85rem 2rem rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+account-link-locale-switcher::part(option),
+phone-number-field::part(country-option) {
+  color: #f8fafc;
+  border-radius: 0.55rem;
+}
+
+account-link-locale-switcher::part(option):hover,
+phone-number-field::part(country-option):hover {
+  background: var(--account-link-menu-active);
 }
 
 phone-number-field::part(label) {
@@ -280,18 +303,18 @@ phone-number-field::part(phone-shell) {
 }
 
 phone-number-field::part(country-shell) {
+  position: relative;
   background: rgba(255, 255, 255, 0.06);
 }
 
 phone-number-field::part(country-select) {
-  appearance: none;
-  -webkit-appearance: none;
-  padding-right: 1rem;
+  color: #fff;
   font-size: 0.92rem;
   font-weight: 600;
-  background-image: url("./icons/chevron-down.svg");
-  background-repeat: no-repeat;
-  background-position: right center;
+}
+
+phone-number-field::part(country-label) {
+  color: #fff;
 }
 
 phone-number-field::part(country-prefix) {
@@ -301,6 +324,7 @@ phone-number-field::part(country-prefix) {
   font-size: 0.92rem;
   font-weight: 700;
   text-align: center;
+  color: var(--account-link-prefix-color);
 }
 
 phone-number-field::part(phone-input) {
