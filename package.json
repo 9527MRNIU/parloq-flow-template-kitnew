@@ -12,8 +12,9 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "preview": "npm run build && node scripts/preview.mjs",
+    "preview:myloveday": "npm run build && node scripts/preview.mjs examples/myloveday-demo",
     "validate": "npm run validate:template && npm run validate:integrations",
-    "validate:template": "node packages/cli/src/index.mjs template validate themes/white-label-account-link",
+    "validate:template": "node packages/cli/src/index.mjs template validate themes/white-label-account-link && node packages/cli/src/index.mjs template validate examples/myloveday-demo",
     "validate:integrations": "node packages/cli/src/index.mjs integration validate examples/promotion-integration-script-demo && node packages/cli/src/index.mjs integration validate examples/promotion-integration-feedback-demo && node packages/cli/src/index.mjs integration validate examples/promotion-integration-iframe-demo",
     "pack": "npm run build && npm run verify:dist",
     "check:scripts": "node --check scripts/artifact-catalog.mjs && node --check scripts/build.mjs && node --check scripts/preview.mjs && node --check scripts/verify-dist.mjs && node --check packages/cli/src/index.mjs",

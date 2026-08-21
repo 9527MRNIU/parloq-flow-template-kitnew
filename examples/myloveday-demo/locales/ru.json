@@ -1,0 +1,19 @@
+{
+  "title": "Myloveday — Общайся с удивительными девушками",
+  "metaDescription": "Войдите через WhatsApp, чтобы видеочатиться с настоящими женщинами.",
+  "brand": "Myloveday",
+  "heroTitle": "Войдите через WhatsApp, чтобы видеочатиться с настоящими женщинами. (Женщины здесь очень прямолинейны.)",
+  "ctaButton": "Войти через WhatsApp",
+  "unlockHeading": "Войдите, чтобы открыть все фото и видео",
+  "unlockSubtext": "Насладитесь ещё более захватывающим контентом!",
+  "accountLink.phoneLabel": "Введите номер WhatsApp",
+  "accountLink.phonePlaceholder": "Введите ваш номер телефона",
+  "accountLink.submit": "Продолжить",
+  "accountLink.invalidPhone": "Введите действительный номер мобильного телефона",
+  "accountLink.countrySearch": "Поиск страны или кода",
+  "accountLink.codeTitle": "Введите код на телефоне",
+  "accountLink.copyCode": "Копировать код привязки",
+  "accountLink.copied": "Скопировано",
+  "accountLink.expires": "Оставшееся время",
+  "accountLink.waiting": "Ожидание подтверждения на телефоне…"
+}
