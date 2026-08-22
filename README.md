@@ -1,132 +1,292 @@
-# Parloq Flow Promotion Kit
+# 推广模板与集成套件
 
-Independent source repository for promotion landing-page templates, managed
-script/iframe integration packages, and the white-label account-linking
-capability consumed by Parloq Flow.
+这个仓库用于制作可以导入推广管理系统的模板和集成包。
 
-The repository separates public bundle releases from the control plane while
-keeping the package names and contracts aligned with the mother project:
-`PromotionTemplate` and `PromotionIntegration` are parallel artifact classes.
+如果你要制作一个新的推广落地页，直接从现有模板复制一份，修改页面样式、图片、
+文案和语言包，然后运行校验与构建命令，即可得到系统能够导入的 ZIP。
 
-## What lives here
+## 快速开始
 
-- `packages/runtime`: template-owned browser elements compiled into every v3
-  template ZIP.
-- `packages/components`: the canonical custom-element composition for templates.
-- `packages/contract`: template, integration-manifest, browser-bridge and iframe
-  feedback TypeScript contracts plus JSON Schemas.
-- `packages/cli`: validation and deterministic ZIP packaging for both artifact
-  classes.
-- `artifacts/catalog.json`: the stable per-kind sequence assigned to every
-  downloadable template or integration ZIP.
-- `themes/white-label-account-link`: the default capability-only template.
-- `examples/promotion-template-minimal`: a small two-language template example.
-- `examples/promotion-integration-script-demo`: ordered classic/module scripts.
-- `examples/promotion-integration-iframe-demo`: a standalone iframe integration
-  without event feedback.
-- `examples/promotion-integration-feedback-demo`: an independently reporting
-  iframe copied from the current mother-project flow and made white-label.
-- `integrations/device-callback-adapter`: an internal ordered JavaScript-only
-  iframe integration with an opaque encrypted runtime asset.
-- `docs`: architecture, authoring, contracts, AI generation, and copy sources.
-
-Templates own presentation and localization only. Integration bundles may own
-their declared browser behavior, while hosting, injection order, source-domain
-validation, session authentication, event persistence, pairing, routing and
-account state remain platform responsibilities. V3 templates carry their own
-compiled UI components and call only the platform-provided
-`window.PromotionBridge`.
-
-## Quick start
-
-Requires Node.js 22 or newer.
+需要 Node.js 22 或更高版本。
 
 ```bash
-npm install
+npm ci
+npm run ci
+npm run preview
+```
+
+打开 `http://127.0.0.1:4174` 可以预览默认白标模板，并切换手机、平板、桌面尺寸，
+语言以及账号关联过程中的不同状态。语言默认使用“自动识别”，预览环境不会创建真实账号。
+
+## 选择一个模板作为起点
+
+仓库提供两个基础模板：
+
+- `themes/white-label-account-link`：完整的白标账号关联模板，包含十五种语言；
+- `examples/promotion-template-minimal`：只保留核心结构的最小示例，适合学习目录和组件用法。
+
+正式制作新模板时，建议复制白标模板：
+
+```bash
+cp -R themes/white-label-account-link themes/your-template-name
+```
+
+模板目录名称使用小写英文，多个单词用连字符连接，例如
+`summer-campaign-account-link`。
+
+## 模板目录结构
+
+一个完整的 v3 模板通常包含：
+
+```text
+themes/your-template-name/
+├── manifest.json
+├── index.html
+├── README.md
+├── assets/
+│   ├── account-link-elements.js
+│   ├── theme.css
+│   └── images/
+└── locales/
+    ├── en.json
+    ├── zh-CN.json
+    └── ...
+```
+
+- `manifest.json`：模板版本、入口、语言和组件契约；
+- `index.html`：页面结构和标准账号关联组件；
+- `assets/theme.css`：模板样式；
+- `assets/account-link-elements.js`：构建生成的标准组件，不要手工修改；
+- `assets/images`：模板自己的图片等静态资源；
+- `locales`：每种语言对应的文案；
+- `README.md`：仅供开发者阅读，打包时不会进入 ZIP。
+
+## 第一步：修改模板清单
+
+新模板必须使用 `promotion-template/v3`：
+
+```json
+{
+  "schema": "promotion-template/v3",
+  "version": "1.0.0",
+  "name": "新的推广模板",
+  "description": "说明这个模板的用途、视觉特点和适用场景。",
+  "entry": "index.html",
+  "format": "static-bundle",
+  "capabilities": ["phone-pairing"],
+  "runtime": "promotion-browser-bridge/v2",
+  "requirements": {
+    "pairingContract": "promotion-public-pairing/v1"
+  },
+  "components": {
+    "contract": "account-link-elements/v1",
+    "entry": "assets/account-link-elements.js"
+  },
+  "interactionProtection": "platform",
+  "defaultLocale": "en",
+  "supportedLocales": [
+    "en",
+    "zh-CN",
+    "hi",
+    "id",
+    "pt-BR",
+    "es",
+    "ru",
+    "ur",
+    "de",
+    "tr",
+    "ar",
+    "fa",
+    "bn",
+    "it",
+    "fr"
+  ],
+  "i18n": {
+    "mode": "bundled",
+    "path": "locales/{locale}.json",
+    "fallbackLocale": "en"
+  }
+}
+```
+
+修改时重点关注：
+
+- `version` 是模板自身版本，也是最终 ZIP 文件名中的版本；
+- `name` 为 1–120 个字符，正式模板使用自然中文展示名称；
+- `description` 最多 2000 个字符，说明用途和差异；
+- `defaultLocale` 和 `fallbackLocale` 必须出现在 `supportedLocales` 中；
+- `supportedLocales` 中的每种语言都必须存在对应 JSON 文件。
+
+## 第二步：修改页面结构
+
+`index.html` 必须加载模板自带的组件脚本：
+
+```html
+<script src="assets/account-link-elements.js" defer></script>
+```
+
+账号关联功能使用下面这套标准组件结构：
+
+```html
+<account-link-flow>
+  <phone-number-field></phone-number-field>
+  <account-link-submit></account-link-submit>
+  <pairing-code-panel></pairing-code-panel>
+  <app-launch-actions></app-launch-actions>
+  <account-link-status></account-link-status>
+  <account-initialization-status></account-initialization-status>
+</account-link-flow>
+```
+
+系统会根据访问者环境解析语言并通过运行时配置注入模板，因此一般不需要在页面中放置
+`account-link-locale-switcher`。只有产品明确要求用户手动切换语言时，才把该组件加入结构。
+
+不要删除或自行实现上述账号关联功能组件。模板主要修改组件外层布局、背景、品牌视觉、图片、
+文案，以及通过 CSS 变量和 `::part()` 调整组件样式。
+
+## 第三步：修改样式、图片和文案
+
+可以修改：
+
+- 页面背景、卡片布局、间距、颜色、圆角和阴影；
+- 模板自己的图片、图标和字体；
+- `locales/*.json` 中用户能看到的文案；
+- 标准组件公开的 CSS 变量和 `::part()` 样式。
+
+需要遵守：
+
+- 所有图片、字体、CSS 和 JavaScript 都必须放在模板 ZIP 内，不能引用外部资源；
+- 不要在模板中写平台 API 地址、网关地址、访问令牌或协议节点标识；
+- 模板只能通过系统注入的 `window.PromotionBridge` 发起账号关联；
+- 用户可见的电话号码不显示开头的加号；
+- 阿拉伯语、波斯语和乌尔都语必须保留 RTL 排版；
+- 公开模板必须保持白标，不能出现控制面产品名称。
+
+## 第四步：登记正式模板
+
+如果模板需要成为仓库正式产物，在 `artifacts/catalog.json` 中新增一条
+`kind: "template"` 记录：
+
+```json
+{
+  "sequence": "0002",
+  "kind": "template",
+  "slug": "your-template-name",
+  "source": "themes/your-template-name",
+  "manifest": "manifest.json",
+  "outputDirectory": "themes"
+}
+```
+
+模板和集成分别独立编号，并且都从 `0001` 开始。新增模板使用模板类型中的下一个
+可用四位编号；已经分配的编号不能因为改名、移动目录或升级版本而改变。
+
+登记后运行：
+
+```bash
+npm run sync:components
+```
+
+这个命令会为所有已登记的 v3 模板生成一致的
+`assets/account-link-elements.js`。该文件由仓库统一维护，不应在单个模板中手工修改。
+
+## 第五步：校验模板
+
+校验指定模板：
+
+```bash
+node packages/cli/src/index.mjs template validate themes/your-template-name
+```
+
+提交前运行完整检查：
+
+```bash
 npm run ci
 ```
 
-Useful commands:
+校验会检查：
+
+- `manifest.json` 是否符合 v3 契约；
+- HTML 是否加载并使用标准组件；
+- 语言文件是否完整；
+- 路径、文件类型和 ZIP 大小是否安全；
+- 是否存在外部资源、源码映射、敏感信息或平台直连代码；
+- 组件文件是否与仓库统一版本一致；
+- 最终 ZIP 是否可以稳定复现。
+
+## 第六步：构建可导入 ZIP
 
 ```bash
-npm run validate
 npm run build
-npm run preview
-node packages/cli/src/index.mjs template validate examples/promotion-template-minimal
-node packages/cli/src/index.mjs integration validate examples/promotion-integration-script-demo
-node packages/cli/src/index.mjs integration validate examples/promotion-integration-iframe-demo
-node packages/cli/src/index.mjs integration pack examples/promotion-integration-feedback-demo
 ```
 
-The legacy template-only command form remains supported, so existing scripts
-using `promotion-template validate|build|pack` do not need an immediate change.
+正式模板 ZIP 会生成在 `dist/themes`，例如：
 
-The local template preview opens at `http://127.0.0.1:4174`. Its management-only
-toolbar switches viewport, locale, and pairing/initialization state without
-creating a real account.
+```text
+dist/themes/0001-white-label-account-link-1.6.0.zip
+dist/themes/0002-your-template-name-1.0.0.zip
+```
 
-`npm run build` produces:
+文件名格式为：
 
-- `dist/runtime/account-link-elements.js`
-- `dist/packages/promotion-contract.js`
-- `dist/packages/template-contract.js` (compatibility alias)
-- `dist/schemas/promotion-template-v1.schema.json`
-- `dist/schemas/promotion-template-v2.schema.json`
-- `dist/schemas/promotion-template-v3.schema.json`
-- `dist/schemas/promotion-integration-v1.schema.json`
-- `dist/themes/0001-white-label-account-link-1.6.0.zip`
-- `dist/integrations/0001-promotion-integration-script-demo-1.0.0.zip`
-- `dist/integrations/0002-promotion-integration-feedback-demo-1.0.0.zip`
-- `dist/integrations/0003-promotion-integration-iframe-demo-1.0.0.zip`
-- `dist/internal-integrations/0004-device-callback-adapter-1.0.0.zip`
-- `dist/artifacts.json` with each artifact's sequence, own version, byte size,
-  and SHA-256 digest
+```text
+四位模板编号-小写连字符名称-模板自身版本.zip
+```
 
-Official ZIP names use `0001-lowercase-hyphenated-name-version.zip`. Templates
-and integrations have independent four-digit sequences, each starting at
-`0001`. A sequence is permanent within its artifact kind; it comes from
-`artifacts/catalog.json` and does not change when a package is renamed
-internally or receives a new version. New artifacts take the next sequence in
-their own kind. The filename version always comes from that package's
-`manifest.json` or `integration.json`, never from the root package version.
+系统可以通过两种方式导入：
 
-Template manifests may provide `name` and `description`. Integration manifests
-may additionally provide `integrationKey`. The control plane can use these
-fields to prefill ZIP import forms. They remain optional for third-party
-contracts, but every official/example package in this repository supplies a
-natural Chinese display name and internal description.
+1. 在模板管理页面手动上传 `dist/themes` 中的 ZIP；
+2. 在系统中配置本 GitHub 仓库，由系统读取 `artifacts/catalog.json` 和模板源码目录，
+   检测版本及内容变化后导入。
 
-## Release boundary
+无论使用哪种方式，最终都会经过同一套 ZIP 大小、安全和契约校验。
 
-The control plane consumes complete template ZIPs. It must never read this
-repository's moving branch or inject a second copy of the template component
-runtime at request time.
+## 模板包限制
 
-| Layer | Current contract |
-| --- | --- |
-| Template manifest | `promotion-template/v3` |
-| Template browser bridge | `promotion-browser-bridge/v2` |
-| Public pairing | `promotion-public-pairing/v1` |
-| Account-link components | `account-link-elements/v1` |
-| Integration manifest | `integration.json` schema version `1` |
-| Iframe feedback bridge | `promotion-integration-bridge/v1` |
+- ZIP 最大 20 MB；
+- 解压后最大 50 MB；
+- 最多 500 个文件；
+- 单个文件最大 5 MB；
+- 必须包含一个 `index.html` 和一个 `manifest.json`；
+- 必须包含 `manifest.components.entry` 指定的组件脚本；
+- 禁止绝对路径、目录穿越、符号链接、重复路径和不支持的文件类型。
 
-Breaking behavior creates a new contract version. Existing versions remain
-buildable for channels that have not migrated.
+## 集成包
 
-Tagged GitHub Releases attach only the numbered template and integration ZIPs.
-`dist/artifacts.json` remains available in the CI build artifact for automated
-verification, but it is not attached to the public Release. GitHub adds source
-archives to tagged Releases automatically; those platform-generated links are
-not product artifacts.
+这个仓库也支持 script 和 iframe 集成包。集成包使用 `integration.json` schema
+version `1`，与模板使用独立编号。iframe 集成必须由包自身提供一个 HTML/HTM
+入口，平台不会为纯 JavaScript 集成自动生成 iframe 页面。
 
-Catalog entries using `outputDirectory: internal-integrations` remain available
-to repository imports and the internal CI artifact, but the Release workflow
-does not attach them publicly.
+相关示例：
 
-## White-label rule
+- `examples/promotion-integration-script-demo`
+- `examples/promotion-integration-iframe-demo`
+- `examples/promotion-integration-feedback-demo`
+- `integrations/device-callback-adapter`
 
-Repository and npm package names identify project ownership. Generated public
-template and integration ZIPs do not. The CLI rejects control-plane branding,
-credentials, protocol identifiers, gateway references, and direct platform API
-paths in public bundle files.
+详细规则见 `docs/promotion-integration-v1.md`。
+
+## 常用命令
+
+```bash
+# 安装锁定版本的依赖
+npm ci
+
+# 校验默认模板和全部集成
+npm run validate
+
+# 同步正式模板的标准组件
+npm run sync:components
+
+# 构建全部正式 ZIP
+npm run build
+
+# 校验构建目录和 SHA-256
+npm run verify:dist
+
+# 运行完整 CI 检查
+npm run ci
+
+# 启动默认白标模板预览
+npm run preview
+```

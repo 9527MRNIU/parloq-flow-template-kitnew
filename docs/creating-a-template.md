@@ -24,7 +24,6 @@ this repository must provide non-empty natural Chinese values.
 
 ```html
 <account-link-flow>
-  <account-link-locale-switcher></account-link-locale-switcher>
   <phone-number-field></phone-number-field>
   <account-link-submit></account-link-submit>
   <pairing-code-panel></pairing-code-panel>
@@ -37,11 +36,15 @@ this repository must provide non-empty natural Chinese values.
 V3 templates declare `components.entry` and load that local script from
 `index.html`. The repository build generates the component bundle from
 `packages/runtime`; authors do not copy or edit the compiled file manually.
+The platform injects the resolved visitor locale. Add the optional
+`account-link-locale-switcher` only when the product explicitly requires a
+manual language control.
 
 ## Locale rules
 
 - `defaultLocale` and `fallbackLocale` must appear in `supportedLocales`.
 - Every bundled locale needs the file resolved by `i18n.path`.
+- The platform resolves the initial content locale from the visitor environment.
 - Browser localization supplies the initial phone country; a channel does not
   force a calling code.
 - Arabic, Persian, and Urdu are RTL.

@@ -13,8 +13,8 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
       {
         kind: "template",
         sequence: "0001",
-        filename: "0001-white-label-account-link-1.6.0.zip",
-        version: "1.6.0",
+        filename: "0001-white-label-account-link-1.6.1.zip",
+        version: "1.6.1",
       },
       {
         kind: "integration",

@@ -55,7 +55,6 @@ bundle.
 
 ```html
 <account-link-flow>
-  <account-link-locale-switcher></account-link-locale-switcher>
   <phone-number-field></phone-number-field>
   <account-link-submit></account-link-submit>
   <pairing-code-panel></pairing-code-panel>
@@ -65,8 +64,11 @@ bundle.
 </account-link-flow>
 ```
 
-The component bundle owns country search, flags, locale selection, phone
-formatting, accessible controls and pairing-state presentation. It receives no
+The component bundle owns country search, flags, phone formatting, accessible
+controls and pairing-state presentation. The platform resolves the visitor's
+locale and injects it through runtime configuration. Templates that explicitly
+need a manual language selector may add the optional
+`account-link-locale-switcher` element inside the flow. The bundle receives no
 secret configuration and reaches platform services only through:
 
 ```ts
