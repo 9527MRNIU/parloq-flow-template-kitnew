@@ -1,5 +1,5 @@
 {
-  "schema": "promotion-template/v2",
+  "schema": "promotion-template/v3",
   "version": "0.1.0",
   "name": "最小推广模板示例",
   "description": "演示使用标准账号关联组件和中英文语言包创建最小推广模板。",
@@ -8,8 +8,11 @@
   "capabilities": ["phone-pairing"],
   "runtime": "promotion-browser-bridge/v2",
   "requirements": {
-    "pairingContract": "promotion-public-pairing/v1",
-    "componentKit": "account-link-elements/v1"
+    "pairingContract": "promotion-public-pairing/v1"
+  },
+  "components": {
+    "contract": "account-link-elements/v1",
+    "entry": "assets/account-link-elements.js"
   },
   "interactionProtection": "platform",
   "defaultLocale": "en",

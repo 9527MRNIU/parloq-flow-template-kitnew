@@ -57,6 +57,7 @@ await copyFile(
 for (const filename of [
   "promotion-template-v1.schema.json",
   "promotion-template-v2.schema.json",
+  "promotion-template-v3.schema.json",
   "promotion-integration-v1.schema.json",
 ]) {
   await copyFile(
@@ -69,7 +70,14 @@ for (const artifact of publicArtifacts) {
   const output = resolve(dist, artifact.outputDirectory, artifact.filename);
   if (artifact.kind === "template") {
     const builtTemplate = resolve(dist, artifact.outputDirectory, artifact.slug);
-    await buildTemplate(artifact.sourcePath, builtTemplate);
+    const manifest = await readJson(artifact.manifestPath);
+    const generatedAssets = manifest.schema === "promotion-template/v3"
+      ? [{
+          source: resolve(dist, "runtime/account-link-elements.js"),
+          path: manifest.components.entry,
+        }]
+      : [];
+    await buildTemplate(artifact.sourcePath, builtTemplate, { generatedAssets });
     await packTemplate(builtTemplate, output);
   } else {
     await packIntegration(artifact.sourcePath, output);
@@ -83,6 +91,7 @@ const artifactSpecs = [
   { path: "packages/template-contract.js", kind: "contract-alias", sequence: null, version: contractPackage.version },
   { path: "schemas/promotion-template-v1.schema.json", kind: "schema", sequence: null, version: "1" },
   { path: "schemas/promotion-template-v2.schema.json", kind: "schema", sequence: null, version: "2" },
+  { path: "schemas/promotion-template-v3.schema.json", kind: "schema", sequence: null, version: "3" },
   { path: "schemas/promotion-integration-v1.schema.json", kind: "schema", sequence: null, version: "1" },
   ...publicArtifacts.map((artifact) => ({
     path: `${artifact.outputDirectory}/${artifact.filename}`,

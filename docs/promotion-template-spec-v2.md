@@ -1,7 +1,7 @@
 # Promotion template specification v2
 
-Status: current for new templates (`promotion-template/v2`). Existing v1
-templates remain supported.
+Status: historical platform-injected component contract. New templates use
+[`promotion-template/v3`](promotion-template-spec-v3.md).
 
 Machine-readable schema:
 [`promotion-template-v2.schema.json`](../packages/contract/schemas/promotion-template-v2.schema.json).

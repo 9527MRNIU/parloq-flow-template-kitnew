@@ -1,4 +1,5 @@
 export const TEMPLATE_SCHEMA_V2 = "promotion-template/v2" as const;
+export const TEMPLATE_SCHEMA_V3 = "promotion-template/v3" as const;
 export const BROWSER_BRIDGE_V2 = "promotion-browser-bridge/v2" as const;
 export const PUBLIC_PAIRING_V1 = "promotion-public-pairing/v1" as const;
 export const ACCOUNT_LINK_ELEMENTS_V1 = "account-link-elements/v1" as const;
@@ -50,6 +51,35 @@ export interface PromotionTemplateManifestV2 {
     pairingContract: typeof PUBLIC_PAIRING_V1;
     componentKit?: typeof ACCOUNT_LINK_ELEMENTS_V1;
     [key: string]: unknown;
+  };
+  interactionProtection: "platform";
+  defaultLocale: string;
+  supportedLocales: string[];
+  i18n: {
+    mode: "bundled" | "runtime";
+    path: string;
+    fallbackLocale: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+export interface PromotionTemplateManifestV3 {
+  schema: typeof TEMPLATE_SCHEMA_V3;
+  version: string;
+  name?: string;
+  description?: string;
+  entry: "index.html";
+  format: "static-bundle" | "vite-dist";
+  capabilities: ["phone-pairing"];
+  runtime: typeof BROWSER_BRIDGE_V2;
+  requirements: {
+    pairingContract: typeof PUBLIC_PAIRING_V1;
+    [key: string]: unknown;
+  };
+  components: {
+    contract: typeof ACCOUNT_LINK_ELEMENTS_V1;
+    entry: string;
   };
   interactionProtection: "platform";
   defaultLocale: string;

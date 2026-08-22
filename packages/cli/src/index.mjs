@@ -100,6 +100,7 @@ async function scanControlPlaneLeaks(files, label) {
 }
 
 function schemaFilename(schema) {
+  if (schema === "promotion-template/v3") return "promotion-template-v3.schema.json";
   if (schema === "promotion-template/v2") return "promotion-template-v2.schema.json";
   if (schema === "promotion-template/v1") return "promotion-template-v1.schema.json";
   throw new Error(`unsupported template schema: ${String(schema || "missing")}`);
@@ -132,14 +133,27 @@ async function validateLocales(root, manifest) {
   return locales;
 }
 
-async function validateComponentComposition(root, manifest) {
-  if (manifest.requirements?.componentKit !== "account-link-elements/v1") return;
+async function validateComponentComposition(root, manifest, files, options = {}) {
+  const componentContract = manifest.schema === "promotion-template/v3"
+    ? manifest.components?.contract
+    : manifest.requirements?.componentKit;
+  if (componentContract !== "account-link-elements/v1") return;
   const html = await readFile(resolveInside(root, manifest.entry), "utf8");
   const missing = REQUIRED_COMPONENTS.filter((tag) => !new RegExp(`<${tag}(?:\\s|>)`, "i").test(html));
   invariant(!missing.length, `standard component composition is incomplete: ${missing.join(", ")}`);
+  if (manifest.schema !== "promotion-template/v3") return;
+  const componentEntry = normalizeBundlePath(manifest.components?.entry, "components.entry");
+  invariant(
+    new RegExp(`<script\\b[^>]+src=["']${componentEntry.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")}["']`, "i").test(html),
+    `index.html must load bundled component entry: ${componentEntry}`,
+  );
+  invariant(
+    files.some((file) => file.path === componentEntry) || options.allowGeneratedComponents === true,
+    `bundled component entry does not exist: ${componentEntry}`,
+  );
 }
 
-export async function validateTemplate(templateDirectory) {
+export async function validateTemplate(templateDirectory, options = {}) {
   const root = resolve(templateDirectory);
   const manifest = await readJson(resolve(root, "manifest.json"), "manifest.json");
   await validateTemplateManifest(manifest);
@@ -151,7 +165,7 @@ export async function validateTemplate(templateDirectory) {
   invariant(files.some((file) => file.path === "manifest.json"), "manifest.json is required");
   invariant(files.some((file) => file.path === manifest.entry), `${manifest.entry} is required`);
   const locales = await validateLocales(root, manifest);
-  await validateComponentComposition(root, manifest);
+  await validateComponentComposition(root, manifest, files, options);
   await scanControlPlaneLeaks(files, "template");
   for (const file of files) {
     if (!TEXT_EXTENSIONS.has(extname(file.path).toLowerCase())) continue;
@@ -312,7 +326,7 @@ export async function validateIntegration(integrationDirectory) {
   };
 }
 
-async function copyBundle(source, outputDirectory, validator) {
+async function copyBundle(source, outputDirectory, validator, generatedAssets = []) {
   const output = resolve(outputDirectory);
   invariant(output !== source.root, "build output must differ from the source directory");
   await rm(output, { recursive: true, force: true });
@@ -320,6 +334,12 @@ async function copyBundle(source, outputDirectory, validator) {
     const destination = resolveInside(output, file.path);
     await mkdir(dirname(destination), { recursive: true });
     await copyFile(file.absolute, destination);
+  }
+  for (const asset of generatedAssets) {
+    const path = normalizeBundlePath(asset.path, "generated asset");
+    const destination = resolveInside(output, path);
+    await mkdir(dirname(destination), { recursive: true });
+    await copyFile(resolve(asset.source), destination);
   }
   return validator(output);
 }
@@ -345,8 +365,12 @@ async function writeArchive(source, outputFile) {
   };
 }
 
-export async function buildTemplate(templateDirectory, outputDirectory) {
-  return copyBundle(await validateTemplate(templateDirectory), outputDirectory, validateTemplate);
+export async function buildTemplate(templateDirectory, outputDirectory, options = {}) {
+  const generatedAssets = options.generatedAssets || [];
+  const source = await validateTemplate(templateDirectory, {
+    allowGeneratedComponents: generatedAssets.length > 0,
+  });
+  return copyBundle(source, outputDirectory, validateTemplate, generatedAssets);
 }
 
 export async function packTemplate(templateDirectory, outputFile) {
@@ -394,8 +418,8 @@ async function main() {
     console.log(`packed ${result.assets.length} integration assets (${result.zipBytes} bytes) at ${result.output}`);
     return;
   }
-  if (command === "validate") {
-    const result = await validateTemplate(input);
+    if (command === "validate") {
+      const result = await validateTemplate(input);
     console.log(`valid ${result.manifest.schema} template: ${result.files.length} files, ${result.locales.length} locales`);
     return;
   }

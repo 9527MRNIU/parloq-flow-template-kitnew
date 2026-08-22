@@ -10,7 +10,8 @@ keeping the package names and contracts aligned with the mother project:
 
 ## What lives here
 
-- `packages/runtime`: platform-owned browser elements for the account-link flow.
+- `packages/runtime`: template-owned browser elements compiled into every v3
+  template ZIP.
 - `packages/components`: the canonical custom-element composition for templates.
 - `packages/contract`: template, integration-manifest, browser-bridge and iframe
   feedback TypeScript contracts plus JSON Schemas.
@@ -32,7 +33,9 @@ keeping the package names and contracts aligned with the mother project:
 Templates own presentation and localization only. Integration bundles may own
 their declared browser behavior, while hosting, injection order, source-domain
 validation, session authentication, event persistence, pairing, routing and
-account state remain platform responsibilities.
+account state remain platform responsibilities. V3 templates carry their own
+compiled UI components and call only the platform-provided
+`window.PromotionBridge`.
 
 ## Quick start
 
@@ -69,8 +72,9 @@ creating a real account.
 - `dist/packages/template-contract.js` (compatibility alias)
 - `dist/schemas/promotion-template-v1.schema.json`
 - `dist/schemas/promotion-template-v2.schema.json`
+- `dist/schemas/promotion-template-v3.schema.json`
 - `dist/schemas/promotion-integration-v1.schema.json`
-- `dist/themes/0001-white-label-account-link-1.4.0.zip`
+- `dist/themes/0001-white-label-account-link-1.6.0.zip`
 - `dist/integrations/0002-promotion-integration-script-demo-1.0.0.zip`
 - `dist/integrations/0003-promotion-integration-feedback-demo-1.0.0.zip`
 - `dist/integrations/0004-promotion-integration-iframe-demo-1.0.0.zip`
@@ -93,12 +97,13 @@ natural Chinese display name and internal description.
 
 ## Release boundary
 
-The control plane consumes pinned runtime and ZIP artifacts. It must never read
-this repository's moving branch at request time.
+The control plane consumes complete template ZIPs. It must never read this
+repository's moving branch or inject a second copy of the template component
+runtime at request time.
 
 | Layer | Current contract |
 | --- | --- |
-| Template manifest | `promotion-template/v2` |
+| Template manifest | `promotion-template/v3` |
 | Template browser bridge | `promotion-browser-bridge/v2` |
 | Public pairing | `promotion-public-pairing/v1` |
 | Account-link components | `account-link-elements/v1` |

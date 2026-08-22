@@ -29,15 +29,15 @@ template.
 ## Build flow
 
 ```text
-account-link runtime ──bundle/pin──────────────> control plane
+account-link runtime ──bundle into template────> template ZIP
 contract schemas ──────copy/pin────────────────> uploader and CI
 template source ───────validate/build/pack─────> template registry
 integration source ────validate/pack───────────> integration registry
 ```
 
-`manifest.requirements.componentKit` tells the platform which pinned account-
-link runtime to inject. Runtime code stays outside template ZIPs so visual
-templates share one audited pairing implementation.
+`manifest.components.entry` identifies the compiled account-link runtime
+inside each v3 template ZIP. The source remains shared in this repository, but
+every released template is self-contained and deterministic.
 
 An integration ZIP may contain either ordered `.js`/`.mjs` entries or one iframe
 HTML entry with relative assets. The platform hosts those assets on the verified

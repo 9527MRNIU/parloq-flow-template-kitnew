@@ -12,8 +12,8 @@ test("the public artifact catalog preserves stable sequences and manifest versio
     [
       {
         sequence: "0001",
-        filename: "0001-white-label-account-link-1.4.0.zip",
-        version: "1.4.0",
+        filename: "0001-white-label-account-link-1.6.0.zip",
+        version: "1.6.0",
       },
       {
         sequence: "0002",

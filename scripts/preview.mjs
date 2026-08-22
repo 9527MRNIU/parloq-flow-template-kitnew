@@ -70,9 +70,8 @@ function mockRuntime(locale, state, localizedCopy) {
 (()=>{const selected=${stateJson},locale=${localeJson},themeCopy=${copyJson};document.documentElement.lang=locale;document.documentElement.dir=['ar','fa','ur'].includes(locale)?'rtl':'ltr';document.addEventListener('DOMContentLoaded',()=>document.querySelectorAll('[data-copy]').forEach(node=>{const key=node.getAttribute('data-copy');if(key&&themeCopy[key])node.textContent=themeCopy[key]}));const pairing={pairingCode:'ABCD-EFGH',attemptId:'preview-attempt',pairingStatus:selected==='input'?'code_issued':selected,expiresAt:new Date(Date.now()+300000).toISOString()};
 const data=()=>{if(selected==='verified_syncing')return{pairingStatus:'verified',verified:true,initializationStatus:'syncing',nextPollAfterMs:60000};if(selected==='verified_ready')return{pairingStatus:'verified',verified:true,initializationStatus:'ready'};return{pairingStatus:selected==='input'?'waiting_phone':selected,verified:false,nextPollAfterMs:60000}};
 window.PromotionBridge={version:'promotion-browser-bridge/v2',submitPhone:async()=>new Response(JSON.stringify({data:{pairing}}),{status:200,headers:{'Content-Type':'application/json'}}),getPairingStatus:async()=>new Response(JSON.stringify({data:data()}),{status:200,headers:{'Content-Type':'application/json'}}),cancelPairing:async()=>new Response('',{status:204})};
-if(selected!=='input')window.addEventListener('load',()=>setTimeout(()=>{const field=document.querySelector('phone-number-field'),country=field?.shadowRoot?.querySelector('select'),input=field?.shadowRoot?.querySelector('input'),button=document.querySelector('account-link-submit')?.shadowRoot?.querySelector('button');if(country&&input&&button){country.value='US';country.dispatchEvent(new Event('change',{bubbles:true}));input.value='2025550123';input.dispatchEvent(new Event('input',{bubbles:true}));button.click()}},50));})();
-</script>
-<script src="/account-link-elements.js" defer></script>`;
+if(selected!=='input')window.addEventListener('load',()=>setTimeout(()=>{const field=document.querySelector('phone-number-field'),country=field?.shadowRoot?.querySelector('[data-country="US"]'),input=field?.shadowRoot?.querySelector('input[type="tel"]'),button=document.querySelector('account-link-submit')?.shadowRoot?.querySelector('button');if(country&&input&&button){country.click();input.value='2025550123';input.dispatchEvent(new Event('input',{bubbles:true}));button.click()}},50));})();
+</script>`;
 }
 
 async function serveFile(response, file) {
@@ -88,7 +87,6 @@ async function serveFile(response, file) {
 createServer(async (request, response) => {
   const url = new URL(request.url || "/", `http://${request.headers.host || "127.0.0.1"}`);
   if (url.pathname === "/") return send(response, 200, previewHost(), "text/html; charset=utf-8");
-  if (url.pathname === "/account-link-elements.js") return serveFile(response, resolve(root, "dist/runtime/account-link-elements.js"));
   if (url.pathname === "/theme") {
     const locale = safeSelection(url.searchParams.get("lang"), locales, "en");
     const state = safeSelection(url.searchParams.get("state"), states, "input");

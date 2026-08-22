@@ -6,19 +6,130 @@
   --account-link-action-color: #ffffff;
   --account-link-focus: #2563eb;
   --account-link-field-border: #cbd5e1;
+  --account-link-field-bg: #ffffff;
+  --account-link-field-radius: 0.75rem;
+  --account-link-input-color: #111827;
+  --account-link-prefix-color: #475569;
+  --account-link-select-color: #111827;
+  --account-link-menu-bg: #ffffff;
+  --account-link-menu-color: #111827;
+  --account-link-menu-border: #cbd5e1;
+  --account-link-menu-active: #e0e7ff;
+  --account-link-menu-radius: 0.85rem;
+  --account-link-locale-radius: 999px;
   --account-link-error: #b91c1c;
   --account-link-success: #047857;
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; }
-.theme-shell { width: min(100% - 2rem, 30rem); margin: 0 auto; padding: 2rem 0; }
-account-link-flow { display: grid; gap: 1rem; }
 
-/* Theme authors may style shadow parts without changing component behavior. */
+body {
+  margin: 0;
+  background: #f8fafc;
+  color: #111827;
+}
+
+.theme-shell {
+  width: min(100% - 2rem, 30rem);
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+account-link-flow {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 1rem 2rem rgba(15, 23, 42, 0.06);
+}
+
 phone-number-field::part(phone-shell),
 account-link-locale-switcher::part(select),
 account-link-submit::part(button),
 pairing-code-panel::part(panel),
 app-launch-actions::part(panel),
-account-link-status::part(panel) { transition: border-color .2s ease, background-color .2s ease; }
+account-link-status::part(panel) {
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+account-link-locale-switcher::part(select) {
+  border: 1px solid var(--account-link-field-border);
+  border-radius: var(--account-link-locale-radius);
+  background: var(--account-link-field-bg);
+  color: var(--account-link-select-color);
+  min-height: 2.5rem;
+  padding: 0.45rem 0.85rem;
+}
+
+account-link-locale-switcher::part(menu),
+phone-number-field::part(country-menu) {
+  border: 1px solid var(--account-link-menu-border);
+  border-radius: var(--account-link-menu-radius);
+  background: var(--account-link-menu-bg);
+  color: var(--account-link-menu-color);
+  box-shadow: 0 0.85rem 2rem rgba(15, 23, 42, 0.12);
+}
+
+phone-number-field::part(country-search) {
+  border: 1px solid var(--account-link-field-border);
+  border-radius: 0.55rem;
+  background: var(--account-link-field-bg);
+  color: var(--account-link-input-color);
+}
+
+account-link-locale-switcher::part(option),
+phone-number-field::part(country-option) {
+  color: var(--account-link-menu-color);
+  border-radius: 0.55rem;
+}
+
+account-link-locale-switcher::part(option):hover,
+phone-number-field::part(country-option):hover,
+phone-number-field::part(country-option):focus-visible {
+  background: var(--account-link-menu-active);
+}
+
+phone-number-field::part(phone-shell) {
+  min-height: 3rem;
+  border: 1px solid var(--account-link-field-border);
+  border-radius: var(--account-link-field-radius);
+  background: var(--account-link-field-bg);
+  color: var(--account-link-input-color);
+  overflow: visible;
+}
+
+phone-number-field::part(country-shell) {
+  background: transparent;
+}
+
+phone-number-field::part(country-select) {
+  color: var(--account-link-select-color);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+phone-number-field::part(country-flag) {
+  display: inline-flex;
+  width: 1.25rem;
+  height: 0.85rem;
+}
+
+phone-number-field::part(country-prefix) {
+  min-width: 1.85rem;
+  padding-inline-start: 0.45rem;
+  border-inline-start: 1px solid var(--account-link-field-border);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--account-link-prefix-color);
+}
+
+phone-number-field::part(phone-input) {
+  color: var(--account-link-input-color);
+}
+
+phone-number-field::part(phone-input)::placeholder {
+  color: #94a3b8;
+}

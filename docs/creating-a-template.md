@@ -34,8 +34,9 @@ this repository must provide non-empty natural Chinese values.
 </account-link-flow>
 ```
 
-The platform injects the runtime for `account-link-elements/v1`. Do not add a
-runtime `<script>` tag to a theme.
+V3 templates declare `components.entry` and load that local script from
+`index.html`. The repository build generates the component bundle from
+`packages/runtime`; authors do not copy or edit the compiled file manually.
 
 ## Locale rules
 
@@ -53,8 +54,7 @@ The baseline component copy supports `en`, `zh-CN`, `hi`, `id`, `pt-BR`, `es`,
 
 ```bash
 node packages/cli/src/index.mjs template validate path/to/theme
-node packages/cli/src/index.mjs template build path/to/theme --out dist/themes/my-theme
-node packages/cli/src/index.mjs template pack dist/themes/my-theme --out dist/themes/my-theme.zip
+npm run build
 ```
 
 Validation checks the manifest Schema, required components, locale coverage,

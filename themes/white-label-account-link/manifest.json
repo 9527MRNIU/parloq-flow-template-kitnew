@@ -1,15 +1,18 @@
 {
-  "schema": "promotion-template/v2",
-  "version": "1.4.0",
+  "schema": "promotion-template/v3",
+  "version": "1.6.0",
   "name": "白标账号关联模板",
-  "description": "标准白标账号关联落地页，使用平台注入的账号关联组件并提供十五种语言。",
+  "description": "标准白标账号关联落地页，自带账号关联组件、国家搜索、国旗与十五种语言。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],
   "runtime": "promotion-browser-bridge/v2",
   "requirements": {
-    "pairingContract": "promotion-public-pairing/v1",
-    "componentKit": "account-link-elements/v1"
+    "pairingContract": "promotion-public-pairing/v1"
+  },
+  "components": {
+    "contract": "account-link-elements/v1",
+    "entry": "assets/account-link-elements.js"
   },
   "interactionProtection": "platform",
   "defaultLocale": "en",
