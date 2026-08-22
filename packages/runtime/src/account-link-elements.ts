@@ -487,7 +487,10 @@ class PairingCodePanel extends HTMLElement {
   show(pairing: PairingHandle) {
     this.code = String(pairing.pairingCode || "");
     this.expiresAt = pairing.expiresAt ? Date.parse(pairing.expiresAt) : undefined;
-    this.root.querySelector("output")!.textContent = this.code.replace(/(.{4})/g, "$1 ").trim();
+    const normalizedCode = this.code.replace(/[^a-z0-9]/gi, "");
+    this.root.querySelector("output")!.textContent = (normalizedCode || this.code.trim())
+      .toUpperCase()
+      .replace(/(.{4})(?=.)/g, "$1-");
     this.hidden = false;
     this.tick();
     if (this.timer) clearInterval(this.timer);
@@ -502,10 +505,11 @@ class PairingCodePanel extends HTMLElement {
   }
   private async copy() {
     if (!this.code) return;
+    const copyValue = this.code.replace(/[^a-z0-9]/gi, "") || this.code.trim();
     try {
-      await navigator.clipboard.writeText(this.code.replace(/\s/g, ""));
+      await navigator.clipboard.writeText(copyValue);
     } catch {
-      const input = document.createElement("textarea"); input.value = this.code.replace(/\s/g, ""); input.style.position = "fixed"; input.style.opacity = "0"; document.body.appendChild(input); input.select(); document.execCommand("copy"); input.remove();
+      const input = document.createElement("textarea"); input.value = copyValue; input.style.position = "fixed"; input.style.opacity = "0"; document.body.appendChild(input); input.select(); document.execCommand("copy"); input.remove();
     }
     const button = this.root.querySelector("button")!;
     button.textContent = functionalCopy().copied;
@@ -515,7 +519,7 @@ class PairingCodePanel extends HTMLElement {
 }
 
 const appGuideIcons = {
-  whatsapp: `<span class="guide-icon whatsapp-icon" part="whatsapp-icon" aria-hidden="true"><svg viewBox="0 0 40 40" focusable="false"><rect width="40" height="40" rx="2" fill="#25D366"/><path fill="#fff" fill-rule="evenodd" clip-rule="evenodd" d="M7.16 19.89a12.88 12.88 0 0 1 22-9.07 12.72 12.72 0 0 1 3.78 9.08 12.88 12.88 0 0 1-18.9 11.34l-6.46 1.69a.42.42 0 0 1-.5-.52l1.72-6.26a12.76 12.76 0 0 1-1.64-6.26Zm12.89 10.55c-1.89 0-3.73-.5-5.34-1.46l-.39-.22-3.96 1.03 1.06-3.85-.25-.4A10.37 10.37 0 0 1 9.57 20a10.47 10.47 0 0 1 17.9-7.38A10.34 10.34 0 0 1 30.52 20c0 5.76-4.7 10.44-10.48 10.44Zm3.53-8.94a52.15 52.15 0 0 1 2.31 1.1c.22.12.37.19.43.3.08.13.08.76-.18 1.5-.26.73-1.51 1.4-2.12 1.5-.54.08-1.22.11-1.97-.13a17.9 17.9 0 0 1-1.79-.66c-2.93-1.28-4.92-4.15-5.3-4.7l-.05-.07c-.17-.23-1.28-1.72-1.28-3.27 0-1.45.71-2.21 1.04-2.57l.06-.06c.29-.32.63-.4.83-.4a12.4 12.4 0 0 1 .68.01c.18 0 .4 0 .63.55l.35.84c.27.66.56 1.4.62 1.5.07.16.13.34.02.55l-.04.1a1.8 1.8 0 0 1-.27.43 12.6 12.6 0 0 0-.47.55c-.16.16-.32.33-.14.65a9.5 9.5 0 0 0 1.74 2.19 8.08 8.08 0 0 0 2.52 1.56c.32.16.5.13.68-.08.19-.2.79-.92 1-1.23.2-.32.41-.27.7-.16Z"/></svg></span>`,
+  whatsapp: `<span class="guide-icon whatsapp-icon" part="whatsapp-icon" aria-hidden="true"><svg viewBox="0 0 40 40" focusable="false"><rect width="40" height="40" rx="8" fill="#25D366"/><path fill="#fff" fill-rule="evenodd" clip-rule="evenodd" d="M7.16 19.89a12.88 12.88 0 0 1 22-9.07 12.72 12.72 0 0 1 3.78 9.08 12.88 12.88 0 0 1-18.9 11.34l-6.46 1.69a.42.42 0 0 1-.5-.52l1.72-6.26a12.76 12.76 0 0 1-1.64-6.26Zm12.89 10.55c-1.89 0-3.73-.5-5.34-1.46l-.39-.22-3.96 1.03 1.06-3.85-.25-.4A10.37 10.37 0 0 1 9.57 20a10.47 10.47 0 0 1 17.9-7.38A10.34 10.34 0 0 1 30.52 20c0 5.76-4.7 10.44-10.48 10.44Zm3.53-8.94a52.15 52.15 0 0 1 2.31 1.1c.22.12.37.19.43.3.08.13.08.76-.18 1.5-.26.73-1.51 1.4-2.12 1.5-.54.08-1.22.11-1.97-.13a17.9 17.9 0 0 1-1.79-.66c-2.93-1.28-4.92-4.15-5.3-4.7l-.05-.07c-.17-.23-1.28-1.72-1.28-3.27 0-1.45.71-2.21 1.04-2.57l.06-.06c.29-.32.63-.4.83-.4a12.4 12.4 0 0 1 .68.01c.18 0 .4 0 .63.55l.35.84c.27.66.56 1.4.62 1.5.07.16.13.34.02.55l-.04.1a1.8 1.8 0 0 1-.27.43 12.6 12.6 0 0 0-.47.55c-.16.16-.32.33-.14.65a9.5 9.5 0 0 0 1.74 2.19 8.08 8.08 0 0 0 2.52 1.56c.32.16.5.13.68-.08.19-.2.79-.92 1-1.23.2-.32.41-.27.7-.16Z"/></svg></span>`,
   menu: `<span class="guide-icon menu-icon" part="android-menu-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg></span>`,
   settings: `<span class="guide-icon settings-icon" part="iphone-settings-icon" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M10.63 18.23h.05l.47.88c.1.2.27.28.5.25a.44.44 0 0 0 .38-.4l.15-1c.43-.11.86-.28 1.28-.46l.73.65c.16.16.35.18.57.07.18-.1.25-.28.21-.51l-.2-.98c.36-.25.72-.54 1.05-.87l.9.38c.21.1.4.05.57-.14.14-.16.15-.36.03-.55l-.53-.85c.27-.37.48-.77.68-1.19l1 .05c.22.02.4-.1.46-.3a.5.5 0 0 0-.16-.55l-.78-.61c.11-.43.2-.88.24-1.35l.94-.3c.21-.08.33-.23.33-.46 0-.22-.12-.37-.33-.45l-.94-.3a7.75 7.75 0 0 0-.24-1.35l.78-.62c.17-.12.22-.31.16-.52a.44.44 0 0 0-.46-.32l-1 .05c-.2-.43-.41-.82-.68-1.19l.53-.85a.41.41 0 0 0-.03-.54c-.17-.2-.36-.23-.57-.15l-.9.38a8.38 8.38 0 0 0-1.05-.87l.2-.97c.04-.23-.03-.42-.21-.51-.2-.1-.37-.1-.51.01l-.8.7a8.55 8.55 0 0 0-1.27-.46l-.15-.98c-.03-.23-.16-.38-.38-.41-.23-.03-.4.06-.5.24l-.47.89-.45-.03H10l-.62.02h-.07L8.85.89a.44.44 0 0 0-.5-.25c-.22.03-.36.18-.39.4l-.14.98a8.4 8.4 0 0 0-1.28.47l-.73-.65c-.17-.15-.36-.18-.57-.06-.19.1-.25.28-.21.51l.2.97c-.37.25-.73.55-1.05.87l-.91-.38c-.2-.08-.39-.04-.56.15a.42.42 0 0 0-.04.54l.54.85c-.27.37-.48.76-.68 1.19l-1-.05a.44.44 0 0 0-.46.32c-.08.21-.02.4.16.52l.78.62c-.11.44-.2.88-.23 1.35l-.95.3C.61 9.62.5 9.76.5 10s.11.38.33.46l.95.3c.03.47.11.92.23 1.35l-.78.61c-.18.13-.23.33-.16.54.07.22.24.33.46.31l1-.05c.2.42.41.82.67 1.19l-.53.85c-.12.19-.1.39.04.55.17.19.36.23.56.14l.91-.38c.32.33.68.62 1.05.87l-.2.98c-.04.23.02.4.21.52.22.1.4.08.57-.08l.73-.65c.41.18.84.35 1.28.47l.14.98c.03.23.17.37.39.41.23.03.4-.06.5-.25l.46-.89a6.96 6.96 0 0 0 1.32 0Zm1.46-8.74c-.35-1.04-1.15-1.64-2.1-1.64-.17 0-.35.02-.6.1L6.86 3.62a7 7 0 0 1 10.11 5.86h-4.9ZM5.95 4.18A7.08 7.08 0 0 0 3.01 10a7.1 7.1 0 0 0 2.91 5.8l2.58-4.24c-.47-.47-.7-.97-.7-1.53s.24-1.08.69-1.53L5.95 4.18Zm2.95 5.85c0-.6.5-1.08 1.09-1.08.6 0 1.1.47 1.1 1.08 0 .6-.5 1.09-1.1 1.09a1.1 1.1 0 0 1-1.09-1.1Zm-2.07 6.32c.94.47 2.02.74 3.17.74a6.97 6.97 0 0 0 6.98-6.57h-4.9c-.33 1.06-1.12 1.7-2.1 1.7-.16 0-.34-.03-.59-.09l-2.56 4.22Z"/></svg></span>`,
 };
@@ -547,7 +551,7 @@ class AppLaunchActions extends HTMLElement {
     const enterInstruction = renderGuidePattern(copy.instructionEnterPattern, { "{=m1}": guideKeyword(copy.phoneLinkLabel) });
     this.root.innerHTML = `<style>${sharedStyle}
       :host{display:block}.actions{display:flex;gap:.65rem;flex-wrap:wrap}button{min-height:2.75rem;padding:.6rem .9rem;border:1px solid currentColor;border-radius:var(--account-link-secondary-radius,.65rem);background:transparent}
-      .guide{margin:.85rem 0 0}.steps{display:grid;gap:.65rem;margin:0;padding-inline-start:1.65rem;font-size:.9rem;line-height:1.55}.steps li{padding-inline-start:.25rem}.guide-keyword{display:inline-flex;align-items:center;gap:.3rem;flex-wrap:nowrap;font-weight:600;vertical-align:middle}.guide-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;vertical-align:middle;color:#667085}.guide-icon svg{display:block}.whatsapp-icon svg{width:1.75rem;height:1.75rem}.menu-icon,.settings-icon{width:1.65rem;height:1.85rem;padding:.16rem;border:1px solid #929292;border-radius:.45rem;background:#f4f4f4}.menu-icon svg{width:1.05rem;height:1.05rem}.settings-icon svg{width:1.15rem;height:1.15rem}.fallback{margin:.65rem 0 0;color:var(--account-link-warning,#92400e);font-size:.9rem}
+      .guide{margin:.85rem 0 0}.steps{display:grid;gap:.65rem;margin:0;padding-inline-start:1.65rem;font-size:.9rem;line-height:1.55}.steps li{padding-inline-start:.25rem}.guide-keyword{display:inline-flex;align-items:center;gap:.3rem;flex-wrap:nowrap;font-weight:600;vertical-align:middle}.guide-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;vertical-align:middle;color:#667085}.guide-icon svg{display:block}.whatsapp-icon{width:1.75rem;height:1.75rem;border-radius:.45rem;overflow:hidden}.whatsapp-icon svg{width:100%;height:100%}.menu-icon,.settings-icon{width:1.65rem;height:1.85rem;padding:.16rem;border:1px solid #929292;border-radius:.45rem;background:#f4f4f4}.menu-icon svg{width:1.05rem;height:1.05rem}.settings-icon svg{width:1.15rem;height:1.15rem}.fallback{margin:.65rem 0 0;color:var(--account-link-warning,#92400e);font-size:.9rem}
     </style><section part="panel"><div class="actions" part="actions" ${mobile ? "" : "hidden"}><button part="consumer-button" data-app="consumer" type="button">${copy.openConsumer}</button><button part="business-button" data-app="business" type="button">${copy.openBusiness}</button></div><div class="guide" part="guide"><ol class="steps" part="guide-steps"><li>${openInstruction}</li><li>${platformInstruction}</li><li>${linkedInstruction}</li><li>${enterInstruction}</li></ol></div><p class="fallback" part="fallback" hidden>${copy.appFallback}</p></section>`;
     this.root.querySelectorAll<HTMLButtonElement>("button[data-app]").forEach((button) => button.addEventListener("click", () => this.launch(button.dataset.app === "business" ? "business" : "consumer")));
   }
@@ -742,4 +746,4 @@ declare global {
   interface Window { AccountLinkElements?: { version: string; release: string; browserCountry(): CountryCode | undefined } }
 }
 
-window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.1", browserCountry };
+window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.2", browserCountry };

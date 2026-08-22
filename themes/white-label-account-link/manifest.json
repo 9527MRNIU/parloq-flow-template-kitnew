@@ -1,6 +1,6 @@
 {
   "schema": "promotion-template/v3",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "name": "白标账号关联模板",
   "description": "标准白标账号关联落地页，自带账号关联组件、国家搜索、国旗与十五种语言。",
   "entry": "index.html",

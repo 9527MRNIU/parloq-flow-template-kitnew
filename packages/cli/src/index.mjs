@@ -27,7 +27,6 @@ const FEEDBACK_EVENT_PATTERN = /^[a-z][a-z0-9_.-]{0,63}$/;
 const BUILTIN_FEEDBACK_EVENTS = new Set(["page_view", "visit_end"]);
 const REQUIRED_COMPONENTS = [
   "account-link-flow",
-  "account-link-locale-switcher",
   "phone-number-field",
   "account-link-submit",
   "pairing-code-panel",

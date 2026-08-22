@@ -10,7 +10,6 @@ export const STANDARD_ACCOUNT_LINK_ELEMENTS = [
 ] as const;
 
 export const STANDARD_ACCOUNT_LINK_FLOW_MARKUP = `<account-link-flow>
-  <account-link-locale-switcher></account-link-locale-switcher>
   <phone-number-field></phone-number-field>
   <account-link-submit></account-link-submit>
   <pairing-code-panel></pairing-code-panel>
