@@ -72,6 +72,13 @@ phone-number-field::part(country-menu) {
   box-shadow: 0 0.85rem 2rem rgba(15, 23, 42, 0.12);
 }
 
+phone-number-field::part(country-search) {
+  border: 1px solid var(--account-link-field-border);
+  border-radius: 0.55rem;
+  background: var(--account-link-field-bg);
+  color: var(--account-link-input-color);
+}
+
 account-link-locale-switcher::part(option),
 phone-number-field::part(country-option) {
   color: var(--account-link-menu-color);
@@ -104,8 +111,9 @@ phone-number-field::part(country-select) {
 }
 
 phone-number-field::part(country-flag) {
-  font-size: 1.1rem;
-  line-height: 1;
+  display: inline-flex;
+  width: 1.25rem;
+  height: 0.85rem;
 }
 
 phone-number-field::part(country-prefix) {
