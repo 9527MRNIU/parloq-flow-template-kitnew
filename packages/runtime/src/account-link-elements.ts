@@ -203,6 +203,9 @@ const LANGUAGE_LABELS: Record<string, string> = {
 const matchingLocaleKey = (locale: string, values: string[]) =>
   values.find((value) => value.toLowerCase() === locale.toLowerCase());
 
+const countryFlag = (code: CountryCode) =>
+  code.toUpperCase().replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)));
+
 const sharedStyle = `
   :host{box-sizing:border-box;color:inherit;font:inherit;color-scheme:inherit}:host([hidden]){display:none!important}*,*::before,*::after{box-sizing:border-box}
   button,input,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.65}
@@ -214,6 +217,8 @@ const dropdownStyle = `
   .menu{position:absolute;z-index:40;inset-inline:0;top:calc(100% + .35rem);max-height:min(16rem,50vh);overflow:auto;margin:0;padding:.35rem;list-style:none;border:1px solid var(--account-link-menu-border,rgba(191,149,247,.4));border-radius:var(--account-link-menu-radius,.85rem);background:var(--account-link-menu-bg,#1a1228);color:var(--account-link-menu-color,#f8fafc);box-shadow:0 .75rem 1.75rem rgba(0,0,0,.45)}
   .menu[hidden]{display:none!important}.option{display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;min-height:2.5rem;padding:.45rem .65rem;border:0;border-radius:.55rem;background:transparent;color:inherit;text-align:start;cursor:pointer}
   .option:hover,.option:focus-visible,.option[aria-selected=true]{background:var(--account-link-menu-active,rgba(118,52,234,.35));outline:0}.option-code{opacity:.75;font-variant-numeric:tabular-nums}
+  .flag{font-size:1.1rem;line-height:1;flex:0 0 auto;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+  .option-leading,.trigger-leading{display:inline-flex;align-items:center;gap:.45rem;min-width:0}.trigger-leading{flex:1}
   .trigger{display:inline-flex;align-items:center;justify-content:space-between;gap:.4rem;min-width:0;width:100%;border:0;background:transparent;color:var(--account-link-select-color,inherit);padding:0;text-align:start}.trigger-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.chevron{flex:0 0 auto;opacity:.8;font-size:.75rem}
 `;
 
@@ -300,6 +305,7 @@ class PhoneNumberField extends HTMLElement {
   private country?: CountryCode;
   private options: Array<{ country: CountryCode; name: string; calling: string }> = [];
   private trigger!: HTMLButtonElement;
+  private triggerFlag!: HTMLElement;
   private triggerLabel!: HTMLElement;
   private menu!: HTMLElement;
   private input!: HTMLInputElement;
@@ -326,8 +332,9 @@ class PhoneNumberField extends HTMLElement {
       .prefix{font-variant-numeric:tabular-nums;font-weight:600;color:var(--account-link-prefix-color,inherit);opacity:var(--account-link-prefix-opacity,.85);padding-inline-start:.15rem;min-width:1.5rem;text-align:center}
       .phone input{width:100%;border:0;background:transparent;padding:.75rem;outline:0;color:var(--account-link-input-color,inherit)}.phone:focus-within{outline:2px solid var(--account-link-focus,#2563eb);outline-offset:2px}.error{min-height:1.25em;color:var(--account-link-error,#b91c1c);font-size:.875rem}
       .menu{left:0;right:auto;width:min(18rem,calc(100vw - 2rem))}
-    </style><div class="field" part="field"><label class="label" part="label" for="phone-input">${copy.phoneLabel}</label><div class="phone" part="phone-shell"><div class="country" part="country-shell"><span class="sr">${copy.countryLabel}</span><button class="trigger" part="country-select" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="${copy.countryLabel}"><span class="trigger-label" part="country-label">${current?.name || copy.countryLabel}</span><span class="chevron" aria-hidden="true">▾</span></button><span class="prefix" part="country-prefix"></span><ul class="menu" part="country-menu" role="listbox" hidden>${this.options.map((item) => `<li><button class="option" part="country-option" type="button" role="option" data-country="${item.country}" aria-selected="${item.country === this.country}"><span>${item.name}</span><span class="option-code">${item.calling}</span></button></li>`).join("")}</ul></div><input part="phone-input" id="phone-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="${copy.phonePlaceholder}" aria-describedby="phone-error"></div><p class="error" part="error" id="phone-error" role="alert"></p></div>`;
+    </style><div class="field" part="field"><label class="label" part="label" for="phone-input">${copy.phoneLabel}</label><div class="phone" part="phone-shell"><div class="country" part="country-shell"><span class="sr">${copy.countryLabel}</span><button class="trigger" part="country-select" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="${copy.countryLabel}"><span class="trigger-leading"><span class="flag" part="country-flag" aria-hidden="true">${current ? countryFlag(current.country) : ""}</span><span class="trigger-label" part="country-label">${current?.name || copy.countryLabel}</span></span><span class="chevron" aria-hidden="true">▾</span></button><span class="prefix" part="country-prefix"></span><ul class="menu" part="country-menu" role="listbox" hidden>${this.options.map((item) => `<li><button class="option" part="country-option" type="button" role="option" data-country="${item.country}" aria-selected="${item.country === this.country}"><span class="option-leading"><span class="flag" part="country-flag" aria-hidden="true">${countryFlag(item.country)}</span><span>${item.name}</span></span><span class="option-code">${item.calling}</span></button></li>`).join("")}</ul></div><input part="phone-input" id="phone-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="${copy.phonePlaceholder}" aria-describedby="phone-error"></div><p class="error" part="error" id="phone-error" role="alert"></p></div>`;
     this.trigger = this.root.querySelector(".trigger")!;
+    this.triggerFlag = this.root.querySelector(".trigger .flag")!;
     this.triggerLabel = this.root.querySelector(".trigger-label")!;
     this.menu = this.root.querySelector(".menu")!;
     this.input = this.root.querySelector("input")!;
@@ -380,6 +387,7 @@ class PhoneNumberField extends HTMLElement {
     const current = this.options.find((item) => item.country === this.country);
     const copy = functionalCopy();
     this.triggerLabel.textContent = current?.name || copy.countryLabel;
+    this.triggerFlag.textContent = current ? countryFlag(current.country) : "";
     this.menu.querySelectorAll<HTMLButtonElement>(".option").forEach((button) => {
       button.setAttribute("aria-selected", button.dataset.country === this.country ? "true" : "false");
     });
@@ -701,4 +709,4 @@ declare global {
   interface Window { AccountLinkElements?: { version: string; browserCountry(): CountryCode | undefined } }
 }
 
-window.AccountLinkElements = { version: "account-link-elements/v1", browserCountry };
+window.AccountLinkElements = { version: "account-link-elements/v1.1.0", browserCountry };

@@ -287,6 +287,11 @@ phone-number-field::part(country-option):hover {
   background: var(--account-link-menu-active);
 }
 
+phone-number-field::part(country-flag) {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
 phone-number-field::part(label) {
   color: #fff;
   font-weight: 700;
