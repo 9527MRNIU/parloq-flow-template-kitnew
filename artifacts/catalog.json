@@ -12,30 +12,6 @@
     {
       "sequence": "0001",
       "kind": "integration",
-      "slug": "promotion-integration-script-demo",
-      "source": "examples/promotion-integration-script-demo",
-      "manifest": "integration.json",
-      "outputDirectory": "integrations"
-    },
-    {
-      "sequence": "0002",
-      "kind": "integration",
-      "slug": "promotion-integration-feedback-demo",
-      "source": "examples/promotion-integration-feedback-demo",
-      "manifest": "integration.json",
-      "outputDirectory": "integrations"
-    },
-    {
-      "sequence": "0003",
-      "kind": "integration",
-      "slug": "promotion-integration-iframe-demo",
-      "source": "examples/promotion-integration-iframe-demo",
-      "manifest": "integration.json",
-      "outputDirectory": "integrations"
-    },
-    {
-      "sequence": "0004",
-      "kind": "integration",
       "visibility": "internal",
       "slug": "device-callback-adapter",
       "source": "integrations/device-callback-adapter",

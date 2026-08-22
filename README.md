@@ -18,16 +18,17 @@ keeping the package names and contracts aligned with the mother project:
 - `packages/cli`: validation and deterministic ZIP packaging for both artifact
   classes.
 - `artifacts/catalog.json`: the stable per-kind sequence assigned to every
-  downloadable template or integration ZIP.
+  managed template or integration artifact.
 - `themes/white-label-account-link`: the default capability-only template.
 - `examples/myloveday-demo`: the Myloveday campaign template maintained on the
   `gfzff` branch.
 - `examples/promotion-template-minimal`: a small two-language template example.
-- `examples/promotion-integration-script-demo`: ordered classic/module scripts.
+- `examples/promotion-integration-script-demo`: source-only ordered
+  classic/module scripts.
 - `examples/promotion-integration-iframe-demo`: a standalone iframe integration
-  without event feedback.
+  source example without event feedback.
 - `examples/promotion-integration-feedback-demo`: an independently reporting
-  iframe copied from the current mother-project flow and made white-label.
+  source-only iframe made white-label.
 - `integrations/device-callback-adapter`: an internal ordered JavaScript-only
   iframe integration with an opaque encrypted runtime asset.
 - `docs`: architecture, authoring, contracts, AI generation, and copy sources.
@@ -76,12 +77,9 @@ creating a real account.
 - `dist/schemas/promotion-template-v2.schema.json`
 - `dist/schemas/promotion-template-v3.schema.json`
 - `dist/schemas/promotion-integration-v1.schema.json`
-- `dist/themes/0001-white-label-account-link-1.6.0.zip`
-- `dist/integrations/0001-promotion-integration-script-demo-1.0.0.zip`
-- `dist/integrations/0002-promotion-integration-feedback-demo-1.0.0.zip`
-- `dist/integrations/0003-promotion-integration-iframe-demo-1.0.0.zip`
-- `dist/internal-integrations/0004-device-callback-adapter-1.0.0.zip`
-- `dist/themes/0002-myloveday-demo-2.0.0.zip` (`gfzff` branch)
+- `dist/themes/0001-white-label-account-link-1.6.1.zip`
+- `dist/internal-integrations/0001-device-callback-adapter-1.0.0.zip`
+- `dist/themes/0002-myloveday-demo-2.0.1.zip` (`gfzff` branch)
 - `dist/artifacts.json` with each artifact's sequence, own version, byte size,
   and SHA-256 digest
 
@@ -92,6 +90,10 @@ and integrations have independent four-digit sequences, each starting at
 internally or receives a new version. New artifacts take the next sequence in
 their own kind. The filename version always comes from that package's
 `manifest.json` or `integration.json`, never from the root package version.
+
+The three `examples/promotion-integration-*-demo` directories remain runnable
+contract examples but are not registered in the catalog or published as
+numbered artifacts.
 
 Template manifests may provide `name` and `description`. Integration manifests
 may additionally provide `integrationKey`. The control plane can use these
