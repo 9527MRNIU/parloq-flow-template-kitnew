@@ -19,7 +19,7 @@ const TEXT_EXTENSIONS = new Set([".css", ".html", ".htm", ".js", ".mjs", ".json"
 const TEMPLATE_DISALLOWED_EXTENSIONS = new Set([".map", ".ts", ".tsx", ".jsx"]);
 const INTEGRATION_ALLOWED_EXTENSIONS = new Set([
   ".html", ".htm", ".css", ".js", ".mjs", ".json", ".png", ".jpg", ".jpeg",
-  ".gif", ".webp", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".txt", ".wasm",
+  ".gif", ".webp", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".txt", ".wasm", ".enc",
 ]);
 const SCRIPT_EXTENSIONS = new Set([".js", ".mjs"]);
 const HTML_EXTENSIONS = new Set([".html", ".htm"]);
@@ -100,6 +100,7 @@ async function scanControlPlaneLeaks(files, label) {
 }
 
 function schemaFilename(schema) {
+  if (schema === "promotion-template/v3") return "promotion-template-v3.schema.json";
   if (schema === "promotion-template/v2") return "promotion-template-v2.schema.json";
   if (schema === "promotion-template/v1") return "promotion-template-v1.schema.json";
   throw new Error(`unsupported template schema: ${String(schema || "missing")}`);
@@ -132,14 +133,27 @@ async function validateLocales(root, manifest) {
   return locales;
 }
 
-async function validateComponentComposition(root, manifest) {
-  if (manifest.requirements?.componentKit !== "account-link-elements/v1") return;
+async function validateComponentComposition(root, manifest, files, options = {}) {
+  const componentContract = manifest.schema === "promotion-template/v3"
+    ? manifest.components?.contract
+    : manifest.requirements?.componentKit;
+  if (componentContract !== "account-link-elements/v1") return;
   const html = await readFile(resolveInside(root, manifest.entry), "utf8");
   const missing = REQUIRED_COMPONENTS.filter((tag) => !new RegExp(`<${tag}(?:\\s|>)`, "i").test(html));
   invariant(!missing.length, `standard component composition is incomplete: ${missing.join(", ")}`);
+  if (manifest.schema !== "promotion-template/v3") return;
+  const componentEntry = normalizeBundlePath(manifest.components?.entry, "components.entry");
+  invariant(
+    new RegExp(`<script\\b[^>]+src=["']${componentEntry.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")}["']`, "i").test(html),
+    `index.html must load bundled component entry: ${componentEntry}`,
+  );
+  invariant(
+    files.some((file) => file.path === componentEntry) || options.allowGeneratedComponents === true,
+    `bundled component entry does not exist: ${componentEntry}`,
+  );
 }
 
-export async function validateTemplate(templateDirectory) {
+export async function validateTemplate(templateDirectory, options = {}) {
   const root = resolve(templateDirectory);
   const manifest = await readJson(resolve(root, "manifest.json"), "manifest.json");
   await validateTemplateManifest(manifest);
@@ -151,7 +165,7 @@ export async function validateTemplate(templateDirectory) {
   invariant(files.some((file) => file.path === "manifest.json"), "manifest.json is required");
   invariant(files.some((file) => file.path === manifest.entry), `${manifest.entry} is required`);
   const locales = await validateLocales(root, manifest);
-  await validateComponentComposition(root, manifest);
+  await validateComponentComposition(root, manifest, files, options);
   await scanControlPlaneLeaks(files, "template");
   for (const file of files) {
     if (!TEXT_EXTENSIONS.has(extname(file.path).toLowerCase())) continue;
@@ -179,6 +193,16 @@ function inferredEntrypoints(files, requestedType) {
   const htmlPaths = files.filter((file) => HTML_EXTENSIONS.has(extname(file.path).toLowerCase())).map((file) => file.path).sort();
   const indexPaths = htmlPaths.filter((path) => path === "index.html" || path.endsWith("/index.html"));
   const scriptPaths = files.filter((file) => SCRIPT_EXTENSIONS.has(extname(file.path).toLowerCase())).map((file) => file.path).sort();
+  if (requestedType === "iframe" && !htmlPaths.length) {
+    invariant(scriptPaths.length > 0, "iframe integration has no recognizable HTML or JavaScript entry");
+    return {
+      type: "iframe",
+      entries: scriptPaths.map((path) => ({
+        path,
+        scriptType: extname(path).toLowerCase() === ".mjs" ? "module" : "classic",
+      })),
+    };
+  }
   if (requestedType === "iframe" || (!requestedType && htmlPaths.length)) {
     const candidates = indexPaths.length ? indexPaths : htmlPaths;
     invariant(candidates.length === 1, "iframe integration has multiple possible entries; specify entry in integration.json");
@@ -210,7 +234,14 @@ function configuredEntrypoints(manifest, files, type) {
     const suffix = extname(path).toLowerCase();
     let scriptType = "classic";
     if (type === "iframe") {
-      invariant(HTML_EXTENSIONS.has(suffix), "iframe integration entry must be .html or .htm");
+      invariant(
+        HTML_EXTENSIONS.has(suffix) || SCRIPT_EXTENSIONS.has(suffix),
+        "iframe integration entry must be HTML, JS, or MJS",
+      );
+      if (SCRIPT_EXTENSIONS.has(suffix)) {
+        scriptType = (typeof value === "object" && value.scriptType) || (suffix === ".mjs" ? "module" : "classic");
+        invariant(["classic", "module"].includes(scriptType), "scriptType must be classic or module");
+      }
     } else {
       invariant(SCRIPT_EXTENSIONS.has(suffix), "script integration entry must be .js or .mjs");
       scriptType = (typeof value === "object" && value.scriptType) || (suffix === ".mjs" ? "module" : "classic");
@@ -250,13 +281,22 @@ export async function validateIntegration(integrationDirectory) {
   const inferred = requestedType ? { type: requestedType } : inferredEntrypoints(files);
   const type = inferred.type;
   const entries = configuredEntrypoints(manifest, files, type);
-  invariant(type !== "iframe" || entries.length === 1, "iframe integration must have exactly one HTML entry");
+  if (type === "iframe") {
+    const entryKinds = new Set(entries.map((entry) => (
+      HTML_EXTENSIONS.has(extname(entry.path).toLowerCase()) ? "html" : "script"
+    )));
+    invariant(entryKinds.size === 1, "iframe integration entries cannot mix HTML and JavaScript");
+    invariant(!entryKinds.has("html") || entries.length === 1, "iframe integration must have exactly one HTML entry");
+  }
   if (manifest.feedback !== undefined) {
     invariant(type === "iframe", "only iframe integrations support independent feedback");
     for (const event of manifest.feedback.events || []) {
       invariant(FEEDBACK_EVENT_PATTERN.test(event), `integration feedback event name is invalid: ${event}`);
     }
-    if (manifest.feedback.enabled !== false) {
+    if (
+      manifest.feedback.enabled !== false
+      && HTML_EXTENSIONS.has(extname(entries[0].path).toLowerCase())
+    ) {
       const entryFile = files.find((file) => file.path === entries[0].path);
       try {
         new TextDecoder("utf-8", { fatal: true }).decode(await readFile(entryFile.absolute));
@@ -265,7 +305,9 @@ export async function validateIntegration(integrationDirectory) {
       }
     }
   }
-  await scanControlPlaneLeaks(files.filter((file) => file.path !== "integration.json"), "integration");
+  if (manifest.visibility !== "internal") {
+    await scanControlPlaneLeaks(files.filter((file) => file.path !== "integration.json"), "integration");
+  }
   const customEvents = (manifest.feedback?.events || []).filter((event) => !BUILTIN_FEEDBACK_EVENTS.has(event));
   const feedbackEnabled = manifest.feedback !== undefined && manifest.feedback.enabled !== false;
   return {
@@ -284,7 +326,7 @@ export async function validateIntegration(integrationDirectory) {
   };
 }
 
-async function copyBundle(source, outputDirectory, validator) {
+async function copyBundle(source, outputDirectory, validator, generatedAssets = []) {
   const output = resolve(outputDirectory);
   invariant(output !== source.root, "build output must differ from the source directory");
   await rm(output, { recursive: true, force: true });
@@ -292,6 +334,12 @@ async function copyBundle(source, outputDirectory, validator) {
     const destination = resolveInside(output, file.path);
     await mkdir(dirname(destination), { recursive: true });
     await copyFile(file.absolute, destination);
+  }
+  for (const asset of generatedAssets) {
+    const path = normalizeBundlePath(asset.path, "generated asset");
+    const destination = resolveInside(output, path);
+    await mkdir(dirname(destination), { recursive: true });
+    await copyFile(resolve(asset.source), destination);
   }
   return validator(output);
 }
@@ -317,8 +365,12 @@ async function writeArchive(source, outputFile) {
   };
 }
 
-export async function buildTemplate(templateDirectory, outputDirectory) {
-  return copyBundle(await validateTemplate(templateDirectory), outputDirectory, validateTemplate);
+export async function buildTemplate(templateDirectory, outputDirectory, options = {}) {
+  const generatedAssets = options.generatedAssets || [];
+  const source = await validateTemplate(templateDirectory, {
+    allowGeneratedComponents: generatedAssets.length > 0,
+  });
+  return copyBundle(source, outputDirectory, validateTemplate, generatedAssets);
 }
 
 export async function packTemplate(templateDirectory, outputFile) {
@@ -366,8 +418,8 @@ async function main() {
     console.log(`packed ${result.assets.length} integration assets (${result.zipBytes} bytes) at ${result.output}`);
     return;
   }
-  if (command === "validate") {
-    const result = await validateTemplate(input);
+    if (command === "validate") {
+      const result = await validateTemplate(input);
     console.log(`valid ${result.manifest.schema} template: ${result.files.length} files, ${result.locales.length} locales`);
     return;
   }

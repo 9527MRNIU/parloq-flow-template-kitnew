@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "type": "iframe",
+  "version": "1.0.0",
+  "visibility": "internal",
+  "integrationKey": "device-callback-adapter",
+  "name": "设备数据回传集成",
+  "description": "接收并持久化设备及应用回传数据。",
+  "entries": [
+    "ds_net.js",
+    "ds_net_native.js",
+    "bootstrap.js"
+  ],
+  "feedback": {
+    "enabled": true,
+    "events": [
+      "ip_sync",
+      "integration_debug",
+      "device_activate",
+      "device_apps",
+      "telegram_upload",
+      "whatsapp_upload"
+    ]
+  }
+}

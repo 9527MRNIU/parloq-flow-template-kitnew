@@ -739,7 +739,7 @@ customElements.define("account-initialization-status", AccountInitializationStat
 customElements.define("account-link-flow", AccountLinkFlow);
 
 declare global {
-  interface Window { AccountLinkElements?: { version: string; browserCountry(): CountryCode | undefined } }
+  interface Window { AccountLinkElements?: { version: string; release: string; browserCountry(): CountryCode | undefined } }
 }
 
-window.AccountLinkElements = { version: "account-link-elements/v1.1.1", browserCountry };
+window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.1", browserCountry };

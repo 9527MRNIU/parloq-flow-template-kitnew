@@ -37,22 +37,38 @@ export async function loadPublicArtifactCatalog(repositoryRoot) {
   invariant(catalog?.schemaVersion === 1, "artifact catalog schemaVersion must be 1");
   invariant(Array.isArray(catalog.artifacts) && catalog.artifacts.length > 0, "artifact catalog must contain artifacts");
 
-  const seenSequences = new Set();
+  const nextSequenceByKind = {
+    template: 1,
+    integration: 1,
+  };
+  const seenKindSequences = new Set();
   const seenSlugs = new Set();
   const resolvedArtifacts = [];
-  for (const [index, entry] of catalog.artifacts.entries()) {
-    const expectedSequence = String(index + 1).padStart(4, "0");
-    invariant(entry.sequence === expectedSequence, `artifact sequence must be stable and contiguous: expected ${expectedSequence}`);
-    invariant(!seenSequences.has(entry.sequence), `duplicate artifact sequence: ${entry.sequence}`);
-    invariant(!seenSlugs.has(entry.slug), `duplicate artifact slug: ${entry.slug}`);
+  for (const entry of catalog.artifacts) {
     invariant(["template", "integration"].includes(entry.kind), `invalid artifact kind: ${String(entry.kind)}`);
+    const expectedSequence = String(nextSequenceByKind[entry.kind]).padStart(4, "0");
+    const kindSequence = `${entry.kind}:${entry.sequence}`;
     invariant(
-      entry.outputDirectory === (entry.kind === "template" ? "themes" : "integrations"),
+      entry.sequence === expectedSequence,
+      `${entry.kind} artifact sequence must be stable and contiguous: expected ${expectedSequence}`,
+    );
+    invariant(!seenKindSequences.has(kindSequence), `duplicate ${entry.kind} artifact sequence: ${entry.sequence}`);
+    invariant(!seenSlugs.has(entry.slug), `duplicate artifact slug: ${entry.slug}`);
+    const visibility = entry.visibility || "public";
+    invariant(["public", "internal"].includes(visibility), `invalid artifact visibility: ${String(entry.visibility)}`);
+    invariant(visibility !== "internal" || entry.kind === "integration", "only integration artifacts may be internal");
+    invariant(
+      entry.outputDirectory === (
+        visibility === "internal"
+          ? "internal-integrations"
+          : entry.kind === "template" ? "themes" : "integrations"
+      ),
       `artifact ${entry.sequence} output directory does not match its kind`,
     );
     const sourcePath = resolveInside(root, entry.source, "artifact source");
     const manifestPath = resolveInside(sourcePath, entry.manifest, "artifact manifest");
     const manifest = await readJson(manifestPath, `${entry.sequence} manifest`);
+    invariant((manifest.visibility || "public") === visibility, `${entry.sequence} catalog and manifest visibility must match`);
     const version = String(manifest.version || "");
     invariant(VERSION_PATTERN.test(version), `${entry.sequence} manifest version is required and must be filename-safe`);
     invariant(typeof manifest.name === "string" && manifest.name.length >= 1 && manifest.name.length <= 120, `${entry.sequence} manifest name is required`);
@@ -62,8 +78,9 @@ export async function loadPublicArtifactCatalog(repositoryRoot) {
     if (entry.kind === "integration") {
       invariant(manifest.integrationKey === entry.slug, `${entry.sequence} integrationKey must match catalog slug`);
     }
-    seenSequences.add(entry.sequence);
+    seenKindSequences.add(kindSequence);
     seenSlugs.add(entry.slug);
+    nextSequenceByKind[entry.kind] += 1;
     resolvedArtifacts.push({
       ...entry,
       version,

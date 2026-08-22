@@ -78,7 +78,11 @@ Rules:
 - `type` is `script` or `iframe`;
 - script integrations may declare multiple ordered `.js`/`.mjs` entries;
 - `scriptType` is `classic` or `module`;
-- iframe integrations declare exactly one `.html`/`.htm` entry;
+- iframe integrations declare either exactly one `.html`/`.htm` entry or one
+  or more ordered `.js`/`.mjs` entries; HTML and JavaScript entries cannot be
+  mixed;
+- JavaScript-only iframe integrations use a platform-generated same-origin
+  document that loads the feedback bridge before the declared entries;
 - `version` contains at most 40 letters, digits, dots, underscores or hyphens;
 - without `version`, the platform derives a stable value from the ZIP digest;
 - `integrationKey` contains 1–80 lowercase ASCII letters, digits, dots,
@@ -88,6 +92,10 @@ Rules:
   the control plane may use to prefill the ZIP import form;
 - official and example packages in this repository provide a machine-readable
   `integrationKey` plus non-empty natural Chinese `name` and `description`;
+- repository-managed internal packages may set `visibility` to `internal` and
+  use an internal output directory; they remain importable through the catalog
+  but are excluded from public Release attachments and public white-label
+  scanning;
 - feedback is available only to iframe integrations;
 - `page_view` and `visit_end` are built in and should not be declared;
 - at most 32 custom event names are allowed, using lowercase letters, digits,
@@ -124,14 +132,16 @@ current retry loop and wait for that interval.
 - one file: at most 5 MB;
 - `integration.json`: at most 64 KB;
 - allowed assets: HTML, CSS, JavaScript, JSON, common raster/SVG images, icons,
-  WOFF/WOFF2/TTF fonts, text and WebAssembly;
+  WOFF/WOFF2/TTF fonts, text, WebAssembly and opaque `.enc` binary files;
 - absolute paths, traversal, duplicates, symbolic links and unsupported file
   extensions are rejected.
 
-Official downloadable ZIPs use the permanent sequence recorded in
+Official downloadable ZIPs use the permanent integration sequence recorded in
 `artifacts/catalog.json` and the package's own manifest version, for example
-`0002-promotion-integration-script-demo-1.0.0.zip`. A package keeps its sequence
-when its version changes; new packages take the next number.
+`0001-promotion-integration-script-demo-1.0.0.zip`. The integration sequence is
+independent from the template sequence and starts at `0001`. A package keeps
+its sequence when its version changes; new integration packages take the next
+integration number.
 
 ## Injection behavior
 

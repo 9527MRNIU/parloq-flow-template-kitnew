@@ -4,12 +4,13 @@ Use this prompt as the fixed capability boundary when asking an AI design tool
 to create a new visual theme:
 
 ```text
-Create the presentation files for a static promotion-template/v2 landing-page
+Create the presentation files for a static promotion-template/v3 landing-page
 theme. Preserve the exact standard account-link custom-element composition
 from examples/promotion-template-minimal/index.html. Change only surrounding semantic HTML,
 CSS variables, ::part() styling, local relative media, and customer-facing
-copy. The platform injects account-link-elements/v1 and exposes
-window.PromotionBridge; do not write pairing requests, status polling,
+copy. The repository build bundles account-link-elements/v1 into the template
+ZIP, while the platform exposes window.PromotionBridge; do not write direct
+pairing requests, status polling,
 authentication headers, API URLs, protocol IDs, analytics SDKs, or phone-number
 persistence. Do not put the control-plane product name in the public bundle.
 Keep every asset relative and local, support 360x800, 390x844, 768x1024, and
