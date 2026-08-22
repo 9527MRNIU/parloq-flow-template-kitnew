@@ -55,9 +55,11 @@ self-contained relative assets, no source maps or external scripts, ZIP at most
 20 MB, expanded content at most 50 MB, at most 500 files and at most 5 MB per
 file.
 
-Official release filenames use the permanent sequence in
+Official release filenames use the permanent template sequence in
 `artifacts/catalog.json` and this manifest's own `version`, not the repository
-package version. Existing artifacts keep their sequence across version changes.
+package version. The template sequence starts at `0001` independently from the
+integration sequence. Existing artifacts keep their sequence across version
+changes.
 
 ## Runtime bridge
 

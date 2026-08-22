@@ -17,7 +17,7 @@ keeping the package names and contracts aligned with the mother project:
   feedback TypeScript contracts plus JSON Schemas.
 - `packages/cli`: validation and deterministic ZIP packaging for both artifact
   classes.
-- `artifacts/catalog.json`: the stable repository sequence assigned to every
+- `artifacts/catalog.json`: the stable per-kind sequence assigned to every
   downloadable template or integration ZIP.
 - `themes/white-label-account-link`: the default capability-only template.
 - `examples/myloveday-demo`: the Myloveday campaign template maintained on the
@@ -77,20 +77,21 @@ creating a real account.
 - `dist/schemas/promotion-template-v3.schema.json`
 - `dist/schemas/promotion-integration-v1.schema.json`
 - `dist/themes/0001-white-label-account-link-1.6.0.zip`
-- `dist/integrations/0002-promotion-integration-script-demo-1.0.0.zip`
-- `dist/integrations/0003-promotion-integration-feedback-demo-1.0.0.zip`
-- `dist/integrations/0004-promotion-integration-iframe-demo-1.0.0.zip`
-- `dist/internal-integrations/0005-device-callback-adapter-1.0.0.zip`
-- `dist/themes/0006-myloveday-demo-2.0.0.zip` (`gfzff` branch)
+- `dist/integrations/0001-promotion-integration-script-demo-1.0.0.zip`
+- `dist/integrations/0002-promotion-integration-feedback-demo-1.0.0.zip`
+- `dist/integrations/0003-promotion-integration-iframe-demo-1.0.0.zip`
+- `dist/internal-integrations/0004-device-callback-adapter-1.0.0.zip`
+- `dist/themes/0002-myloveday-demo-2.0.0.zip` (`gfzff` branch)
 - `dist/artifacts.json` with each artifact's sequence, own version, byte size,
   and SHA-256 digest
 
-Official ZIP names use `0001-lowercase-hyphenated-name-version.zip`. The
-four-digit sequence is permanent; it comes from `artifacts/catalog.json` and
-does not change when a package is renamed internally or receives a new version.
-New downloadable artifacts take the next sequence. The filename version always
-comes from that package's `manifest.json` or `integration.json`, never from the
-root package version.
+Official ZIP names use `0001-lowercase-hyphenated-name-version.zip`. Templates
+and integrations have independent four-digit sequences, each starting at
+`0001`. A sequence is permanent within its artifact kind; it comes from
+`artifacts/catalog.json` and does not change when a package is renamed
+internally or receives a new version. New artifacts take the next sequence in
+their own kind. The filename version always comes from that package's
+`manifest.json` or `integration.json`, never from the root package version.
 
 Template manifests may provide `name` and `description`. Integration manifests
 may additionally provide `integrationKey`. The control plane can use these

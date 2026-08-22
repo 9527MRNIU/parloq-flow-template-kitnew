@@ -10,5 +10,5 @@ node packages/cli/src/index.mjs integration pack examples/promotion-integration-
 ```
 
 The repository build publishes this package as
-`0002-promotion-integration-script-demo-1.0.0.zip`. Sequence `0002` is permanent;
+`0001-promotion-integration-script-demo-1.0.0.zip`. Integration sequence `0001` is permanent;
 the final segment follows `integration.json.version`.

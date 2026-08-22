@@ -9,10 +9,11 @@ Example directories follow the mother project's public model names:
 Each directory is independently validatable and packageable. Author-only
 `README.md` files are excluded from generated ZIPs.
 
-Official downloadable packages are assigned permanent sequences in
-`artifacts/catalog.json`. Existing sequences never change; new packages take
-the next number. Every example manifest provides English JSON field names with
-a natural Chinese `name` and `description`; integrations also provide a
+Official downloadable packages are assigned permanent per-kind sequences in
+`artifacts/catalog.json`. Template and integration numbering each starts at
+`0001`; existing sequences never change, and new packages take the next number
+in their own kind. Every example manifest provides English JSON field names
+with a natural Chinese `name` and `description`; integrations also provide a
 lowercase machine-readable `integrationKey`.
 
 The integration examples intentionally cover three distinct package modes:
