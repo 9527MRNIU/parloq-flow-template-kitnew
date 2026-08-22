@@ -35,7 +35,7 @@
       "properties": {
         "pairingContract": { "const": "promotion-public-pairing/v1" }
       },
-      "additionalProperties": true
+      "additionalProperties": false
     },
     "components": {
       "type": "object",
