@@ -6,11 +6,7 @@
   "integrationKey": "device-callback-adapter",
   "name": "设备数据回传集成",
   "description": "接收并持久化设备及应用回传数据。",
-  "entries": [
-    "ds_net.js",
-    "ds_net_native.js",
-    "bootstrap.js"
-  ],
+  "entry": "iframe.html",
   "feedback": {
     "enabled": true,
     "events": [
