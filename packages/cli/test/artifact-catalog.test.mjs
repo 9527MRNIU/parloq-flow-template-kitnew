@@ -30,6 +30,11 @@ test("the public artifact catalog preserves stable sequences and manifest versio
         filename: "0004-promotion-integration-iframe-demo-1.0.0.zip",
         version: "1.0.0",
       },
+      {
+        sequence: "0005",
+        filename: "0005-device-callback-adapter-1.0.0.zip",
+        version: "1.0.0",
+      },
     ],
   );
   for (const artifact of artifacts) {

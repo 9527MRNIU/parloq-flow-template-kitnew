@@ -32,6 +32,15 @@
       "source": "examples/promotion-integration-iframe-demo",
       "manifest": "integration.json",
       "outputDirectory": "integrations"
+    },
+    {
+      "sequence": "0005",
+      "kind": "integration",
+      "visibility": "internal",
+      "slug": "device-callback-adapter",
+      "source": "integrations/device-callback-adapter",
+      "manifest": "integration.json",
+      "outputDirectory": "internal-integrations"
     }
   ]
 }

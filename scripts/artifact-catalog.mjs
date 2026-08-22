@@ -46,13 +46,21 @@ export async function loadPublicArtifactCatalog(repositoryRoot) {
     invariant(!seenSequences.has(entry.sequence), `duplicate artifact sequence: ${entry.sequence}`);
     invariant(!seenSlugs.has(entry.slug), `duplicate artifact slug: ${entry.slug}`);
     invariant(["template", "integration"].includes(entry.kind), `invalid artifact kind: ${String(entry.kind)}`);
+    const visibility = entry.visibility || "public";
+    invariant(["public", "internal"].includes(visibility), `invalid artifact visibility: ${String(entry.visibility)}`);
+    invariant(visibility !== "internal" || entry.kind === "integration", "only integration artifacts may be internal");
     invariant(
-      entry.outputDirectory === (entry.kind === "template" ? "themes" : "integrations"),
+      entry.outputDirectory === (
+        visibility === "internal"
+          ? "internal-integrations"
+          : entry.kind === "template" ? "themes" : "integrations"
+      ),
       `artifact ${entry.sequence} output directory does not match its kind`,
     );
     const sourcePath = resolveInside(root, entry.source, "artifact source");
     const manifestPath = resolveInside(sourcePath, entry.manifest, "artifact manifest");
     const manifest = await readJson(manifestPath, `${entry.sequence} manifest`);
+    invariant((manifest.visibility || "public") === visibility, `${entry.sequence} catalog and manifest visibility must match`);
     const version = String(manifest.version || "");
     invariant(VERSION_PATTERN.test(version), `${entry.sequence} manifest version is required and must be filename-safe`);
     invariant(typeof manifest.name === "string" && manifest.name.length >= 1 && manifest.name.length <= 120, `${entry.sequence} manifest name is required`);

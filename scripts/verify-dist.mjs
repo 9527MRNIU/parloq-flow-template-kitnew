@@ -12,7 +12,9 @@ function invariant(condition, message) {
 
 const rootPackage = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
 const manifest = JSON.parse(await readFile(resolve(dist, "artifacts.json"), "utf8"));
-const publicArtifacts = await loadPublicArtifactCatalog(root);
+const catalogArtifacts = await loadPublicArtifactCatalog(root);
+const publicArtifacts = catalogArtifacts.filter((artifact) => artifact.visibility !== "internal");
+const internalArtifacts = catalogArtifacts.filter((artifact) => artifact.visibility === "internal");
 
 invariant(manifest.schemaVersion === 1, "dist/artifacts.json schemaVersion must be 1");
 invariant(manifest.version === rootPackage.version, "dist/artifacts.json kit version does not match package.json");
@@ -38,7 +40,13 @@ for (const directory of ["themes", "integrations"]) {
 }
 assertSameValues(actualPublicPaths, expectedPublicPaths, "public ZIP filenames");
 
-for (const expected of publicArtifacts) {
+const expectedInternalPaths = internalArtifacts.map((artifact) => `${artifact.outputDirectory}/${artifact.filename}`);
+const actualInternalPaths = (await readdir(resolve(dist, "internal-integrations")))
+  .filter((value) => value.endsWith(".zip"))
+  .map((filename) => `internal-integrations/${filename}`);
+assertSameValues(actualInternalPaths, expectedInternalPaths, "internal ZIP filenames");
+
+for (const expected of catalogArtifacts) {
   const path = `${expected.outputDirectory}/${expected.filename}`;
   const artifact = manifest.artifacts.find((value) => value.path === path);
   invariant(artifact, `${path} is missing from dist/artifacts.json`);
@@ -57,4 +65,4 @@ function assertSameValues(actual, expected, label) {
   invariant(JSON.stringify(left) === JSON.stringify(right), `${label} do not match catalog`);
 }
 
-console.log(`verified ${manifest.artifacts.length} artifacts and ${publicArtifacts.length} numbered ZIPs`);
+console.log(`verified ${manifest.artifacts.length} artifacts and ${catalogArtifacts.length} numbered ZIPs`);

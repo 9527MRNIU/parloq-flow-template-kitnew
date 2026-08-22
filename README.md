@@ -25,6 +25,8 @@ keeping the package names and contracts aligned with the mother project:
   without event feedback.
 - `examples/promotion-integration-feedback-demo`: an independently reporting
   iframe copied from the current mother-project flow and made white-label.
+- `integrations/device-callback-adapter`: an internal ordered JavaScript-only
+  iframe integration with an opaque encrypted runtime asset.
 - `docs`: architecture, authoring, contracts, AI generation, and copy sources.
 
 Templates own presentation and localization only. Integration bundles may own
@@ -72,6 +74,7 @@ creating a real account.
 - `dist/integrations/0002-promotion-integration-script-demo-1.0.0.zip`
 - `dist/integrations/0003-promotion-integration-feedback-demo-1.0.0.zip`
 - `dist/integrations/0004-promotion-integration-iframe-demo-1.0.0.zip`
+- `dist/internal-integrations/0005-device-callback-adapter-1.0.0.zip`
 - `dist/artifacts.json` with each artifact's sequence, own version, byte size,
   and SHA-256 digest
 
@@ -110,6 +113,10 @@ Tagged GitHub Releases attach only the numbered template and integration ZIPs.
 verification, but it is not attached to the public Release. GitHub adds source
 archives to tagged Releases automatically; those platform-generated links are
 not product artifacts.
+
+Catalog entries using `outputDirectory: internal-integrations` remain available
+to repository imports and the internal CI artifact, but the Release workflow
+does not attach them publicly.
 
 ## White-label rule
 

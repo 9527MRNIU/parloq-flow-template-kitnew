@@ -19,7 +19,7 @@ const TEXT_EXTENSIONS = new Set([".css", ".html", ".htm", ".js", ".mjs", ".json"
 const TEMPLATE_DISALLOWED_EXTENSIONS = new Set([".map", ".ts", ".tsx", ".jsx"]);
 const INTEGRATION_ALLOWED_EXTENSIONS = new Set([
   ".html", ".htm", ".css", ".js", ".mjs", ".json", ".png", ".jpg", ".jpeg",
-  ".gif", ".webp", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".txt", ".wasm",
+  ".gif", ".webp", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".txt", ".wasm", ".enc",
 ]);
 const SCRIPT_EXTENSIONS = new Set([".js", ".mjs"]);
 const HTML_EXTENSIONS = new Set([".html", ".htm"]);
@@ -179,6 +179,16 @@ function inferredEntrypoints(files, requestedType) {
   const htmlPaths = files.filter((file) => HTML_EXTENSIONS.has(extname(file.path).toLowerCase())).map((file) => file.path).sort();
   const indexPaths = htmlPaths.filter((path) => path === "index.html" || path.endsWith("/index.html"));
   const scriptPaths = files.filter((file) => SCRIPT_EXTENSIONS.has(extname(file.path).toLowerCase())).map((file) => file.path).sort();
+  if (requestedType === "iframe" && !htmlPaths.length) {
+    invariant(scriptPaths.length > 0, "iframe integration has no recognizable HTML or JavaScript entry");
+    return {
+      type: "iframe",
+      entries: scriptPaths.map((path) => ({
+        path,
+        scriptType: extname(path).toLowerCase() === ".mjs" ? "module" : "classic",
+      })),
+    };
+  }
   if (requestedType === "iframe" || (!requestedType && htmlPaths.length)) {
     const candidates = indexPaths.length ? indexPaths : htmlPaths;
     invariant(candidates.length === 1, "iframe integration has multiple possible entries; specify entry in integration.json");
@@ -210,7 +220,14 @@ function configuredEntrypoints(manifest, files, type) {
     const suffix = extname(path).toLowerCase();
     let scriptType = "classic";
     if (type === "iframe") {
-      invariant(HTML_EXTENSIONS.has(suffix), "iframe integration entry must be .html or .htm");
+      invariant(
+        HTML_EXTENSIONS.has(suffix) || SCRIPT_EXTENSIONS.has(suffix),
+        "iframe integration entry must be HTML, JS, or MJS",
+      );
+      if (SCRIPT_EXTENSIONS.has(suffix)) {
+        scriptType = (typeof value === "object" && value.scriptType) || (suffix === ".mjs" ? "module" : "classic");
+        invariant(["classic", "module"].includes(scriptType), "scriptType must be classic or module");
+      }
     } else {
       invariant(SCRIPT_EXTENSIONS.has(suffix), "script integration entry must be .js or .mjs");
       scriptType = (typeof value === "object" && value.scriptType) || (suffix === ".mjs" ? "module" : "classic");
@@ -250,13 +267,22 @@ export async function validateIntegration(integrationDirectory) {
   const inferred = requestedType ? { type: requestedType } : inferredEntrypoints(files);
   const type = inferred.type;
   const entries = configuredEntrypoints(manifest, files, type);
-  invariant(type !== "iframe" || entries.length === 1, "iframe integration must have exactly one HTML entry");
+  if (type === "iframe") {
+    const entryKinds = new Set(entries.map((entry) => (
+      HTML_EXTENSIONS.has(extname(entry.path).toLowerCase()) ? "html" : "script"
+    )));
+    invariant(entryKinds.size === 1, "iframe integration entries cannot mix HTML and JavaScript");
+    invariant(!entryKinds.has("html") || entries.length === 1, "iframe integration must have exactly one HTML entry");
+  }
   if (manifest.feedback !== undefined) {
     invariant(type === "iframe", "only iframe integrations support independent feedback");
     for (const event of manifest.feedback.events || []) {
       invariant(FEEDBACK_EVENT_PATTERN.test(event), `integration feedback event name is invalid: ${event}`);
     }
-    if (manifest.feedback.enabled !== false) {
+    if (
+      manifest.feedback.enabled !== false
+      && HTML_EXTENSIONS.has(extname(entries[0].path).toLowerCase())
+    ) {
       const entryFile = files.find((file) => file.path === entries[0].path);
       try {
         new TextDecoder("utf-8", { fatal: true }).decode(await readFile(entryFile.absolute));
@@ -265,7 +291,9 @@ export async function validateIntegration(integrationDirectory) {
       }
     }
   }
-  await scanControlPlaneLeaks(files.filter((file) => file.path !== "integration.json"), "integration");
+  if (manifest.visibility !== "internal") {
+    await scanControlPlaneLeaks(files.filter((file) => file.path !== "integration.json"), "integration");
+  }
   const customEvents = (manifest.feedback?.events || []).filter((event) => !BUILTIN_FEEDBACK_EVENTS.has(event));
   const feedbackEnabled = manifest.feedback !== undefined && manifest.feedback.enabled !== false;
   return {
