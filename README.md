@@ -257,12 +257,14 @@ dist/themes/0002-your-template-name-1.0.0.zip
 version `1`，与模板使用独立编号。iframe 集成必须由包自身提供一个 HTML/HTM
 入口，平台不会为纯 JavaScript 集成自动生成 iframe 页面。
 
-相关示例：
+下面三个目录仅作为开发和测试示例，不进入正式产物清单，也不会生成编号 ZIP：
 
 - `examples/promotion-integration-script-demo`
 - `examples/promotion-integration-iframe-demo`
 - `examples/promotion-integration-feedback-demo`
-- `integrations/device-callback-adapter`
+
+当前正式托管的集成是 `integrations/device-callback-adapter`，固定编号为
+`0001`。它属于内部产物，可供系统远程仓库导入，但不会附加到公开 Release。
 
 详细规则见 `docs/promotion-integration-v1.md`。
 

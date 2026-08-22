@@ -136,9 +136,9 @@ current retry loop and wait for that interval.
 - absolute paths, traversal, duplicates, symbolic links and unsupported file
   extensions are rejected.
 
-Official downloadable ZIPs use the permanent integration sequence recorded in
+Managed ZIPs use the permanent integration sequence recorded in
 `artifacts/catalog.json` and the package's own manifest version, for example
-`0001-promotion-integration-script-demo-1.0.0.zip`. The integration sequence is
+`0001-device-callback-adapter-1.0.0.zip`. The integration sequence is
 independent from the template sequence and starts at `0001`. A package keeps
 its sequence when its version changes; new integration packages take the next
 integration number.
@@ -151,7 +151,8 @@ then injects iframe entries. Classic scripts use `defer`; module entries use
 integrity metadata. Only enabled integrations with enabled bindings, a ready
 source domain and a valid current package are distributed.
 
-See the runnable source examples:
+The runnable source examples below are intentionally not registered as formal
+artifacts and therefore do not receive numbered ZIPs:
 
 - [`promotion-integration-script-demo`](../examples/promotion-integration-script-demo)
 - [`promotion-integration-iframe-demo`](../examples/promotion-integration-iframe-demo)
