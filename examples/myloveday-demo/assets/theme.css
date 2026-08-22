@@ -1,0 +1,429 @@
+/* Myloveday scene theme — white-label account-link composition + campaign scene. */
+:root {
+  color-scheme: dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --primary: #bf95f7;
+  --purple-border: rgba(191, 149, 247, 0.45);
+  --btn-gradient: linear-gradient(135deg, #7634ea, #b04ef6);
+  --brand-pink: #fe4e60;
+  --scene-max: 26.25rem;
+  --thumb-h: 11.5rem;
+  --account-link-action-bg: #7634ea;
+  --account-link-action-color: #ffffff;
+  --account-link-focus: #bf95f7;
+  --account-link-field-border: rgba(191, 149, 247, 0.4);
+  --account-link-field-bg: rgba(255, 255, 255, 0.08);
+  --account-link-error: #ff6b6b;
+  --account-link-success: #34d399;
+  --account-link-muted: #cbd5e1;
+  --account-link-action-radius: 999px;
+  --account-link-field-radius: 0.75rem;
+  --account-link-secondary-radius: 999px;
+  --account-link-locale-radius: 999px;
+  --account-link-select-option-bg: #1a1228;
+  --account-link-select-option-color: #f8fafc;
+  --account-link-select-color: #fff;
+  --account-link-input-color: #fff;
+  --account-link-prefix-color: #e9d5ff;
+  --account-link-prefix-opacity: 1;
+  --account-link-menu-bg: #1a1228;
+  --account-link-menu-color: #f8fafc;
+  --account-link-menu-border: rgba(191, 149, 247, 0.45);
+  --account-link-menu-radius: 0.85rem;
+  --account-link-menu-active: rgba(118, 52, 234, 0.42);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #0d0d0d;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---- Scene layer (fixed atmosphere) ---- */
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scene-scroll {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(100%, var(--scene-max));
+  height: 200vh;
+  transform: translateX(-50%);
+  overflow: hidden;
+}
+
+.scene-scroll-track {
+  position: absolute;
+  inset: 0;
+  height: 200%;
+  animation: scene-scroll-y 36s linear infinite;
+}
+
+.scene-scroll-frame {
+  width: 100%;
+  height: 50%;
+  background-image: url("./images/changtu.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+@keyframes scene-scroll-y {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.scene-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 4, 16, 0.55) 0%, rgba(8, 4, 16, 0.28) 28%, rgba(8, 4, 16, 0.45) 62%, rgba(8, 4, 16, 0.92) 100%),
+    radial-gradient(120% 70% at 50% 0%, rgba(118, 52, 234, 0.22), transparent 55%);
+}
+
+.scene-thumbs {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(100%, var(--scene-max));
+  height: var(--thumb-h);
+  transform: translateX(-50%);
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 100%);
+}
+
+.scene-thumbs-track {
+  display: flex;
+  gap: 0.4rem;
+  width: max-content;
+  padding: 1.5rem 0.5rem 0.75rem;
+  animation: scene-scroll-x 22s linear infinite;
+}
+
+@keyframes scene-scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scene-thumb {
+  width: 6.75rem;
+  height: 11rem;
+  flex: 0 0 auto;
+  border-radius: 1rem;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  opacity: 0.92;
+}
+
+/* ---- Content layer ---- */
+.theme-shell {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 1.5rem, var(--scene-max));
+  margin: 0 auto;
+  padding: 1.1rem 0 calc(var(--thumb-h) + 1.25rem);
+}
+
+.campaign-header {
+  display: grid;
+  gap: 0.9rem;
+  margin-bottom: 0.85rem;
+}
+
+.brand-title {
+  margin: 0;
+  color: var(--brand-pink);
+  font-style: italic;
+  font-size: clamp(2.1rem, 9vw, 2.75rem);
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: 0.06em;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.75);
+}
+
+.hero-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  background: rgba(12, 8, 22, 0.55);
+  backdrop-filter: blur(10px);
+}
+
+.hero-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.65rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(254, 78, 96, 0.55);
+}
+
+.hero-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-text {
+  margin: 0;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+.campaign-copy {
+  margin-bottom: 0.9rem;
+  text-align: center;
+}
+
+.campaign-copy h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+
+.campaign-copy p {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.link-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem 0.85rem 1.1rem;
+  border: 1.5px solid var(--purple-border);
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(160deg, rgba(55, 24, 95, 0.72), rgba(28, 14, 48, 0.78) 55%, rgba(18, 10, 32, 0.82));
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+account-link-flow {
+  display: grid;
+  gap: 0.85rem;
+  color-scheme: dark;
+}
+
+account-link-locale-switcher {
+  justify-self: center;
+  color-scheme: dark;
+}
+
+phone-number-field {
+  color-scheme: dark;
+}
+
+phone-number-field::part(phone-shell),
+account-link-locale-switcher::part(select),
+account-link-submit::part(button),
+pairing-code-panel::part(panel),
+app-launch-actions::part(panel),
+account-link-status::part(panel) {
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+account-link-locale-switcher::part(select) {
+  border: 1px solid var(--purple-border);
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.85rem;
+}
+
+account-link-locale-switcher::part(menu),
+phone-number-field::part(country-menu) {
+  border: 1px solid var(--account-link-menu-border);
+  border-radius: var(--account-link-menu-radius);
+  background: var(--account-link-menu-bg);
+  color: var(--account-link-menu-color);
+  box-shadow: 0 0.85rem 2rem rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+account-link-locale-switcher::part(option),
+phone-number-field::part(country-option) {
+  color: #f8fafc;
+  border-radius: 0.55rem;
+}
+
+account-link-locale-switcher::part(option):hover,
+phone-number-field::part(country-option):hover {
+  background: var(--account-link-menu-active);
+}
+
+phone-number-field::part(country-flag) {
+  display: inline-flex;
+  width: 1.25rem;
+  height: 0.85rem;
+}
+
+phone-number-field::part(label) {
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+}
+
+phone-number-field::part(phone-shell) {
+  min-height: 3rem;
+  border: 2px solid rgba(191, 149, 247, 0.35);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  overflow: visible;
+}
+
+phone-number-field::part(country-shell) {
+  position: relative;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+phone-number-field::part(country-select) {
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+phone-number-field::part(country-label) {
+  color: #fff;
+}
+
+phone-number-field::part(country-prefix) {
+  min-width: 1.85rem;
+  padding-inline-start: 0.45rem;
+  border-inline-start: 1px solid rgba(191, 149, 247, 0.28);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--account-link-prefix-color);
+}
+
+phone-number-field::part(phone-input) {
+  color: #fff;
+}
+
+phone-number-field::part(error) {
+  text-align: center;
+}
+
+account-link-submit::part(button) {
+  min-height: 3rem;
+  background: var(--btn-gradient);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 22px rgba(118, 52, 234, 0.35);
+}
+
+pairing-code-panel::part(panel),
+app-launch-actions::part(panel) {
+  padding: 1rem;
+  border: 1.5px solid var(--purple-border);
+  border-radius: 1rem;
+  background: rgba(18, 10, 32, 0.88);
+}
+
+pairing-code-panel::part(title) {
+  color: var(--primary);
+}
+
+pairing-code-panel::part(code) {
+  color: #fff;
+  letter-spacing: 0.14em;
+}
+
+pairing-code-panel::part(copy-button),
+app-launch-actions::part(consumer-button),
+app-launch-actions::part(business-button),
+account-link-status::part(retry-button) {
+  border-color: var(--primary);
+  color: #fff;
+  background: rgba(118, 52, 234, 0.28);
+}
+
+app-launch-actions::part(guide-steps) {
+  color: #eee;
+}
+
+account-link-status::part(panel),
+account-initialization-status::part(message) {
+  padding: 0.75rem 1rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.07);
+  text-align: center;
+}
+
+account-link-status::part(message) {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .scene-scroll,
+  .scene-thumbs,
+  .theme-shell {
+    width: var(--scene-max);
+  }
+
+  .brand-title {
+    font-size: 2.9rem;
+  }
+
+  .hero-avatar {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-scroll-track,
+  .scene-thumbs-track {
+    animation: none;
+  }
+}
+
+[dir="rtl"] .hero-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .hero-text {
+  text-align: right;
+}
+
+[dir="rtl"] account-link-locale-switcher {
+  justify-self: center;
+}

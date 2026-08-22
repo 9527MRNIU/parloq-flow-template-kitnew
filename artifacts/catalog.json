@@ -41,6 +41,14 @@
       "source": "integrations/device-callback-adapter",
       "manifest": "integration.json",
       "outputDirectory": "internal-integrations"
+    },
+    {
+      "sequence": "0006",
+      "kind": "template",
+      "slug": "myloveday-demo",
+      "source": "examples/myloveday-demo",
+      "manifest": "manifest.json",
+      "outputDirectory": "themes"
     }
   ]
 }

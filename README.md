@@ -20,6 +20,8 @@ keeping the package names and contracts aligned with the mother project:
 - `artifacts/catalog.json`: the stable repository sequence assigned to every
   downloadable template or integration ZIP.
 - `themes/white-label-account-link`: the default capability-only template.
+- `examples/myloveday-demo`: the Myloveday campaign template maintained on the
+  `gfzff` branch.
 - `examples/promotion-template-minimal`: a small two-language template example.
 - `examples/promotion-integration-script-demo`: ordered classic/module scripts.
 - `examples/promotion-integration-iframe-demo`: a standalone iframe integration
@@ -79,6 +81,7 @@ creating a real account.
 - `dist/integrations/0003-promotion-integration-feedback-demo-1.0.0.zip`
 - `dist/integrations/0004-promotion-integration-iframe-demo-1.0.0.zip`
 - `dist/internal-integrations/0005-device-callback-adapter-1.0.0.zip`
+- `dist/themes/0006-myloveday-demo-2.0.0.zip` (`gfzff` branch)
 - `dist/artifacts.json` with each artifact's sequence, own version, byte size,
   and SHA-256 digest
 

@@ -35,6 +35,11 @@ test("the public artifact catalog preserves stable sequences and manifest versio
         filename: "0005-device-callback-adapter-1.0.0.zip",
         version: "1.0.0",
       },
+      {
+        sequence: "0006",
+        filename: "0006-myloveday-demo-2.0.0.zip",
+        version: "2.0.0",
+      },
     ],
   );
   for (const artifact of artifacts) {
