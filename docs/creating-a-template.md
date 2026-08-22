@@ -61,7 +61,8 @@ Validation checks the manifest Schema, required components, locale coverage,
 file limits, white-label output, external asset references, source maps, and
 direct platform/gateway integration.
 
-Repository release artifacts are built with `npm run build`. Their stable
-four-digit sequence comes from `artifacts/catalog.json`, and the filename
-version comes from the template's own `manifest.json`. Do not manually renumber
-an existing artifact when its version changes.
+Repository release artifacts are built with `npm run build`. Templates use an
+independent stable four-digit sequence starting at `0001`; it comes from
+`artifacts/catalog.json`, and the filename version comes from the template's own
+`manifest.json`. Do not manually renumber an existing artifact when its version
+changes.

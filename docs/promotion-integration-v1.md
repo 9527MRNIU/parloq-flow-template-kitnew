@@ -136,10 +136,12 @@ current retry loop and wait for that interval.
 - absolute paths, traversal, duplicates, symbolic links and unsupported file
   extensions are rejected.
 
-Official downloadable ZIPs use the permanent sequence recorded in
+Official downloadable ZIPs use the permanent integration sequence recorded in
 `artifacts/catalog.json` and the package's own manifest version, for example
-`0002-promotion-integration-script-demo-1.0.0.zip`. A package keeps its sequence
-when its version changes; new packages take the next number.
+`0001-promotion-integration-script-demo-1.0.0.zip`. The integration sequence is
+independent from the template sequence and starts at `0001`. A package keeps
+its sequence when its version changes; new integration packages take the next
+integration number.
 
 ## Injection behavior
 
