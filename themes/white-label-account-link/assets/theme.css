@@ -16,7 +16,6 @@
   --account-link-menu-border: #cbd5e1;
   --account-link-menu-active: #e0e7ff;
   --account-link-menu-radius: 0.85rem;
-  --account-link-locale-radius: 999px;
   --account-link-error: #b91c1c;
   --account-link-success: #047857;
 }
@@ -46,7 +45,6 @@ account-link-flow {
 }
 
 phone-number-field::part(phone-shell),
-account-link-locale-switcher::part(select),
 account-link-submit::part(button),
 pairing-code-panel::part(panel),
 app-launch-actions::part(panel),
@@ -54,16 +52,6 @@ account-link-status::part(panel) {
   transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-account-link-locale-switcher::part(select) {
-  border: 1px solid var(--account-link-field-border);
-  border-radius: var(--account-link-locale-radius);
-  background: var(--account-link-field-bg);
-  color: var(--account-link-select-color);
-  min-height: 2.5rem;
-  padding: 0.45rem 0.85rem;
-}
-
-account-link-locale-switcher::part(menu),
 phone-number-field::part(country-menu) {
   border: 1px solid var(--account-link-menu-border);
   border-radius: var(--account-link-menu-radius);
@@ -79,13 +67,11 @@ phone-number-field::part(country-search) {
   color: var(--account-link-input-color);
 }
 
-account-link-locale-switcher::part(option),
 phone-number-field::part(country-option) {
   color: var(--account-link-menu-color);
   border-radius: 0.55rem;
 }
 
-account-link-locale-switcher::part(option):hover,
 phone-number-field::part(country-option):hover,
 phone-number-field::part(country-option):focus-visible {
   background: var(--account-link-menu-active);
