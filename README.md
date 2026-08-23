@@ -20,9 +20,11 @@ npm run preview
 
 ## 选择一个模板作为起点
 
-仓库提供两个基础模板：
+仓库提供四个可参考或直接构建的模板：
 
 - `themes/white-label-account-link`：完整的白标账号关联模板，包含十五种语言；
+- `examples/myloveday-demo`：Myloveday 场景化落地页，正式产物编号为 `0002`；
+- `examples/short-tagline-demo`：短剧推广场景落地页，正式产物编号为 `0003`；
 - `examples/promotion-template-minimal`：只保留核心结构的最小示例，适合学习目录和组件用法。
 
 正式制作新模板时，建议复制白标模板：
@@ -223,8 +225,9 @@ npm run build
 正式模板 ZIP 会生成在 `dist/themes`，例如：
 
 ```text
-dist/themes/0001-white-label-account-link-1.6.0.zip
-dist/themes/0002-your-template-name-1.0.0.zip
+dist/themes/0001-white-label-account-link-1.6.1.zip
+dist/themes/0002-myloveday-demo-2.0.3.zip
+dist/themes/0003-short-tagline-demo-1.3.0.zip
 ```
 
 文件名格式为：

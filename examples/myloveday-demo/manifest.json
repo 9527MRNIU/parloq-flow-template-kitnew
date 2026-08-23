@@ -1,0 +1,25 @@
+{
+  "schema": "promotion-template/v3",
+  "version": "2.0.3",
+  "name": "Myloveday 场景化落地页",
+  "description": "分层场景背景、首屏 CTA 与全屏账号关联浮层，配合底部缩略图滚动氛围。",
+  "entry": "index.html",
+  "format": "static-bundle",
+  "capabilities": ["phone-pairing"],
+  "runtime": "promotion-browser-bridge/v2",
+  "requirements": {
+    "pairingContract": "promotion-public-pairing/v1"
+  },
+  "components": {
+    "contract": "account-link-elements/v1",
+    "entry": "assets/account-link-elements.js"
+  },
+  "interactionProtection": "platform",
+  "defaultLocale": "en",
+  "supportedLocales": ["en", "zh-CN", "hi", "id", "pt-BR", "es", "ru", "ur", "de", "tr", "ar", "fa", "bn", "it", "fr"],
+  "i18n": {
+    "mode": "bundled",
+    "path": "locales/{locale}.json",
+    "fallbackLocale": "en"
+  }
+}

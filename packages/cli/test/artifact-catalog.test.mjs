@@ -22,6 +22,18 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
         filename: "0001-device-callback-adapter-1.0.0.zip",
         version: "1.0.0",
       },
+      {
+        kind: "template",
+        sequence: "0002",
+        filename: "0002-myloveday-demo-2.0.3.zip",
+        version: "2.0.3",
+      },
+      {
+        kind: "template",
+        sequence: "0003",
+        filename: "0003-short-tagline-demo-1.3.0.zip",
+        version: "1.3.0",
+      },
     ],
   );
   for (const artifact of artifacts) {

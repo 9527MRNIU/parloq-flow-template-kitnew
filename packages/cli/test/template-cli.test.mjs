@@ -9,6 +9,8 @@ import { buildTheme, packTheme, validateTheme } from "../src/index.mjs";
 const repoRoot = resolve(import.meta.dirname, "../../..");
 const defaultTheme = resolve(repoRoot, "themes/white-label-account-link");
 const minimalTemplate = resolve(repoRoot, "examples/promotion-template-minimal");
+const mylovedayTemplate = resolve(repoRoot, "examples/myloveday-demo");
+const shortTaglineTemplate = resolve(repoRoot, "examples/short-tagline-demo");
 const runtimeEntry = resolve(repoRoot, "packages/runtime/src/account-link-elements.ts");
 const validateSourceTheme = (path) => validateTheme(path);
 
@@ -32,6 +34,18 @@ test("the minimal template example carries Chinese import metadata", async () =>
   const result = await validateSourceTheme(minimalTemplate);
   assert.equal(result.manifest.name, "最小推广模板示例");
   assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
+});
+
+test("the numbered campaign templates satisfy the self-contained v3 contract", async () => {
+  const myloveday = await validateSourceTheme(mylovedayTemplate);
+  const shortTagline = await validateSourceTheme(shortTaglineTemplate);
+  assert.equal(myloveday.manifest.version, "2.0.3");
+  assert.equal(shortTagline.manifest.version, "1.3.0");
+  assert.equal(myloveday.locales.length, 15);
+  assert.equal(shortTagline.locales.length, 15);
+  assert.match(myloveday.manifest.name, /[\u3400-\u9fff]/u);
+  assert.match(shortTagline.manifest.name, /[\u3400-\u9fff]/u);
+  assert.ok(shortTagline.files.some((file) => file.path === "assets/images/poster.mp4"));
 });
 
 test("template import metadata remains optional in the public contract", async () => {
