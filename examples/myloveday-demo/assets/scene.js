@@ -1,5 +1,6 @@
 (() => {
   const PREFERRED_COUNTRIES = ["US", "GB", "CA", "AU", "IN", "BR", "DE", "FR", "ES", "JP", "KR", "CN"];
+  const PAIRING_COUNTDOWN_SECONDS = 180;
   const COUNTRY_LOCALE_MAP = {
     ad: "ca", ae: "ar", af: "fa", al: "sq", am: "hy", ao: "pt", ar: "es", at: "de", au: "en", az: "az",
     ba: "bs", bd: "bn", be: "nl", bf: "fr", bg: "bg", bh: "ar", bi: "fr", bj: "fr", bn: "ms", bo: "es",
@@ -23,6 +24,8 @@
   };
 
   let shadowCssText = "";
+  let pairingCountdownTimer = null;
+  let pairingCountdownEndsAt = 0;
 
   function readThemeCopy() {
     const copy = {};
@@ -482,6 +485,253 @@
     applySubmitCopy(readThemeCopy());
   }
 
+  function getLoginFlow() {
+    return document.querySelector(".login-flow");
+  }
+
+  function setPairingStep(step) {
+    const flow = getLoginFlow();
+    if (!flow) return;
+    if (step) flow.dataset.pairingStep = step;
+    else delete flow.dataset.pairingStep;
+  }
+
+  function formatDisplayPhone(e164) {
+    return String(e164 || "").replace(/^\+/, "").trim();
+  }
+
+  function ensurePairingAssociatingNode(codePanel) {
+    const root = codePanel?.shadowRoot;
+    const code = root?.querySelector('[part="code"]');
+    if (!root || !code) return null;
+
+    let node = root.querySelector('[part="associating"]');
+    if (!node) {
+      node = document.createElement("p");
+      node.setAttribute("part", "associating");
+      code.before(node);
+    }
+    return node;
+  }
+
+  function applyPairingCodeModalCopy(codePanel) {
+    if (!codePanel?.shadowRoot) return;
+
+    const copy = readThemeCopy();
+    const title = codePanel.shadowRoot.querySelector('[part="title"]');
+    const associating = ensurePairingAssociatingNode(codePanel);
+    const phone = document.querySelector("phone-number-field")?.getPhone?.();
+    const displayPhone = phone ? formatDisplayPhone(phone.e164) : "";
+
+    if (title && copy.pairingTitle) title.textContent = copy.pairingTitle;
+    if (associating) {
+      if (copy.associating && displayPhone) {
+        associating.innerHTML = `${copy.associating}<br><b>${displayPhone}</b>`;
+        associating.hidden = false;
+      } else {
+        associating.textContent = "";
+        associating.hidden = true;
+      }
+    }
+  }
+
+  function clearPairingCountdown() {
+    if (pairingCountdownTimer) {
+      window.clearInterval(pairingCountdownTimer);
+      pairingCountdownTimer = null;
+    }
+    pairingCountdownEndsAt = 0;
+  }
+
+  function readExpiryLabel() {
+    const copy = readThemeCopy();
+    return copy.expires || copy.pairingExpires || "剩余时间";
+  }
+
+  function updatePairingCountdownDisplay(codePanel) {
+    const expiry = codePanel?.shadowRoot?.querySelector('[part="expiry"]');
+    if (!expiry || !pairingCountdownEndsAt) return;
+
+    const seconds = Math.max(0, Math.ceil((pairingCountdownEndsAt - Date.now()) / 1000));
+    expiry.textContent = `${readExpiryLabel()} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+    if (seconds <= 0) clearPairingCountdown();
+  }
+
+  function startPairingCountdown(codePanel) {
+    clearPairingCountdown();
+    pairingCountdownEndsAt = Date.now() + PAIRING_COUNTDOWN_SECONDS * 1000;
+    updatePairingCountdownDisplay(codePanel);
+    pairingCountdownTimer = window.setInterval(() => updatePairingCountdownDisplay(codePanel), 1000);
+  }
+
+  function resetPairingCodeModalCopy(codePanel) {
+    const associating = codePanel?.shadowRoot?.querySelector('[part="associating"]');
+    if (associating) {
+      associating.textContent = "";
+      associating.hidden = true;
+    }
+  }
+
+  function readPairingCodeText(codePanel) {
+    return codePanel?.shadowRoot?.querySelector('[part="code"]')?.textContent?.trim() || "";
+  }
+
+  function restructureAppLaunchPanel(apps) {
+    const root = apps?.shadowRoot;
+    const panel = root?.querySelector('[part="panel"]');
+    const guide = root?.querySelector('[part="guide"]');
+    const actions = root?.querySelector('[part="actions"]');
+    const verification = root?.querySelector('[part="verification-box"]');
+    if (!panel || !guide || !actions) return;
+
+    root.querySelector('[part="tips-popup"]')?.remove();
+
+    if (verification) panel.append(guide, verification, actions);
+    else panel.append(guide, actions);
+
+    panel.dataset.guideLayout = "v1";
+  }
+
+  function ensureGuideTipsHeader(apps) {
+    const root = apps?.shadowRoot;
+    const guide = root?.querySelector('[part="guide"]');
+    if (!root || !guide || root.querySelector('[part="tips-heading"]')) return;
+
+    const heading = document.createElement("h2");
+    heading.setAttribute("part", "tips-heading");
+
+    const copied = document.createElement("p");
+    copied.setAttribute("part", "tips-copied");
+
+    guide.before(heading, copied);
+  }
+
+  function ensureGuideTipsFooter(apps) {
+    const root = apps?.shadowRoot;
+    const actions = root?.querySelector('[part="actions"]');
+    if (!root || !actions) return;
+
+    root.querySelector('[part="tips-popup"]')?.remove();
+
+    if (!root.querySelector('[part="verification-box"]')) {
+      const verification = document.createElement("div");
+      verification.setAttribute("part", "verification-box");
+
+      const label = document.createElement("span");
+      label.setAttribute("part", "verification-label");
+
+      const code = document.createElement("span");
+      code.setAttribute("part", "verification-code");
+
+      verification.append(label, code);
+      actions.before(verification);
+    }
+  }
+
+  function applyGuideTipsModal(apps, codePanel) {
+    if (!apps?.shadowRoot) return;
+
+    ensureGuideTipsHeader(apps);
+    ensureGuideTipsFooter(apps);
+    restructureAppLaunchPanel(apps);
+
+    const copy = readThemeCopy();
+    const root = apps.shadowRoot;
+    const heading = root.querySelector('[part="tips-heading"]');
+    const copied = root.querySelector('[part="tips-copied"]');
+    const label = root.querySelector('[part="verification-label"]');
+    const code = root.querySelector('[part="verification-code"]');
+
+    if (heading) heading.textContent = copy.tipsHeading || "Helpful Tips";
+    if (copied) copied.textContent = copy.tipsCopied || "";
+    if (label) label.textContent = copy.verificationLabel || "";
+    if (code) code.textContent = readPairingCodeText(codePanel);
+  }
+
+  function watchPairingSteps() {
+    const attach = () => {
+      const flow = getLoginFlow();
+      const codePanel = flow?.querySelector("pairing-code-panel");
+      const appsPanel = flow?.querySelector("app-launch-actions");
+      if (!flow || !codePanel || !appsPanel) return false;
+
+      if (flow.dataset.pairingStepsWired === "true") return true;
+
+      const syncStepFromPanel = () => {
+        if (codePanel.hidden) {
+          setPairingStep(undefined);
+          resetPairingCodeModalCopy(codePanel);
+          clearPairingCountdown();
+          return;
+        }
+        if (flow.dataset.pairingStep !== "guide") {
+          setPairingStep("code");
+          applyPairingCodeModalCopy(codePanel);
+        }
+      };
+
+      const advanceToGuideStep = () => {
+        if (!codePanel.hidden) {
+          applyGuideTipsModal(appsPanel, codePanel);
+          setPairingStep("guide");
+        }
+      };
+
+      const wireCopyAdvance = () => {
+        const button = codePanel.shadowRoot?.querySelector('[part="copy-button"]');
+        if (!button || button.dataset.stepWired === "true") return false;
+        button.addEventListener("click", () => window.setTimeout(advanceToGuideStep, 0));
+        button.dataset.stepWired = "true";
+        return true;
+      };
+
+      syncStepFromPanel();
+      new MutationObserver(syncStepFromPanel).observe(codePanel, {
+        attributes: true,
+        attributeFilter: ["hidden"],
+      });
+
+      flow.addEventListener("account-link-pairing-started", () => {
+        setPairingStep("code");
+        applyPairingCodeModalCopy(codePanel);
+        startPairingCountdown(codePanel);
+      });
+      flow.addEventListener("account-link-reset", () => {
+        setPairingStep(undefined);
+        resetPairingCodeModalCopy(codePanel);
+        clearPairingCountdown();
+      });
+
+      if (!wireCopyAdvance()) {
+        customElements.whenDefined("pairing-code-panel").then(() => {
+          window.requestAnimationFrame(() => wireCopyAdvance());
+        });
+      }
+
+      flow.dataset.pairingStepsWired = "true";
+      return true;
+    };
+
+    if (attach()) return;
+
+    customElements.whenDefined("account-link-flow").then(() => {
+      window.requestAnimationFrame(() => {
+        if (!attach()) window.setTimeout(attach, 120);
+      });
+    });
+
+    customElements.whenDefined("app-launch-actions").then(() => {
+      window.requestAnimationFrame(() => {
+        const flow = getLoginFlow();
+        const apps = flow?.querySelector("app-launch-actions");
+        const codePanel = flow?.querySelector("pairing-code-panel");
+        if (apps && flow?.dataset.pairingStep === "guide") {
+          applyGuideTipsModal(apps, codePanel);
+        }
+      });
+    });
+  }
+
   function watchPhoneField() {
     const attach = () => {
       const field = document.querySelector("phone-number-field");
@@ -521,6 +771,7 @@
     duplicateThumbnails();
     watchPhoneField();
     watchSubmitButton();
+    watchPairingSteps();
 
     const overlay = document.getElementById("main-container");
     if (overlay) overlay.style.display = "none";
