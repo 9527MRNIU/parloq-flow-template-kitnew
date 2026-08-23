@@ -540,36 +540,48 @@ const renderGuidePattern = (pattern: string, replacements: Record<string, string
   return value;
 };
 
-const launchBrowsingContext = (): Window => {
+const resolveAppLaunchUrls = (app: "consumer" | "business", mobile: boolean): string[] => {
+  const android = /Android/i.test(navigator.userAgent);
+  const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (!mobile && !android && !ios) {
+    return app === "business"
+      ? ["https://web.whatsapp.com/", "whatsapp-business://"]
+      : ["https://web.whatsapp.com/", "whatsapp://"];
+  }
+  if (app === "business") {
+    return android
+      ? ["intent://send#Intent;scheme=whatsapp-business;package=com.whatsapp.w4b;end", "whatsapp-business://"]
+      : ios
+        ? ["whatsapp-business://", "https://apps.apple.com/app/whatsapp-business/id1386412985"]
+        : ["whatsapp-business://"];
+  }
+  return android
+    ? ["intent://send#Intent;scheme=whatsapp;package=com.whatsapp;end", "whatsapp://"]
+    : ios
+      ? ["whatsapp://", "https://apps.apple.com/app/whatsapp-messenger/id310633997"]
+      : ["whatsapp://"];
+};
+
+const openLaunchUrl = (url: string) => {
+  const targets: Window[] = [window];
   try {
-    if (window.top && window.top !== window && !window.top.closed) return window.top;
+    if (window.top && window.top !== window && !window.top.closed) targets.push(window.top);
   } catch {
     /* cross-origin parent */
   }
-  return window;
-};
-
-const resolveAppLaunchUrls = (app: "consumer" | "business"): string[] => {
-  const android = /Android/i.test(navigator.userAgent);
-  if (app === "business") {
-    return android
-      ? ["whatsapp-business://", "intent://send#Intent;scheme=whatsapp-business;package=com.whatsapp.w4b;end"]
-      : ["whatsapp-business://"];
+  for (const target of targets) {
+    try {
+      target.location.assign(url);
+      return;
+    } catch {
+      /* try the next launch surface */
+    }
   }
-  return android
-    ? ["whatsapp://", "intent://send#Intent;scheme=whatsapp;package=com.whatsapp;end"]
-    : ["whatsapp://"];
-};
-
-const openExternalUrl = (targetWindow: Window, url: string) => {
-  const doc = targetWindow.document;
-  const link = doc.createElement("a");
-  link.href = url;
-  link.rel = "noopener noreferrer";
-  link.style.display = "none";
-  doc.body.appendChild(link);
-  link.click();
-  link.remove();
+  try {
+    window.open(url, "_blank", "noopener,noreferrer");
+  } catch {
+    /* no launch surface available */
+  }
 };
 
 class AppLaunchActions extends HTMLElement {
@@ -600,25 +612,12 @@ class AppLaunchActions extends HTMLElement {
     const onVisibility = () => { if (document.visibilityState === "hidden") pageHidden = true; };
     document.addEventListener("visibilitychange", onVisibility, { once: true });
     this.dispatchEvent(new CustomEvent("account-link-app-launch", { bubbles: true, detail: { app, status: "attempted" } }));
-    const targetWindow = launchBrowsingContext();
-    const urls = resolveAppLaunchUrls(app);
-    let opened = false;
-    for (const url of urls) {
-      try {
-        openExternalUrl(targetWindow, url);
-        opened = true;
-        break;
-      } catch {
-        /* try the next launch URL */
-      }
-    }
-    if (!opened) {
-      try {
-        targetWindow.location.href = urls[0];
-      } catch {
-        window.open(urls[0], "_blank", "noopener,noreferrer");
-      }
-    }
+    const config = runtimeConfig();
+    const simulatedDevice = config.previewMode ? config.previewDevice : undefined;
+    const mobile = simulatedDevice
+      ? simulatedDevice === "mobile" || simulatedDevice === "tablet"
+      : /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    for (const url of resolveAppLaunchUrls(app, mobile)) openLaunchUrl(url);
     window.setTimeout(() => {
       if (!pageHidden && document.visibilityState === "visible") {
         fallback.hidden = false;
@@ -804,4 +803,4 @@ declare global {
   interface Window { AccountLinkElements?: { version: string; release: string; browserCountry(): CountryCode | undefined } }
 }
 
-window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.2", browserCountry };
+window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.3", browserCountry };

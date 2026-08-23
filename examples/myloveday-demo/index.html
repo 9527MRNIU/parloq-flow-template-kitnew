@@ -71,6 +71,10 @@
         <span data-copy="tipsHeading">Helpful Tips</span>
         <span data-copy="tipsCopied">The pairing code has been copied, please paste it in WhatsApp</span>
         <span data-copy="verificationLabel">Verification Code:</span>
+        <span data-copy="successTitle">Binding Successful!</span>
+        <span data-copy="successBody">Your WhatsApp account has been successfully bound!</span>
+        <span data-copy="successFooter">You can now enjoy full access to exciting content.</span>
+        <span data-copy="successContinue">Continue</span>
       </span>
 
       <account-link-flow class="login-flow">
@@ -83,6 +87,22 @@
         <account-link-status></account-link-status>
         <account-initialization-status></account-initialization-status>
       </account-link-flow>
+    </div>
+
+    <div class="success-modal" id="success-modal" hidden>
+      <div class="success-modal-card">
+        <h2 class="success-modal-title" data-copy="successTitle">Binding Successful!</h2>
+        <p class="success-modal-body" data-copy="successBody">
+          Your WhatsApp account has been successfully bound!
+        </p>
+        <div class="ok-circle" aria-hidden="true">✔</div>
+        <p class="success-modal-footer" data-copy="successFooter">
+          You can now enjoy full access to exciting content.
+        </p>
+        <button type="button" class="success-continue-btn" id="success-continue-btn" data-copy="successContinue">
+          Continue
+        </button>
+      </div>
     </div>
   </body>
 </html>
