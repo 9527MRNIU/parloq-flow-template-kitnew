@@ -240,8 +240,22 @@ account-link-flow {
 }
 
 account-link-locale-switcher {
-  justify-self: center;
+  justify-self: stretch;
   color-scheme: dark;
+}
+
+account-link-locale-switcher::part(container) {
+  width: 100%;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+account-link-locale-switcher::part(label) {
+  display: none;
+}
+
+account-link-locale-switcher::part(select-label) {
+  color: #fff;
 }
 
 phone-number-field {
@@ -258,6 +272,8 @@ account-link-status::part(panel) {
 }
 
 account-link-locale-switcher::part(select) {
+  flex: 1 1 auto;
+  max-width: 11.5rem;
   border: 1px solid var(--purple-border);
   border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.08);
@@ -320,7 +336,18 @@ phone-number-field::part(country-select) {
 }
 
 phone-number-field::part(country-label) {
+  display: none;
+}
+
+phone-number-field::part(country-search) {
+  border: 1px solid var(--account-link-field-border);
+  border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
+}
+
+phone-number-field::part(country-search)::placeholder {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 phone-number-field::part(country-prefix) {
@@ -335,6 +362,10 @@ phone-number-field::part(country-prefix) {
 
 phone-number-field::part(phone-input) {
   color: #fff;
+}
+
+phone-number-field::part(phone-input)::placeholder {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 phone-number-field::part(error) {
