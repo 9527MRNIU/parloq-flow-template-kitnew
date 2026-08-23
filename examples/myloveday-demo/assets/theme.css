@@ -43,6 +43,69 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile tap / focus — avoid full-width rectangular outlines on custom elements */
+button,
+.download-button,
+account-link-submit,
+app-launch-actions,
+pairing-code-panel,
+phone-number-field {
+  -webkit-tap-highlight-color: transparent;
+}
+
+account-link-submit:focus,
+account-link-submit:focus-visible,
+app-launch-actions:focus,
+app-launch-actions:focus-visible,
+pairing-code-panel:focus,
+pairing-code-panel:focus-visible {
+  outline: none;
+}
+
+account-link-submit::part(button),
+app-launch-actions::part(consumer-button),
+app-launch-actions::part(business-button),
+pairing-code-panel::part(copy-button),
+.download-button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+account-link-submit::part(button):focus,
+account-link-submit::part(button):focus-visible,
+app-launch-actions::part(consumer-button):focus,
+app-launch-actions::part(consumer-button):focus-visible,
+app-launch-actions::part(business-button):focus,
+app-launch-actions::part(business-button):focus-visible,
+pairing-code-panel::part(copy-button):focus,
+pairing-code-panel::part(copy-button):focus-visible,
+.download-button:focus,
+.download-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 6px 20px rgba(118, 52, 234, 0.4),
+    0 0 0 3px rgba(191, 149, 247, 0.28);
+}
+
+account-link-submit::part(button):active,
+app-launch-actions::part(consumer-button):active,
+app-launch-actions::part(business-button):active,
+pairing-code-panel::part(copy-button):active {
+  transform: scale(0.985);
+}
+
+.download-button:active {
+  transform: translateX(-50%) scale(0.985);
+}
+
+account-link-status::part(retry-button):focus,
+account-link-status::part(retry-button):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(191, 149, 247, 0.24);
 }
 
 img {
@@ -254,6 +317,9 @@ img {
   height: 95px;
   box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
   pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
 .download-button::before {
@@ -424,6 +490,10 @@ account-link-submit[hidden] {
 .login-box > * {
   position: relative;
   z-index: 1;
+}
+
+.login-box.has-input-error {
+  border-color: rgba(255, 107, 107, 0.55);
 }
 
 .login-box.error-shake {
@@ -834,11 +904,42 @@ phone-number-field::part(phone-input)::placeholder {
 }
 
 phone-number-field::part(error) {
-  min-height: 1.25em;
-  margin-top: 8px;
-  text-align: center;
-  color: var(--error-red);
+  min-height: 0;
+  margin-top: 0;
+  text-align: start;
+  color: #ffb4b4;
   font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+phone-number-field::part(error):empty {
+  display: none;
+}
+
+phone-number-field::part(error):not(:empty) {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin-top: 10px;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.32);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+phone-number-field::part(error):not(:empty)::before {
+  content: "!";
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  background: rgba(255, 107, 107, 0.22);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.15rem;
+  text-align: center;
 }
 
 account-link-submit {
@@ -926,12 +1027,41 @@ app-launch-actions::part(guide-steps) {
 
 account-link-status::part(panel),
 account-initialization-status::part(message) {
-  padding: 0.65rem 0.85rem;
-  border-radius: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(191, 149, 247, 0.14);
   text-align: center;
   font-size: 0.9rem;
   line-height: 1.45;
+}
+
+account-link-status[data-status-tone="waiting"]::part(panel) {
+  background: rgba(118, 52, 234, 0.14);
+  border-color: rgba(191, 149, 247, 0.28);
+  color: #e9d5ff;
+}
+
+account-link-status[data-status-tone="error"]::part(panel) {
+  background: rgba(255, 77, 77, 0.1);
+  border-color: rgba(255, 107, 107, 0.32);
+}
+
+account-link-status[data-status-tone="error"]::part(message) {
+  color: #ffb4b4;
+}
+
+account-link-status[data-status-tone="success"]::part(panel) {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.32);
+}
+
+account-link-status[data-status-tone="success"]::part(message) {
+  color: #86efac;
+}
+
+account-initialization-status::part(message) {
+  color: #cbd5e1;
 }
 
 account-link-status[hidden],

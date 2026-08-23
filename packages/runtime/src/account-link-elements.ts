@@ -320,7 +320,9 @@ class PhoneNumberField extends HTMLElement {
   private error!: HTMLElement;
   private open = false;
   private onDocPointer = (event: Event) => {
-    if (!event.composedPath().includes(this)) this.closeMenu();
+    const path = event.composedPath();
+    if (path.includes(this.menu) || path.includes(this.trigger)) return;
+    this.closeMenu();
   };
 
   connectedCallback() {
@@ -580,15 +582,17 @@ class AccountLinkStatus extends HTMLElement {
   }
   setState(state: string, message?: string) {
     const copy = functionalCopy();
+    const errorStates = ["expired", "failed", "cancelled", "account_already_linked", "number_unavailable", "pairing_in_progress"];
     const messages: Record<string, string> = { waiting_phone: copy.waiting, code_issued: copy.waiting, reconnecting: copy.reconnecting, verified: copy.verified, expired: copy.expired, failed: copy.failed, cancelled: copy.cancelled, account_already_linked: copy.alreadyLinked, number_unavailable: copy.unavailable, pairing_in_progress: copy.inProgress };
     const node = this.root.querySelector<HTMLElement>(".status")!;
     node.textContent = message || messages[state] || copy.failed;
-    node.className = `status ${state === "verified" ? "success" : ["expired", "failed", "cancelled", "account_already_linked", "number_unavailable", "pairing_in_progress"].includes(state) ? "error" : ""}`;
+    node.className = `status ${state === "verified" ? "success" : errorStates.includes(state) ? "error" : ""}`;
+    this.dataset.statusTone = state === "verified" ? "success" : errorStates.includes(state) ? "error" : "waiting";
     const retry = this.root.querySelector<HTMLButtonElement>("button")!;
-    retry.hidden = !["expired", "failed", "cancelled", "account_already_linked", "number_unavailable", "pairing_in_progress"].includes(state);
+    retry.hidden = !errorStates.includes(state);
     this.hidden = false;
   }
-  reset() { this.hidden = true; }
+  reset() { delete this.dataset.statusTone; this.hidden = true; }
 }
 
 class AccountInitializationStatus extends HTMLElement {

@@ -243,8 +243,9 @@
     overlay = document.createElement("div");
     overlay.id = "country-picker-overlay";
     overlay.hidden = true;
-    overlay.addEventListener("click", (event) => {
+    overlay.addEventListener("pointerdown", (event) => {
       if (event.target !== overlay) return;
+      event.preventDefault();
       const field = document.querySelector("phone-number-field");
       field?.shadowRoot?.querySelector(".trigger")?.click();
     });
@@ -432,8 +433,38 @@
     });
   }
 
+  function watchPhoneErrors(field) {
+    const root = field.shadowRoot;
+    const error = root?.querySelector(".error");
+    const loginBox = document.getElementById("login-card");
+    if (!error || !loginBox) return;
+
+    let lastMessage = "";
+    const sync = () => {
+      const message = error.textContent.trim();
+      loginBox.classList.toggle("has-input-error", Boolean(message));
+      if (message && message !== lastMessage) {
+        loginBox.classList.remove("error-shake");
+        void loginBox.offsetWidth;
+        loginBox.classList.add("error-shake");
+        window.setTimeout(() => loginBox.classList.remove("error-shake"), 450);
+      }
+      lastMessage = message;
+    };
+
+    sync();
+    new MutationObserver(sync).observe(error, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+  }
+
   function setupPhoneField(field) {
-    injectPhoneFieldOverrides(field).then(() => watchCountryMenu(field));
+    injectPhoneFieldOverrides(field).then(() => {
+      watchCountryMenu(field);
+      watchPhoneErrors(field);
+    });
   }
 
   function setupSubmitButton() {
