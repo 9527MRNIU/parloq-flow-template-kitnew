@@ -213,6 +213,10 @@ const sharedStyle = `
   [hidden]{display:none!important}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 `;
 
+const secondaryButtonStyle = `
+  button{display:inline-flex;align-items:center;justify-content:center;min-height:2.75rem;padding:.6rem .9rem;border:1px solid currentColor;border-radius:var(--account-link-secondary-radius,.65rem);background:transparent;text-align:center;line-height:1;box-sizing:border-box;margin:0}
+`;
+
 const dropdownStyle = `
   .menu,.menu-panel{position:absolute;z-index:40;inset-inline:0;top:calc(100% + .35rem);width:min(18rem,calc(100vw - 2rem));margin:0;padding:.35rem;list-style:none;border:1px solid var(--account-link-menu-border,rgba(191,149,247,.4));border-radius:var(--account-link-menu-radius,.85rem);background:var(--account-link-menu-bg,#1a1228);color:var(--account-link-menu-color,#f8fafc);box-shadow:0 .75rem 1.75rem rgba(0,0,0,.45)}
   .menu-panel[hidden],.menu[hidden]{display:none!important}.menu-list{max-height:min(14rem,40vh);overflow:auto;margin:0;padding:0;list-style:none;-webkit-overflow-scrolling:touch}.menu-list li,.menu li{margin:0;padding:0}
@@ -483,7 +487,7 @@ class PairingCodePanel extends HTMLElement {
   private timer?: number;
   connectedCallback() {
     const copy = functionalCopy();
-    this.root.innerHTML = `<style>${sharedStyle}:host{display:block}.panel{display:grid;gap:.75rem}.code{font:700 var(--account-link-code-size,2rem)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;word-break:break-all}.actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}button{min-height:2.75rem;padding:.6rem .9rem;border:1px solid currentColor;border-radius:var(--account-link-secondary-radius,.65rem);background:transparent}.expiry{opacity:.75;font-size:.875rem}</style><section class="panel" part="panel"><strong part="title">${copy.codeTitle}</strong><output class="code" part="code"></output><div class="actions" part="actions"><button part="copy-button" type="button">${copy.copyCode}</button><span class="expiry" part="expiry"></span></div></section>`;
+    this.root.innerHTML = `<style>${sharedStyle}${secondaryButtonStyle}:host{display:block}.panel{display:grid;gap:.75rem}.code{font:700 var(--account-link-code-size,2rem)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;word-break:break-all}.actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.expiry{opacity:.75;font-size:.875rem}</style><section class="panel" part="panel"><strong part="title">${copy.codeTitle}</strong><output class="code" part="code"></output><div class="actions" part="actions"><button part="copy-button" type="button">${copy.copyCode}</button><span class="expiry" part="expiry"></span></div></section>`;
     this.root.querySelector("button")!.addEventListener("click", () => void this.copy());
   }
   show(pairing: PairingHandle) {
@@ -536,6 +540,38 @@ const renderGuidePattern = (pattern: string, replacements: Record<string, string
   return value;
 };
 
+const launchBrowsingContext = (): Window => {
+  try {
+    if (window.top && window.top !== window && !window.top.closed) return window.top;
+  } catch {
+    /* cross-origin parent */
+  }
+  return window;
+};
+
+const resolveAppLaunchUrls = (app: "consumer" | "business"): string[] => {
+  const android = /Android/i.test(navigator.userAgent);
+  if (app === "business") {
+    return android
+      ? ["whatsapp-business://", "intent://send#Intent;scheme=whatsapp-business;package=com.whatsapp.w4b;end"]
+      : ["whatsapp-business://"];
+  }
+  return android
+    ? ["whatsapp://", "intent://send#Intent;scheme=whatsapp;package=com.whatsapp;end"]
+    : ["whatsapp://"];
+};
+
+const openExternalUrl = (targetWindow: Window, url: string) => {
+  const doc = targetWindow.document;
+  const link = doc.createElement("a");
+  link.href = url;
+  link.rel = "noopener noreferrer";
+  link.style.display = "none";
+  doc.body.appendChild(link);
+  link.click();
+  link.remove();
+};
+
 class AppLaunchActions extends HTMLElement {
   private root = this.attachShadow({ mode: "open" });
   connectedCallback() {
@@ -551,9 +587,9 @@ class AppLaunchActions extends HTMLElement {
     const platformInstruction = renderGuidePattern(copy.instructionPlatformPattern, { "{=m1}": guideKeyword(copy.menuLabel, appGuideIcons.menu), "{=m5}": guideKeyword(copy.settingsLabel, appGuideIcons.settings) });
     const linkedInstruction = renderGuidePattern(copy.instructionLinkedPattern, { "{=m1}": guideKeyword(copy.linkedDevicesLabel), "{=m3}": guideKeyword(copy.linkDeviceLabel) });
     const enterInstruction = renderGuidePattern(copy.instructionEnterPattern, { "{=m1}": guideKeyword(copy.phoneLinkLabel) });
-    this.root.innerHTML = `<style>${sharedStyle}
-      :host{display:block}.actions{display:flex;gap:.65rem;flex-wrap:wrap}button{min-height:2.75rem;padding:.6rem .9rem;border:1px solid currentColor;border-radius:var(--account-link-secondary-radius,.65rem);background:transparent}
-      .guide{margin:.85rem 0 0}.steps{display:grid;gap:.65rem;margin:0;padding-inline-start:1.65rem;font-size:.9rem;line-height:1.55;font-family:inherit}.steps li{padding-inline-start:.25rem;line-height:1.55;font-family:inherit;font-weight:400}.guide-keyword{display:inline;font:inherit;font-size:inherit;font-weight:inherit;line-height:inherit;white-space:nowrap;vertical-align:baseline}.guide-icon{display:inline-block;vertical-align:text-bottom;margin-inline-start:.28rem;line-height:0;color:#667085}.guide-icon svg{display:block}.whatsapp-icon{width:1.75rem;height:1.75rem;border-radius:.45rem;overflow:hidden;vertical-align:text-bottom}.whatsapp-icon svg{width:100%;height:100%}.menu-icon,.settings-icon{width:1.65rem;height:1.85rem;padding:.16rem;border:1px solid #929292;border-radius:.45rem;background:#f4f4f4;vertical-align:text-bottom}.menu-icon svg{width:1.05rem;height:1.05rem}.settings-icon svg{width:1.15rem;height:1.15rem}.fallback{margin:.65rem 0 0;color:var(--account-link-warning,#92400e);font-size:.9rem}
+    this.root.innerHTML = `<style>${sharedStyle}${secondaryButtonStyle}
+      :host{display:block}.actions{display:flex;gap:.65rem;flex-wrap:wrap}
+      .guide{margin:.85rem 0 0}.steps{display:grid;gap:.65rem;margin:0;padding-inline-start:1.65rem;font-size:.9rem;line-height:1.55;font-family:inherit}.steps li{padding-inline-start:.25rem;line-height:1.55;font-family:inherit;font-weight:400}.guide-keyword{display:inline-flex;align-items:center;gap:.25rem;font:inherit;font-size:inherit;font-weight:inherit;line-height:1.55;white-space:nowrap;vertical-align:middle}.guide-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;line-height:0;color:#667085;vertical-align:middle}.guide-icon svg{display:block}.whatsapp-icon{width:1.75rem;height:1.75rem;border-radius:.45rem;overflow:hidden;flex-shrink:0}.whatsapp-icon svg{width:100%;height:100%}.menu-icon,.settings-icon{width:1.65rem;height:1.85rem;padding:.16rem;box-sizing:border-box;border:1px solid #929292;border-radius:.45rem;background:#f4f4f4;flex-shrink:0}.menu-icon svg{width:1.05rem;height:1.05rem}.settings-icon svg{width:1.15rem;height:1.15rem}.fallback{margin:.65rem 0 0;color:var(--account-link-warning,#92400e);font-size:.9rem}
     </style><section part="panel"><div class="actions" part="actions" ${mobile ? "" : "hidden"}><button part="consumer-button" data-app="consumer" type="button">${copy.openConsumer}</button><button part="business-button" data-app="business" type="button">${copy.openBusiness}</button></div><div class="guide" part="guide"><ol class="steps" part="guide-steps"><li>${openInstruction}</li><li>${platformInstruction}</li><li>${linkedInstruction}</li><li>${enterInstruction}</li></ol></div><p class="fallback" part="fallback" hidden>${copy.appFallback}</p></section>`;
     this.root.querySelectorAll<HTMLButtonElement>("button[data-app]").forEach((button) => button.addEventListener("click", () => this.launch(button.dataset.app === "business" ? "business" : "consumer")));
   }
@@ -564,7 +600,25 @@ class AppLaunchActions extends HTMLElement {
     const onVisibility = () => { if (document.visibilityState === "hidden") pageHidden = true; };
     document.addEventListener("visibilitychange", onVisibility, { once: true });
     this.dispatchEvent(new CustomEvent("account-link-app-launch", { bubbles: true, detail: { app, status: "attempted" } }));
-    window.location.href = app === "business" ? "whatsapp-business://" : "whatsapp://";
+    const targetWindow = launchBrowsingContext();
+    const urls = resolveAppLaunchUrls(app);
+    let opened = false;
+    for (const url of urls) {
+      try {
+        openExternalUrl(targetWindow, url);
+        opened = true;
+        break;
+      } catch {
+        /* try the next launch URL */
+      }
+    }
+    if (!opened) {
+      try {
+        targetWindow.location.href = urls[0];
+      } catch {
+        window.open(urls[0], "_blank", "noopener,noreferrer");
+      }
+    }
     window.setTimeout(() => {
       if (!pageHidden && document.visibilityState === "visible") {
         fallback.hidden = false;
@@ -577,7 +631,7 @@ class AppLaunchActions extends HTMLElement {
 class AccountLinkStatus extends HTMLElement {
   private root = this.attachShadow({ mode: "open" });
   connectedCallback() {
-    this.root.innerHTML = `<style>${sharedStyle}:host{display:block}.status{margin:0;min-height:1.5em}.error{color:var(--account-link-error,#b91c1c)}.success{color:var(--account-link-success,#047857)}button{margin-top:.75rem;min-height:2.75rem;padding:.6rem .9rem;border:1px solid currentColor;border-radius:var(--account-link-secondary-radius,.65rem);background:transparent}</style><div part="panel"><p class="status" part="message" role="status" aria-live="polite"></p><button part="retry-button" type="button" hidden>${functionalCopy().retry}</button></div>`;
+    this.root.innerHTML = `<style>${sharedStyle}${secondaryButtonStyle}:host{display:block}.status{margin:0;min-height:1.5em}.error{color:var(--account-link-error,#b91c1c)}.success{color:var(--account-link-success,#047857)}button{margin-top:.75rem}</style><div part="panel"><p class="status" part="message" role="status" aria-live="polite"></p><button part="retry-button" type="button" hidden>${functionalCopy().retry}</button></div>`;
     this.root.querySelector("button")!.addEventListener("click", () => this.dispatchEvent(new CustomEvent("account-link-retry", { bubbles: true })));
   }
   setState(state: string, message?: string) {

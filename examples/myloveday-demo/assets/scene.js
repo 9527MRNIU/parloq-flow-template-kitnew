@@ -236,20 +236,31 @@
     menuList.dataset.deduped = "true";
   }
 
+  function closeCountryPicker(field) {
+    const root = field?.shadowRoot;
+    const trigger = root?.querySelector(".trigger");
+    if (trigger?.getAttribute("aria-expanded") !== "true") return;
+    trigger.click();
+  }
+
   function ensureCountryPickerOverlay() {
     let overlay = document.getElementById("country-picker-overlay");
-    if (overlay) return overlay;
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "country-picker-overlay";
+      overlay.hidden = true;
+      document.body.appendChild(overlay);
+    }
 
-    overlay = document.createElement("div");
-    overlay.id = "country-picker-overlay";
-    overlay.hidden = true;
-    overlay.addEventListener("pointerdown", (event) => {
-      if (event.target !== overlay) return;
-      event.preventDefault();
-      const field = document.querySelector("phone-number-field");
-      field?.shadowRoot?.querySelector(".trigger")?.click();
-    });
-    document.body.appendChild(overlay);
+    if (overlay.dataset.backdropWired !== "true") {
+      overlay.addEventListener("pointerdown", (event) => {
+        if (event.target !== overlay) return;
+        event.preventDefault();
+        closeCountryPicker(document.querySelector("phone-number-field"));
+      });
+      overlay.dataset.backdropWired = "true";
+    }
+
     return overlay;
   }
 
