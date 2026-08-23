@@ -22,6 +22,7 @@ keeping the package names and contracts aligned with the mother project:
 - `themes/white-label-account-link`: the default capability-only template.
 - `examples/myloveday-demo`: the Myloveday campaign template maintained on the
   `gfzff` branch.
+- `examples/short-tagline-demo`: a short-drama promotion landing-page scenario.
 - `examples/promotion-template-minimal`: a small two-language template example.
 - `examples/promotion-integration-script-demo`: source-only ordered
   classic/module scripts.
