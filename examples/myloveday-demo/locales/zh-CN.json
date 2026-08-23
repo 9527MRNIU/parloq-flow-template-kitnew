@@ -6,5 +6,10 @@
   "ctaButton": "WhatsApp 登录",
   "overlayTitle": "登录解锁完整照片与视频",
   "overlaySubtitle": "享受更多精彩内容！",
+  "phoneLabel": "请输入 WhatsApp 手机号码",
+  "phonePlaceholder": "请输入手机号码",
+  "countrySearchPlaceholder": "搜索国家名称或区号",
+  "searchCountry": "搜索国家名称或区号",
+  "submitLabel": "继续",
   "tipAlt": "WhatsApp 绑定教程"
 }

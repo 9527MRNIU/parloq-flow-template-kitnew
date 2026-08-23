@@ -2,7 +2,7 @@
   "schema": "promotion-template/v3",
   "version": "2.0.3",
   "name": "Myloveday 场景化落地页",
-  "description": "白标账号关联组件直出布局，配合分层场景背景、玻璃卡片与底部缩略图氛围。",
+  "description": "分层场景背景、首屏 CTA 与全屏账号关联浮层，配合底部缩略图滚动氛围。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],

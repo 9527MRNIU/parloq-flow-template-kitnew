@@ -6,5 +6,10 @@
   "ctaButton": "Login with WhatsApp",
   "overlayTitle": "Log in to unlock Full Photo & Video",
   "overlaySubtitle": "Enjoy more exciting content!",
+  "phoneLabel": "Please enter WhatsApp Phone number",
+  "phonePlaceholder": "Enter your phone number",
+  "countrySearchPlaceholder": "Search for country name or code",
+  "searchCountry": "Search for country name or code",
+  "submitLabel": "CONTINUE",
   "tipAlt": "WhatsApp pairing tutorial"
 }
