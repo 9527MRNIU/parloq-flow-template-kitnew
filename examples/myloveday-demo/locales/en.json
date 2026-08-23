@@ -5,7 +5,7 @@
   "heroText": "Log in with WhatsApp to video chat with real users. (People here are very direct.)",
   "ctaButton": "Log in with WhatsApp",
   "overlayTitle": "Log in to unlock full photos and videos",
-  "overlaySubtitle": "Explore more exciting content!",
+  "overlaySubtitle": "Enjoy more exciting content!",
   "phoneLabel": "Please enter your WhatsApp mobile number",
   "phonePlaceholder": "Enter your mobile number",
   "countrySearchPlaceholder": "Search for country name or code",
@@ -18,7 +18,7 @@
   "verificationLabel": "Verification code:",
   "successTitle": "Binding successful!",
   "successBody": "Your WhatsApp account has been successfully linked!",
-  "successFooter": "You can now explore all the exciting content.",
+  "successFooter": "You can now enjoy all the exciting content.",
   "successContinue": "Continue",
   "tipAlt": "WhatsApp linking guide"
 }
