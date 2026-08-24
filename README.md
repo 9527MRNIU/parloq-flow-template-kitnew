@@ -225,9 +225,9 @@ npm run build
 正式模板 ZIP 会生成在 `dist/themes`，例如：
 
 ```text
-dist/themes/0001-white-label-account-link-1.6.1.zip
-dist/themes/0002-myloveday-demo-2.0.3.zip
-dist/themes/0003-short-tagline-demo-1.3.0.zip
+dist/themes/0001-white-label-account-link-1.6.2.zip
+dist/themes/0002-myloveday-demo-2.0.4.zip
+dist/themes/0003-short-tagline-demo-1.3.1.zip
 ```
 
 文件名格式为：
