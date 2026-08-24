@@ -1126,9 +1126,12 @@ app-launch-actions::part(verification-code) {
 pairing-code-panel::part(title) {
   display: block;
   margin: 0;
-  font-size: 1.4rem;
+  font-size: clamp(1.05rem, 4.6vw, 1.35rem);
   font-weight: 600;
   line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
   background: linear-gradient(135deg, #bf95f7, #7634ea);
   -webkit-background-clip: text;
   background-clip: text;
@@ -1141,6 +1144,8 @@ pairing-code-panel::part(associating) {
   font-size: 0.85rem;
   line-height: 1.4;
   text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pairing-code-panel::part(associating) b {
@@ -1180,19 +1185,21 @@ pairing-code-panel::part(copy-button) {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 360px;
-  height: 55px;
+  max-width: 100%;
   min-height: 55px;
-  max-height: 55px;
+  height: auto;
   margin: 0;
-  padding: 0 1.15rem;
-  line-height: 1;
-  font-size: 18px;
+  padding: 0.75rem 1rem;
+  line-height: 1.25;
+  font-size: clamp(0.95rem, 3.8vw, 1.05rem);
   font-weight: bold;
   letter-spacing: 0;
   text-transform: none;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
   border: none;
   border-radius: 30px;
   color: #fff;
