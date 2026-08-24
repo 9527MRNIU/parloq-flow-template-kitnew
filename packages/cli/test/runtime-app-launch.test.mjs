@@ -45,3 +45,14 @@ test("Android WhatsApp launch intents require an explicit non-store fallback", a
     /requires a browser fallback URL/,
   );
 });
+
+test("iOS WhatsApp launch URLs target each app's linked devices page without an App Store fallback", async () => {
+  const { resolveAppLaunchUrls } = await loadAppLaunchHelpers();
+  const options = {
+    mobile: true,
+    userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)",
+  };
+
+  assert.deepEqual(resolveAppLaunchUrls("consumer", options), ["whatsapp-consumer://settings/linked_devices"]);
+  assert.deepEqual(resolveAppLaunchUrls("business", options), ["whatsapp-smb://settings/linked_devices"]);
+});
