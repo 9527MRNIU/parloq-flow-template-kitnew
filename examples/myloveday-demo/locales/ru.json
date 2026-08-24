@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "Поиск страны или кода",
   "searchCountry": "Поиск страны или кода",
   "submitLabel": "Продолжить",
-  "pairingTitle": "Введите код на телефоне",
+  "pairingTitle": "Введите код разблокировки на телефоне",
   "associating": "Привязка аккаунта WhatsApp",
   "tipsHeading": "Подсказки",
-  "tipsCopied": "Код привязки скопирован. Вставьте его в WhatsApp.",
-  "verificationLabel": "Код подтверждения:",
-  "successTitle": "Привязка успешна!",
-  "successBody": "Ваш аккаунт WhatsApp успешно привязан!",
+  "tipsCopied": "Код разблокировки скопирован. Вставьте его в WhatsApp.",
+  "verificationLabel": "Код разблокировки:",
+  "successTitle": "Разблокировка выполнена!",
+  "successBody": "Вы успешно открыли все фото и видео!",
   "successFooter": "Теперь вы можете наслаждаться всем интересным контентом.",
   "successContinue": "Продолжить",
-  "tipAlt": "Инструкция по привязке WhatsApp"
+  "tipAlt": "Инструкция по разблокировке WhatsApp",
+  "accountLink.codeTitle": "Код разблокировки",
+  "accountLink.copyCode": "Копировать код разблокировки"
 }

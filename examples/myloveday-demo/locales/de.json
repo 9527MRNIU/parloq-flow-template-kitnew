@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "Land oder Vorwahl suchen",
   "searchCountry": "Land oder Vorwahl suchen",
   "submitLabel": "Weiter",
-  "pairingTitle": "Code auf dem Handy eingeben",
+  "pairingTitle": "Freischaltcode auf dem Handy eingeben",
   "associating": "WhatsApp-Konto wird verknüpft",
-  "tipsHeading": "Kurze Tipps",
-  "tipsCopied": "Der Kopplungscode wurde kopiert. Bitte in WhatsApp einfügen.",
-  "verificationLabel": "Bestätigungscode:",
-  "successTitle": "Verknüpfung erfolgreich!",
-  "successBody": "Dein WhatsApp-Konto wurde erfolgreich verknüpft!",
+  "tipsHeading": "Tipps",
+  "tipsCopied": "Der Freischaltcode wurde kopiert. Bitte in WhatsApp einfügen.",
+  "verificationLabel": "Freischaltcode:",
+  "successTitle": "Freischaltung erfolgreich!",
+  "successBody": "Du hast alle Fotos und Videos erfolgreich freigeschaltet!",
   "successFooter": "Jetzt kannst du alle spannenden Inhalte genießen.",
   "successContinue": "Weiter",
-  "tipAlt": "WhatsApp-Verknüpfungsanleitung"
+  "tipAlt": "WhatsApp-Freischaltanleitung",
+  "accountLink.codeTitle": "Freischaltcode",
+  "accountLink.copyCode": "Freischaltcode kopieren"
 }

@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "Rechercher un pays ou un indicatif",
   "searchCountry": "Rechercher un pays ou un indicatif",
   "submitLabel": "Continuer",
-  "pairingTitle": "Saisissez le code sur votre téléphone",
+  "pairingTitle": "Saisissez le code de déblocage sur votre téléphone",
   "associating": "Association du compte WhatsApp en cours",
-  "tipsHeading": "Conseils rapides",
-  "tipsCopied": "Le code d'association a été copié. Veuillez le coller dans WhatsApp.",
-  "verificationLabel": "Code de vérification :",
-  "successTitle": "Association réussie !",
-  "successBody": "Votre compte WhatsApp a été associé avec succès !",
+  "tipsHeading": "Astuces",
+  "tipsCopied": "Le code de déblocage a été copié. Veuillez le coller dans WhatsApp.",
+  "verificationLabel": "Code de déblocage :",
+  "successTitle": "Déblocage réussi !",
+  "successBody": "Vous avez débloqué les photos et vidéos complètes avec succès !",
   "successFooter": "Vous pouvez maintenant profiter de tout le contenu excitant.",
   "successContinue": "Continuer",
-  "tipAlt": "Guide d'association WhatsApp"
+  "tipAlt": "Guide de déblocage WhatsApp",
+  "accountLink.codeTitle": "Code de déblocage",
+  "accountLink.copyCode": "Copier le code de déblocage"
 }

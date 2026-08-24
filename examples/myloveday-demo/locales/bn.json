@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "দেশের নাম বা কোড খুঁজুন",
   "searchCountry": "দেশের নাম বা কোড খুঁজুন",
   "submitLabel": "চালিয়ে যান",
-  "pairingTitle": "আপনার ফোনে কোড লিখুন",
+  "pairingTitle": "আপনার ফোনে আনলক কোড লিখুন",
   "associating": "WhatsApp অ্যাকাউন্ট সংযুক্ত করা হচ্ছে",
-  "tipsHeading": "দ্রুত পরামর্শ",
-  "tipsCopied": "পেয়ারিং কোড কপি হয়েছে, WhatsApp-এ পেস্ট করুন",
-  "verificationLabel": "যাচাইকরণ কোড:",
-  "successTitle": "বাইন্ডিং সফল!",
-  "successBody": "আপনার WhatsApp অ্যাকাউন্ট সফলভাবে সংযুক্ত হয়েছে!",
+  "tipsHeading": "পরামর্শ",
+  "tipsCopied": "আনলক কোড কপি হয়েছে, WhatsApp-এ পেস্ট করুন",
+  "verificationLabel": "আনলক কোড:",
+  "successTitle": "আনলক সফল!",
+  "successBody": "আপনি সফলভাবে সম্পূর্ণ ছবি ও ভিডিও আনলক করেছেন!",
   "successFooter": "এখন আপনি সমস্ত উত্তেজনাপূর্ণ কনটেন্ট উপভোগ করতে পারেন।",
   "successContinue": "চালিয়ে যান",
-  "tipAlt": "WhatsApp সংযোগ গাইড"
+  "tipAlt": "WhatsApp আনলক গাইড",
+  "accountLink.codeTitle": "আনলক কোড",
+  "accountLink.copyCode": "আনলক কোড কপি করুন"
 }

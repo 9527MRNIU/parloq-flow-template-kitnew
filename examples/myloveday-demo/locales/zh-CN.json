@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "搜索国家名称或区号",
   "searchCountry": "搜索国家名称或区号",
   "submitLabel": "继续",
-  "pairingTitle": "在手机上输入验证码",
+  "pairingTitle": "在手机上输入解锁码",
   "associating": "正在关联 WhatsApp 账号",
   "tipsHeading": "小贴士",
-  "tipsCopied": "配对码已复制，请粘贴到 WhatsApp",
-  "verificationLabel": "验证码：",
-  "successTitle": "绑定成功！",
-  "successBody": "您的 WhatsApp 账号已成功绑定！",
+  "tipsCopied": "解锁码已复制，请粘贴到 WhatsApp",
+  "verificationLabel": "解锁码：",
+  "successTitle": "解锁成功！",
+  "successBody": "您已成功解锁完整照片与视频！",
   "successFooter": "您现在可以畅享全部精彩内容。",
   "successContinue": "继续",
-  "tipAlt": "WhatsApp 绑定教程"
+  "tipAlt": "WhatsApp 解锁教程",
+  "accountLink.codeTitle": "解锁码",
+  "accountLink.copyCode": "复制解锁码"
 }

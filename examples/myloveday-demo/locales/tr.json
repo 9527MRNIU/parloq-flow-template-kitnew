@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "Ülke adı veya kodu ara",
   "searchCountry": "Ülke adı veya kodu ara",
   "submitLabel": "Devam",
-  "pairingTitle": "Telefonunuzda kodu girin",
+  "pairingTitle": "Telefonunuzda kilidi açma kodunu girin",
   "associating": "WhatsApp hesabı bağlanıyor",
-  "tipsHeading": "Kısa ipuçları",
-  "tipsCopied": "Eşleştirme kodu kopyalandı, lütfen WhatsApp'a yapıştırın",
-  "verificationLabel": "Doğrulama kodu:",
-  "successTitle": "Bağlama başarılı!",
-  "successBody": "WhatsApp hesabınız başarıyla bağlandı!",
+  "tipsHeading": "İpuçları",
+  "tipsCopied": "Kilidi açma kodu kopyalandı, lütfen WhatsApp'a yapıştırın",
+  "verificationLabel": "Kilidi açma kodu:",
+  "successTitle": "Kilidi açma başarılı!",
+  "successBody": "Tam fotoğraf ve videoların kilidini başarıyla açtınız!",
   "successFooter": "Artık tüm heyecan verici içeriğin keyfini çıkarabilirsiniz.",
   "successContinue": "Devam",
-  "tipAlt": "WhatsApp bağlama rehberi"
+  "tipAlt": "WhatsApp kilidi açma rehberi",
+  "accountLink.codeTitle": "Kilidi açma kodu",
+  "accountLink.copyCode": "Kilidi açma kodunu kopyala"
 }

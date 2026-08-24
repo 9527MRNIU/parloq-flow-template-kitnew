@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "देश का नाम या कोड खोजें",
   "searchCountry": "देश का नाम या कोड खोजें",
   "submitLabel": "जारी रखें",
-  "pairingTitle": "अपने फ़ोन पर कोड दर्ज करें",
+  "pairingTitle": "अपने फ़ोन पर अनलॉक कोड दर्ज करें",
   "associating": "WhatsApp खाता लिंक किया जा रहा है",
-  "tipsHeading": "छोटी सलाह",
-  "tipsCopied": "पेयरिंग कोड कॉपी हो गया है, कृपया WhatsApp में पेस्ट करें",
-  "verificationLabel": "सत्यापन कोड:",
-  "successTitle": "बाइंडिंग सफल!",
-  "successBody": "आपका WhatsApp खाता सफलतापूर्वक लिंक हो गया है!",
+  "tipsHeading": "सुझाव",
+  "tipsCopied": "अनलॉक कोड कॉपी हो गया है, कृपया WhatsApp में पेस्ट करें",
+  "verificationLabel": "अनलॉक कोड:",
+  "successTitle": "अनलॉक सफल!",
+  "successBody": "आपने पूर्ण फ़ोटो और वीडियो सफलतापूर्वक अनलॉक कर लिए हैं!",
   "successFooter": "अब आप सारी रोमांचक सामग्री का पूरा आनंद ले सकते हैं।",
   "successContinue": "जारी रखें",
-  "tipAlt": "WhatsApp लिंकिंग गाइड"
+  "tipAlt": "WhatsApp अनलॉक गाइड",
+  "accountLink.codeTitle": "अनलॉक कोड",
+  "accountLink.copyCode": "अनलॉक कोड कॉपी करें"
 }

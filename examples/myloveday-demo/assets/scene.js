@@ -28,6 +28,32 @@
   let pairingCountdownTimer = null;
   let pairingCountdownEndsAt = 0;
 
+  function patchAccountLinkStatusState() {
+    customElements.whenDefined("account-link-status").then(() => {
+      const StatusClass = customElements.get("account-link-status");
+      if (!StatusClass?.prototype?.setState || StatusClass.prototype.__mylovedayStatePatched) return;
+
+      const originalSetState = StatusClass.prototype.setState;
+      StatusClass.prototype.setState = function (state, message) {
+        if (state) this.dataset.statusState = state;
+        else delete this.dataset.statusState;
+        return originalSetState.call(this, state, message);
+      };
+
+      const originalReset = StatusClass.prototype.reset;
+      if (typeof originalReset === "function") {
+        StatusClass.prototype.reset = function () {
+          delete this.dataset.statusState;
+          return originalReset.call(this);
+        };
+      }
+
+      StatusClass.prototype.__mylovedayStatePatched = true;
+    });
+  }
+
+  patchAccountLinkStatusState();
+
   function readThemeCopy() {
     const copy = {};
     document.querySelectorAll("[data-copy]").forEach((node) => {
@@ -790,14 +816,22 @@
         if (modal) modal.hidden = false;
       };
 
+      const shouldOpenSuccessModal = () => {
+        if (status.hidden) return false;
+        return (
+          status.dataset.statusTone === "success" ||
+          status.dataset.statusState === "account_already_linked"
+        );
+      };
+
       const sync = () => {
-        if (status.dataset.statusTone === "success" && !status.hidden) openSuccessModal();
+        if (shouldOpenSuccessModal()) openSuccessModal();
       };
 
       sync();
       new MutationObserver(sync).observe(status, {
         attributes: true,
-        attributeFilter: ["data-status-tone", "hidden"],
+        attributeFilter: ["data-status-tone", "data-status-state", "hidden"],
       });
 
       document.getElementById("success-continue-btn")?.addEventListener("click", () => {

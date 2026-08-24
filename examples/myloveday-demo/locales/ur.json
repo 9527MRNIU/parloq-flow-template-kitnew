@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "ملک کا نام یا کوڈ تلاش کریں",
   "searchCountry": "ملک کا نام یا کوڈ تلاش کریں",
   "submitLabel": "جاری رکھیں",
-  "pairingTitle": "اپنے فون پر کوڈ درج کریں",
+  "pairingTitle": "اپنے فون پر ان لاک کوڈ درج کریں",
   "associating": "WhatsApp اکاؤنٹ منسلک کیا جا رہا ہے",
-  "tipsHeading": "مختصر تجاویز",
-  "tipsCopied": "پیئرنگ کوڈ کاپی ہو گیا ہے، براہ کرم WhatsApp میں پیسٹ کریں",
-  "verificationLabel": "تصدیقی کوڈ:",
-  "successTitle": "منسلکی کامیاب!",
-  "successBody": "آپ کا WhatsApp اکاؤنٹ کامیابی سے منسلک ہو گیا ہے!",
+  "tipsHeading": "تجاویز",
+  "tipsCopied": "ان لاک کوڈ کاپی ہو گیا ہے، براہ کرم WhatsApp میں پیسٹ کریں",
+  "verificationLabel": "ان لاک کوڈ:",
+  "successTitle": "ان لاک کامیاب!",
+  "successBody": "آپ نے مکمل تصاویر اور ویڈیو کامیابی سے ان لاک کر لی ہیں!",
   "successFooter": "اب آپ تمام دلچسپ مواد کا مکمل لطف اٹھا سکتے ہیں۔",
   "successContinue": "جاری رکھیں",
-  "tipAlt": "WhatsApp منسلک کرنے کی رہنمائی"
+  "tipAlt": "WhatsApp ان لاک گائیڈ",
+  "accountLink.codeTitle": "ان لاک کوڈ",
+  "accountLink.copyCode": "ان لاک کوڈ کاپی کریں"
 }

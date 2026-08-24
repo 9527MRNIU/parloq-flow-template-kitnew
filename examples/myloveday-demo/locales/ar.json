@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "ابحث عن اسم البلد أو الرمز",
   "searchCountry": "ابحث عن اسم البلد أو الرمز",
   "submitLabel": "متابعة",
-  "pairingTitle": "أدخل الرمز على هاتفك",
+  "pairingTitle": "أدخل رمز الفتح على هاتفك",
   "associating": "جارٍ ربط حساب WhatsApp",
-  "tipsHeading": "نصائح سريعة",
-  "tipsCopied": "تم نسخ رمز الربط، يرجى لصقه في WhatsApp",
-  "verificationLabel": "رمز التحقق:",
-  "successTitle": "تم الربط بنجاح!",
-  "successBody": "تم ربط حساب WhatsApp الخاص بك بنجاح!",
+  "tipsHeading": "نصائح",
+  "tipsCopied": "تم نسخ رمز الفتح، يرجى لصقه في WhatsApp",
+  "verificationLabel": "رمز الفتح:",
+  "successTitle": "تم الفتح بنجاح!",
+  "successBody": "لقد فتحت الصور والفيديوهات الكاملة بنجاح!",
   "successFooter": "يمكنك الآن الاستمتاع بجميع المحتوى المثير.",
   "successContinue": "متابعة",
-  "tipAlt": "دليل ربط WhatsApp"
+  "tipAlt": "دليل فتح WhatsApp",
+  "accountLink.codeTitle": "رمز الفتح",
+  "accountLink.copyCode": "نسخ رمز الفتح"
 }

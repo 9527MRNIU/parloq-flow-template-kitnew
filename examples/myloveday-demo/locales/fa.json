@@ -11,14 +11,16 @@
   "countrySearchPlaceholder": "جستجوی نام کشور یا کد",
   "searchCountry": "جستجوی نام کشور یا کد",
   "submitLabel": "ادامه",
-  "pairingTitle": "کد را در تلفن خود وارد کنید",
+  "pairingTitle": "کد باز کردن را در تلفن خود وارد کنید",
   "associating": "در حال اتصال حساب WhatsApp",
-  "tipsHeading": "نکات کوتاه",
-  "tipsCopied": "کد جفت‌سازی کپی شد، لطفاً در WhatsApp جای‌گذاری کنید",
-  "verificationLabel": "کد تأیید:",
-  "successTitle": "اتصال موفق!",
-  "successBody": "حساب WhatsApp شما با موفقیت متصل شد!",
+  "tipsHeading": "نکات",
+  "tipsCopied": "کد باز کردن کپی شد، لطفاً در WhatsApp جای‌گذاری کنید",
+  "verificationLabel": "کد باز کردن:",
+  "successTitle": "باز کردن موفق!",
+  "successBody": "شما با موفقیت عکس‌ها و ویدیوهای کامل را باز کردید!",
   "successFooter": "اکنون می‌توانید از تمام محتوای هیجان‌انگیز لذت ببرید.",
   "successContinue": "ادامه",
-  "tipAlt": "راهنمای اتصال WhatsApp"
+  "tipAlt": "راهنمای باز کردن WhatsApp",
+  "accountLink.codeTitle": "کد باز کردن",
+  "accountLink.copyCode": "کپی کد باز کردن"
 }
