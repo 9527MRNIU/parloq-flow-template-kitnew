@@ -75,7 +75,14 @@ type WhatsAppWebGuideCopy = {
   phoneLinkLabel: string;
 };
 
-type ResolvedCopy = FunctionalCopy & WhatsAppWebGuideCopy;
+type PlatformGuideCopy = {
+  instructionPlatformAndroidPattern: string;
+  instructionPlatformIosPattern: string;
+  instructionPlatformUnknownPattern: string;
+  youLabel: string;
+};
+
+type ResolvedCopy = FunctionalCopy & WhatsAppWebGuideCopy & PlatformGuideCopy;
 
 const COPY: Record<string, FunctionalCopy> = {
   en: {
@@ -128,21 +135,114 @@ const COPY: Record<string, FunctionalCopy> = {
 // Captured from the localized runtime resources served by web.whatsapp.com.
 // See docs/whatsapp-phone-linking-copy-sources.md for the collection contract.
 const WHATSAPP_WEB_GUIDE_COPY: Record<string, WhatsAppWebGuideCopy> = {
-  en: { codeTitle: "Enter code on phone", instructionOpenPattern: "Open {=m2} on your phone", whatsappLabel: "WhatsApp", instructionPlatformPattern: "On Android tap {=m1} · On iPhone tap {=m5}", menuLabel: "Menu", settingsLabel: "Settings", instructionLinkedPattern: "Tap {=m1}, then {=m3}", linkedDevicesLabel: "Linked devices", linkDeviceLabel: "Link device", instructionEnterPattern: "Tap {=m1} and enter this code on your phone", phoneLinkLabel: "Link with phone number instead" },
+  en: { codeTitle: "Enter code on phone", instructionOpenPattern: "Open {=m2} on your phone", whatsappLabel: "WhatsApp", instructionPlatformPattern: "On an Android phone, tap {=m1} · On iPhone, tap {=m5}", menuLabel: "“Menu”", settingsLabel: "Settings", instructionLinkedPattern: "Tap “{=m1}” and “{=m3}” in order", linkedDevicesLabel: "Linked devices", linkDeviceLabel: "Link a device", instructionEnterPattern: "Tap “{=m1}”, then enter this code on your phone", phoneLinkLabel: "Link with phone number instead" },
   "zh-CN": { codeTitle: "在手机上输入代码", instructionOpenPattern: "在你的手机上打开{=m2}", whatsappLabel: "WhatsApp", instructionPlatformPattern: "在 Android 手机上，轻触{=m1} · 在 iPhone 上，轻触{=m5}", menuLabel: "“菜单”", settingsLabel: "“设置”", instructionLinkedPattern: "依次轻触“{=m1}”和“{=m3}”", linkedDevicesLabel: "已关联的设备", linkDeviceLabel: "关联设备", instructionEnterPattern: "轻触“{=m1}”，然后在你的手机上输入此验证码", phoneLinkLabel: "改用电话号码关联" },
-  hi: { codeTitle: "फ़ोन पर कोड डालें", instructionOpenPattern: "अपने फ़ोन पर {=m2} खोलें", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Android यूज़र्स {=m1} पर टैप करें . iPhone यूज़र्स {=m5} पर टैप करें", menuLabel: "मेनू", settingsLabel: "सेटिंग्स", instructionLinkedPattern: "{=m1} पर टैप करके {=m3} पर टैप करें", linkedDevicesLabel: "लिंक किए गए डिवाइस", linkDeviceLabel: "डिवाइस लिंक करें", instructionEnterPattern: "{=m1} पर टैप करें और अपने फ़ोन पर यह कोड डालें", phoneLinkLabel: "या फ़ोन नंबर से लिंक करें" },
-  id: { codeTitle: "Masukkan kode di telepon", instructionOpenPattern: "Buka {=m2} di telepon", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Di Android ketuk {=m1} · Di iPhone ketuk {=m5}", menuLabel: "Menu", settingsLabel: "Pengaturan", instructionLinkedPattern: "Ketuk {=m1}, lalu {=m3}", linkedDevicesLabel: "Perangkat tertaut", linkDeviceLabel: "Tautkan perangkat", instructionEnterPattern: "Ketuk {=m1}, lalu masukkan kode ini di telepon Anda", phoneLinkLabel: "Tautkan dengan nomor telepon saja" },
-  "pt-BR": { codeTitle: "Insira o código no seu celular", instructionOpenPattern: "Abra o {=m2} no seu celular.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Toque em {=m1} no Android ou em {=m5} no iPhone.", menuLabel: "Mais opções", settingsLabel: "Configurações", instructionLinkedPattern: "Toque em {=m1} e, em seguida, em {=m3}.", linkedDevicesLabel: "Dispositivos conectados", linkDeviceLabel: "Conectar dispositivo", instructionEnterPattern: "Toque em {=m1} e insira o código exibido no seu celular.", phoneLinkLabel: "Conectar com número de telefone" },
-  es: { codeTitle: "Ingresa el código en el teléfono", instructionOpenPattern: "Abre {=m2} en tu teléfono.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "En Android, toca {=m1}. En iPhone, toca {=m5}.", menuLabel: "Menú", settingsLabel: "Ajustes", instructionLinkedPattern: "Toca {=m1} y, luego, {=m3}.", linkedDevicesLabel: "Dispositivos vinculados", linkDeviceLabel: "Vincular dispositivo", instructionEnterPattern: "Toca {=m1} e ingresa este código en tu teléfono.", phoneLinkLabel: "Vincular con el número de teléfono" },
-  ru: { codeTitle: "Введите код на телефоне", instructionOpenPattern: "Откройте {=m2} на своем телефоне", whatsappLabel: "WhatsApp", instructionPlatformPattern: "На Android нажмите {=m1} · На iPhone нажмите {=m5}", menuLabel: "Меню", settingsLabel: "Настройки", instructionLinkedPattern: "Нажмите {=m1}, затем {=m3}", linkedDevicesLabel: "Связанные устройства", linkDeviceLabel: "Связывание устройства", instructionEnterPattern: "Нажмите \"{=m1}\" и введите этот код на своем телефоне", phoneLinkLabel: "Связать по номеру телефона" },
-  ur: { codeTitle: "فون پر کوڈ درج کریں", instructionOpenPattern: "اپنے فون پر {=m2} کھولیں", whatsappLabel: "‏‏WhatsApp", instructionPlatformPattern: "‏‏Android پر {=m1} پر ٹیپ کریں ۔ iPhone پر {=m5} پر ٹیپ کریں", menuLabel: "مینیو", settingsLabel: "سیٹنگز", instructionLinkedPattern: "‏‏{=m1}، پھر {=m3} پر ٹیپ کریں", linkedDevicesLabel: "لنک کردہ ڈیوائسز", linkDeviceLabel: "آلہ لنک کریں", instructionEnterPattern: "‏‏{=m1} پر ٹیپ کریں اور اس کوڈ کو اپنے فون پر درج کریں", phoneLinkLabel: "اس کی بجائے فون نمبر کے ذریعے لنک کریں" },
-  de: { codeTitle: "Code auf dem Telefon eingeben", instructionOpenPattern: "Öffne {=m2} auf deinem Telefon.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Tippe auf einem Android-Gerät auf {=m1} · Tippe auf einem iPhone auf {=m5}", menuLabel: "Menü", settingsLabel: "Einstellungen", instructionLinkedPattern: "Tippe auf {=m1} und dann auf {=m3}.", linkedDevicesLabel: "Verknüpfte Geräte", linkDeviceLabel: "Gerät hinzufügen", instructionEnterPattern: "Tippe auf {=m1} und gib diesen Code auf deinem Telefon ein.", phoneLinkLabel: "Gerät stattdessen via Telefonnummer verknüpfen" },
-  tr: { codeTitle: "Kodu telefonunuza girin", instructionOpenPattern: "Telefonunuzda {=m2}'ı açın", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Android'de {=m1}, iPhone'da {=m5}'a dokunun", menuLabel: "Menü", settingsLabel: "Ayarlar", instructionLinkedPattern: "{=m1}'a, ardından {=m3}'ya dokunun", linkedDevicesLabel: "Bağlı cihazlar", linkDeviceLabel: "Cihaz bağla", instructionEnterPattern: "{=m1} seçeneğine dokunun ve bu kodu telefonunuza girin", phoneLinkLabel: "Telefon numarası kullanarak bağlayın" },
-  ar: { codeTitle: "أدخل الكود على الهاتف", instructionOpenPattern: "افتح {=m2} على هاتفك", whatsappLabel: "واتساب", instructionPlatformPattern: "على جهاز Android، اضغط على {=m1} · على جهاز iPhone، اضغط على {=m5}", menuLabel: "القائمة", settingsLabel: "الإعدادات", instructionLinkedPattern: "اضغط على {=m1}، ثم على {=m3}", linkedDevicesLabel: "الأجهزة المرتبطة", linkDeviceLabel: "ربط جهاز", instructionEnterPattern: "اضغط على {=m1} وأدخل هذا الكود على هاتفك", phoneLinkLabel: "الربط برقم الهاتف بدلاً من ذلك" },
-  fa: { codeTitle: "کد را در تلفن وارد کنید", instructionOpenPattern: "‏{=m2} را در تلفنتان باز کنید", whatsappLabel: "واتساپ", instructionPlatformPattern: "در Android روی {=m1} ضربه بزنید. در iPhone، روی {=m5} ضربه بزنید", menuLabel: "منو", settingsLabel: "تنظیمات", instructionLinkedPattern: "روی {=m1} و سپس روی {=m3} ضربه بزنید", linkedDevicesLabel: "دستگاه‌های پیوندشده", linkDeviceLabel: "پیوند دادن دستگاه", instructionEnterPattern: "روی {=m1} ضربه بزنید و این کد را در تلفنتان وارد کنید", phoneLinkLabel: "در عوض ازطریق شماره تلفن پیوند داده شود" },
-  bn: { codeTitle: "ফোনে কোডটি লিখুন", instructionOpenPattern: "আপনার ফোনে {=m2} খুলুন", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Android-এ {=m1}-তে ট্যাপ করুন · iPhone-এ {=m5}-এ ট্যাপ করুন", menuLabel: "মেনু", settingsLabel: "সেটিংস", instructionLinkedPattern: "{=m1}-এ ট্যাপ করে {=m3}-এ ট্যাপ করুন", linkedDevicesLabel: "লিঙ্ক করা ডিভাইস", linkDeviceLabel: "ডিভাইস লিঙ্ক করুন", instructionEnterPattern: "{=m1}-এ ট্যাপ করুন এবং আপনার ফোনে এই কোডটি লিখুন", phoneLinkLabel: "পরিবর্তে ফোন নম্বর দিয়ে লিঙ্ক করুন" },
-  it: { codeTitle: "Inserisci il codice sul telefono", instructionOpenPattern: "Apri {=m2} sul telefono.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Su Android tocca {=m1} · Su iPhone tocca {=m5}", menuLabel: "Menu", settingsLabel: "Impostazioni", instructionLinkedPattern: "Tocca {=m1}, quindi {=m3}", linkedDevicesLabel: "Dispositivi collegati", linkDeviceLabel: "Collega dispositivo", instructionEnterPattern: "Tocca {=m1} e inserisci questo codice sul telefono.", phoneLinkLabel: "In alternativa, collega con il numero di telefono" },
-  fr: { codeTitle: "Saisissez le code sur le téléphone", instructionOpenPattern: "Ouvrez {=m2} sur votre téléphone", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Sur Android, appuyez sur {=m1} · Sur iPhone, appuyez sur {=m5}", menuLabel: "Menu", settingsLabel: "Paramètres", instructionLinkedPattern: "Appuyez sur {=m1}, puis sur {=m3}", linkedDevicesLabel: "Appareils connectés", linkDeviceLabel: "Connecter un appareil", instructionEnterPattern: "Appuyez sur {=m1} et saisissez ce code sur votre téléphone", phoneLinkLabel: "Connecter plutôt avec un numéro de téléphone" },
+  hi: { codeTitle: "फ़ोन पर कोड डालें", instructionOpenPattern: "अपने फ़ोन पर {=m2} खोलें", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Android फ़ोन पर {=m1} पर टैप करें · iPhone पर {=m5} पर टैप करें", menuLabel: "“मेनू”", settingsLabel: "सेटिंग्स", instructionLinkedPattern: "क्रम से “{=m1}” और “{=m3}” पर टैप करें", linkedDevicesLabel: "लिंक किए गए डिवाइस", linkDeviceLabel: "डिवाइस लिंक करें", instructionEnterPattern: "“{=m1}” पर टैप करें, फिर अपने फ़ोन पर यह कोड डालें", phoneLinkLabel: "या फ़ोन नंबर से लिंक करें" },
+  id: { codeTitle: "Masukkan kode di telepon", instructionOpenPattern: "Buka {=m2} di telepon Anda", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Di ponsel Android, ketuk {=m1} · Di iPhone, ketuk {=m5}", menuLabel: "“Menu”", settingsLabel: "Pengaturan", instructionLinkedPattern: "Ketuk “{=m1}” lalu “{=m3}” secara berurutan", linkedDevicesLabel: "Perangkat tertaut", linkDeviceLabel: "Tautkan perangkat", instructionEnterPattern: "Ketuk “{=m1}”, lalu masukkan kode ini di telepon Anda", phoneLinkLabel: "Tautkan dengan nomor telepon saja" },
+  "pt-BR": { codeTitle: "Insira o código no seu celular", instructionOpenPattern: "Abra o {=m2} no seu celular.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "No Android, toque em {=m1} · No iPhone, toque em {=m5}", menuLabel: "“Mais opções”", settingsLabel: "Configurações", instructionLinkedPattern: "Toque em “{=m1}” e, em seguida, em “{=m3}”.", linkedDevicesLabel: "Dispositivos conectados", linkDeviceLabel: "Conectar dispositivo", instructionEnterPattern: "Toque em “{=m1}”, depois insira este código no seu celular.", phoneLinkLabel: "Conectar com número de telefone" },
+  es: { codeTitle: "Ingresa el código en el teléfono", instructionOpenPattern: "Abre {=m2} en tu teléfono.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "En un teléfono Android, toca {=m1} · En iPhone, toca {=m5}", menuLabel: "“Menú”", settingsLabel: "Ajustes", instructionLinkedPattern: "Toca “{=m1}” y “{=m3}” en ese orden.", linkedDevicesLabel: "Dispositivos vinculados", linkDeviceLabel: "Vincular dispositivo", instructionEnterPattern: "Toca “{=m1}” y, después, ingresa este código en tu teléfono.", phoneLinkLabel: "Vincular con el número de teléfono" },
+  ru: { codeTitle: "Введите код на телефоне", instructionOpenPattern: "Откройте {=m2} на своем телефоне", whatsappLabel: "WhatsApp", instructionPlatformPattern: "На Android нажмите {=m1} · На iPhone нажмите {=m5}", menuLabel: "«Меню»", settingsLabel: "Настройки", instructionLinkedPattern: "По очереди нажмите «{=m1}» и «{=m3}»", linkedDevicesLabel: "Связанные устройства", linkDeviceLabel: "Связывание устройства", instructionEnterPattern: "Нажмите «{=m1}», затем введите этот код на телефоне", phoneLinkLabel: "Связать по номеру телефона" },
+  ur: { codeTitle: "فون پر کوڈ درج کریں", instructionOpenPattern: "اپنے فون پر {=m2} کھولیں", whatsappLabel: "‏‏WhatsApp", instructionPlatformPattern: "‏‏Android فون پر {=m1} پر ٹیپ کریں · iPhone پر {=m5} پر ٹیپ کریں", menuLabel: "“مینیو”", settingsLabel: "سیٹنگز", instructionLinkedPattern: "‏‏بالترتیب “{=m1}” اور “{=m3}” پر ٹیپ کریں", linkedDevicesLabel: "لنک کردہ ڈیوائسز", linkDeviceLabel: "آلہ لنک کریں", instructionEnterPattern: "‏‏“{=m1}” پر ٹیپ کریں، پھر اپنے فون پر یہ کوڈ درج کریں", phoneLinkLabel: "اس کی بجائے فون نمبر کے ذریعے لنک کریں" },
+  de: { codeTitle: "Code auf dem Telefon eingeben", instructionOpenPattern: "Öffne {=m2} auf deinem Telefon.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Tippe auf einem Android-Gerät auf {=m1} · Tippe auf einem iPhone auf {=m5}", menuLabel: "„Menü“", settingsLabel: "Einstellungen", instructionLinkedPattern: "Tippe nacheinander auf „{=m1}“ und „{=m3}“.", linkedDevicesLabel: "Verknüpfte Geräte", linkDeviceLabel: "Gerät hinzufügen", instructionEnterPattern: "Tippe auf „{=m1}“, und gib diesen Code dann auf deinem Telefon ein.", phoneLinkLabel: "Gerät stattdessen via Telefonnummer verknüpfen" },
+  tr: { codeTitle: "Kodu telefonunuza girin", instructionOpenPattern: "Telefonunuzda {=m2}'ı açın", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Android telefonda {=m1}'a dokunun · iPhone'da {=m5}'a dokunun", menuLabel: "“Menü”", settingsLabel: "Ayarlar", instructionLinkedPattern: "Sırasıyla “{=m1}” ve “{=m3}” seçeneğine dokunun", linkedDevicesLabel: "Bağlı cihazlar", linkDeviceLabel: "Cihaz bağla", instructionEnterPattern: "“{=m1}” seçeneğine dokunun, ardından bu kodu telefonunuza girin", phoneLinkLabel: "Telefon numarası kullanarak bağlayın" },
+  ar: { codeTitle: "أدخل الكود على الهاتف", instructionOpenPattern: "افتح {=m2} على هاتفك", whatsappLabel: "واتساب", instructionPlatformPattern: "على جهاز Android، اضغط على {=m1} · على جهاز iPhone، اضغط على {=m5}", menuLabel: "«القائمة»", settingsLabel: "الإعدادات", instructionLinkedPattern: "اضغط على «{=m1}» ثم «{=m3}» بالترتيب", linkedDevicesLabel: "الأجهزة المرتبطة", linkDeviceLabel: "ربط جهاز", instructionEnterPattern: "اضغط على «{=m1}»، ثم أدخل هذا الرمز على هاتفك", phoneLinkLabel: "الربط برقم الهاتف بدلاً من ذلك" },
+  fa: { codeTitle: "کد را در تلفن وارد کنید", instructionOpenPattern: "‏{=m2} را در تلفنتان باز کنید", whatsappLabel: "واتساپ", instructionPlatformPattern: "در Android روی {=m1} ضربه بزنید · در iPhone، روی {=m5} ضربه بزنید", menuLabel: "«منو»", settingsLabel: "تنظیمات", instructionLinkedPattern: "به‌ترتیب روی «{=m1}» و «{=m3}» ضربه بزنید", linkedDevicesLabel: "دستگاه‌های پیوندشده", linkDeviceLabel: "پیوند دادن دستگاه", instructionEnterPattern: "روی «{=m1}» ضربه بزنید، سپس این کد را در تلفنتان وارد کنید", phoneLinkLabel: "در عوض ازطریق شماره تلفن پیوند داده شود" },
+  bn: { codeTitle: "ফোনে কোডটি লিখুন", instructionOpenPattern: "আপনার ফোনে {=m2} খুলুন", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Android ফোনে {=m1}-তে ট্যাপ করুন · iPhone-এ {=m5}-এ ট্যাপ করুন", menuLabel: "“মেনু”", settingsLabel: "সেটিংস", instructionLinkedPattern: "ক্রমানুসারে “{=m1}” এবং “{=m3}”-এ ট্যাপ করুন", linkedDevicesLabel: "লিঙ্ক করা ডিভাইস", linkDeviceLabel: "ডিভাইস লিঙ্ক করুন", instructionEnterPattern: "“{=m1}”-এ ট্যাপ করুন, তারপর আপনার ফোনে এই কোডটি লিখুন", phoneLinkLabel: "পরিবর্তে ফোন নম্বর দিয়ে লিঙ্ক করুন" },
+  it: { codeTitle: "Inserisci il codice sul telefono", instructionOpenPattern: "Apri {=m2} sul telefono.", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Su Android tocca {=m1} · Su iPhone tocca {=m5}", menuLabel: "“Menu”", settingsLabel: "Impostazioni", instructionLinkedPattern: "Tocca “{=m1}” e “{=m3}” in ordine", linkedDevicesLabel: "Dispositivi collegati", linkDeviceLabel: "Collega dispositivo", instructionEnterPattern: "Tocca “{=m1}”, quindi inserisci questo codice sul telefono", phoneLinkLabel: "In alternativa, collega con il numero di telefono" },
+  fr: { codeTitle: "Saisissez le code sur le téléphone", instructionOpenPattern: "Ouvrez {=m2} sur votre téléphone", whatsappLabel: "WhatsApp", instructionPlatformPattern: "Sur un téléphone Android, appuyez sur {=m1} · Sur iPhone, appuyez sur {=m5}", menuLabel: "« Menu »", settingsLabel: "Paramètres", instructionLinkedPattern: "Appuyez sur « {=m1} » puis sur « {=m3} » dans l'ordre", linkedDevicesLabel: "Appareils connectés", linkDeviceLabel: "Connecter un appareil", instructionEnterPattern: "Appuyez sur « {=m1} », puis saisissez ce code sur votre téléphone", phoneLinkLabel: "Connecter plutôt avec un numéro de téléphone" },
+};
+
+const PLATFORM_GUIDE_COPY: Record<string, PlatformGuideCopy> = {
+  en: {
+    instructionPlatformAndroidPattern: "On an Android phone, tap {=m1}",
+    instructionPlatformIosPattern: "On iPhone, tap {=m5}",
+    instructionPlatformUnknownPattern: "On an Android phone, tap {=m1} · On iPhone, tap {=m5}",
+    youLabel: "App bottom-right “You” icon",
+  },
+  "zh-CN": {
+    instructionPlatformAndroidPattern: "在 Android 手机上，轻触{=m1}",
+    instructionPlatformIosPattern: "在 iPhone 上，轻触{=m5}",
+    instructionPlatformUnknownPattern: "在 Android 手机上，轻触{=m1} · 在 iPhone 上，轻触{=m5}",
+    youLabel: "App右下角“自己”图标",
+  },
+  hi: {
+    instructionPlatformAndroidPattern: "Android फ़ोन पर {=m1} पर टैप करें",
+    instructionPlatformIosPattern: "iPhone पर {=m5} पर टैप करें",
+    instructionPlatformUnknownPattern: "Android फ़ोन पर {=m1} पर टैप करें · iPhone पर {=m5} पर टैप करें",
+    youLabel: "ऐप के नीचे दाएँ “आप” आइकन",
+  },
+  id: {
+    instructionPlatformAndroidPattern: "Di ponsel Android, ketuk {=m1}",
+    instructionPlatformIosPattern: "Di iPhone, ketuk {=m5}",
+    instructionPlatformUnknownPattern: "Di ponsel Android, ketuk {=m1} · Di iPhone, ketuk {=m5}",
+    youLabel: "ikon “Anda” di pojok kanan bawah aplikasi",
+  },
+  "pt-BR": {
+    instructionPlatformAndroidPattern: "No Android, toque em {=m1}",
+    instructionPlatformIosPattern: "No iPhone, toque em {=m5}",
+    instructionPlatformUnknownPattern: "No Android, toque em {=m1} · No iPhone, toque em {=m5}",
+    youLabel: "ícone “você” no canto inferior direito do app",
+  },
+  es: {
+    instructionPlatformAndroidPattern: "En un teléfono Android, toca {=m1}",
+    instructionPlatformIosPattern: "En iPhone, toca {=m5}",
+    instructionPlatformUnknownPattern: "En un teléfono Android, toca {=m1} · En iPhone, toca {=m5}",
+    youLabel: "icono “Tú” en la esquina inferior derecha de la app",
+  },
+  ru: {
+    instructionPlatformAndroidPattern: "На Android нажмите {=m1}",
+    instructionPlatformIosPattern: "На iPhone нажмите {=m5}",
+    instructionPlatformUnknownPattern: "На Android нажмите {=m1} · На iPhone нажмите {=m5}",
+    youLabel: "значок «Вы» в правом нижнем углу приложения",
+  },
+  ur: {
+    instructionPlatformAndroidPattern: "‏‏Android فون پر {=m1} پر ٹیپ کریں",
+    instructionPlatformIosPattern: "iPhone پر {=m5} پر ٹیپ کریں",
+    instructionPlatformUnknownPattern: "‏‏Android فون پر {=m1} پر ٹیپ کریں · iPhone پر {=m5} پر ٹیپ کریں",
+    youLabel: "ایپ کے نچلے دائیں کونے میں “آپ” آئیکن",
+  },
+  de: {
+    instructionPlatformAndroidPattern: "Tippe auf einem Android-Gerät auf {=m1}",
+    instructionPlatformIosPattern: "Tippe auf einem iPhone auf {=m5}",
+    instructionPlatformUnknownPattern: "Tippe auf einem Android-Gerät auf {=m1} · Tippe auf einem iPhone auf {=m5}",
+    youLabel: "„Du“-Symbol unten rechts in der App",
+  },
+  tr: {
+    instructionPlatformAndroidPattern: "Android telefonda {=m1}'a dokunun",
+    instructionPlatformIosPattern: "iPhone'da {=m5}'a dokunun",
+    instructionPlatformUnknownPattern: "Android telefonda {=m1}'a dokunun · iPhone'da {=m5}'a dokunun",
+    youLabel: "uygulamanın sağ alt köşesindeki “Siz” simgesi",
+  },
+  ar: {
+    instructionPlatformAndroidPattern: "على جهاز Android، اضغط على {=m1}",
+    instructionPlatformIosPattern: "على جهاز iPhone، اضغط على {=m5}",
+    instructionPlatformUnknownPattern: "على جهاز Android، اضغط على {=m1} · على جهاز iPhone، اضغط على {=m5}",
+    youLabel: "أيقونة «أنت» في الزاوية السفلية اليمنى من التطبيق",
+  },
+  fa: {
+    instructionPlatformAndroidPattern: "در Android روی {=m1} ضربه بزنید",
+    instructionPlatformIosPattern: "در iPhone، روی {=m5} ضربه بزنید",
+    instructionPlatformUnknownPattern: "در Android روی {=m1} ضربه بزنید · در iPhone، روی {=m5} ضربه بزنید",
+    youLabel: "نماد «شما» در گوشه پایین سمت راست برنامه",
+  },
+  bn: {
+    instructionPlatformAndroidPattern: "Android ফোনে {=m1}-তে ট্যাপ করুন",
+    instructionPlatformIosPattern: "iPhone-এ {=m5}-এ ট্যাপ করুন",
+    instructionPlatformUnknownPattern: "Android ফোনে {=m1}-তে ট্যাপ করুন · iPhone-এ {=m5}-এ ট্যাপ করুন",
+    youLabel: "অ্যাপের নিচের ডান কোণে “আপনি” আইকন",
+  },
+  it: {
+    instructionPlatformAndroidPattern: "Su Android tocca {=m1}",
+    instructionPlatformIosPattern: "Su iPhone tocca {=m5}",
+    instructionPlatformUnknownPattern: "Su Android tocca {=m1} · Su iPhone tocca {=m5}",
+    youLabel: "icona “Tu” in basso a destra nell'app",
+  },
+  fr: {
+    instructionPlatformAndroidPattern: "Sur un téléphone Android, appuyez sur {=m1}",
+    instructionPlatformIosPattern: "Sur iPhone, appuyez sur {=m5}",
+    instructionPlatformUnknownPattern: "Sur un téléphone Android, appuyez sur {=m1} · Sur iPhone, appuyez sur {=m5}",
+    youLabel: "icône « Vous » en bas à droite de l'app",
+  },
 };
 
 const runtimeConfig = (): RuntimeConfig => {
@@ -159,8 +259,9 @@ const functionalCopy = (): ResolvedCopy => {
   const exact = Object.keys(COPY).find((key) => key.toLowerCase() === locale.toLowerCase());
   const selected = (exact ? COPY[exact] : undefined) || COPY[base] || COPY.en;
   const guide = (exact ? WHATSAPP_WEB_GUIDE_COPY[exact] : undefined) || WHATSAPP_WEB_GUIDE_COPY[base] || WHATSAPP_WEB_GUIDE_COPY.en;
+  const platformGuide = (exact ? PLATFORM_GUIDE_COPY[exact] : undefined) || PLATFORM_GUIDE_COPY[base] || PLATFORM_GUIDE_COPY.en;
   const overrides = runtimeConfig().localizedCopy || {};
-  const copy: ResolvedCopy = { ...COPY.en, ...selected, ...WHATSAPP_WEB_GUIDE_COPY.en, ...guide };
+  const copy: ResolvedCopy = { ...COPY.en, ...selected, ...WHATSAPP_WEB_GUIDE_COPY.en, ...guide, ...PLATFORM_GUIDE_COPY.en, ...platformGuide };
   for (const key of Object.keys(copy) as Array<keyof ResolvedCopy>) {
     const value = overrides[`accountLink.${key}`];
     if (typeof value === "string" && value.trim()) copy[key] = value;
@@ -542,12 +643,35 @@ const appGuideIcons = {
 
 const escapeGuideText = (value: string) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]!));
 
-const guideKeyword = (label: string, icon = "") => `<span class="guide-keyword">${escapeGuideText(label)}${icon}</span>`;
+const guideKeyword = (label: string, icon = "") => `<span class="guide-keyword${icon ? " guide-keyword--icon" : ""}">${escapeGuideText(label)}${icon}</span>`;
 
 const renderGuidePattern = (pattern: string, replacements: Record<string, string>) => {
   let value = escapeGuideText(pattern);
   for (const [placeholder, replacement] of Object.entries(replacements)) value = value.split(placeholder).join(replacement);
   return value;
+};
+
+type PhoneGuidePlatform = "android" | "ios" | "unknown";
+
+const detectPhoneGuidePlatform = (): PhoneGuidePlatform => {
+  const config = runtimeConfig();
+  if (config.previewMode && config.previewDevice === "mobile") return "ios";
+  if (config.previewMode && config.previewDevice === "tablet") return "android";
+  const ua = navigator.userAgent || "";
+  const uaPlatform = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform || "";
+  if (/Android/i.test(ua) || /^Android$/i.test(uaPlatform)) return "android";
+  if (/iPhone|iPad|iPod/i.test(ua) || /^iP(hone|ad)?OS$/i.test(uaPlatform)) return "ios";
+  if (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) return "ios";
+  return "unknown";
+};
+
+const buildPlatformInstruction = (copy: ResolvedCopy) => {
+  const menu = guideKeyword(copy.menuLabel, appGuideIcons.menu);
+  const you = guideKeyword(copy.youLabel);
+  const platform = detectPhoneGuidePlatform();
+  if (platform === "android") return renderGuidePattern(copy.instructionPlatformAndroidPattern, { "{=m1}": menu });
+  if (platform === "ios") return renderGuidePattern(copy.instructionPlatformIosPattern, { "{=m5}": you });
+  return renderGuidePattern(copy.instructionPlatformUnknownPattern, { "{=m1}": menu, "{=m5}": you });
 };
 
 const resolveAppLaunchUrls = (app: "consumer" | "business", mobile: boolean): string[] => {
@@ -606,12 +730,12 @@ class AppLaunchActions extends HTMLElement {
       ? simulatedDevice === "mobile" || simulatedDevice === "tablet"
       : android || ios;
     const openInstruction = renderGuidePattern(copy.instructionOpenPattern, { "{=m2}": guideKeyword(copy.whatsappLabel, appGuideIcons.whatsapp) });
-    const platformInstruction = renderGuidePattern(copy.instructionPlatformPattern, { "{=m1}": guideKeyword(copy.menuLabel, appGuideIcons.menu), "{=m5}": guideKeyword(copy.settingsLabel, appGuideIcons.settings) });
+    const platformInstruction = buildPlatformInstruction(copy);
     const linkedInstruction = renderGuidePattern(copy.instructionLinkedPattern, { "{=m1}": guideKeyword(copy.linkedDevicesLabel), "{=m3}": guideKeyword(copy.linkDeviceLabel) });
     const enterInstruction = renderGuidePattern(copy.instructionEnterPattern, { "{=m1}": guideKeyword(copy.phoneLinkLabel) });
     this.root.innerHTML = `<style>${sharedStyle}${secondaryButtonStyle}
       :host{display:block}.actions{display:flex;gap:.65rem;flex-wrap:wrap}
-      .guide{margin:.85rem 0 0}.steps{display:grid;gap:.65rem;margin:0;padding-inline-start:1.65rem;font-size:.9rem;line-height:1.55;font-family:inherit}.steps li{padding-inline-start:.25rem;line-height:1.55;font-family:inherit;font-weight:400}.guide-keyword{display:inline-flex;align-items:center;gap:.25rem;font:inherit;font-size:inherit;font-weight:inherit;line-height:1.55;white-space:nowrap;vertical-align:middle}.guide-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;line-height:0;color:#667085;vertical-align:middle}.guide-icon svg{display:block}.whatsapp-icon{width:1.75rem;height:1.75rem;border-radius:.45rem;overflow:hidden;flex-shrink:0}.whatsapp-icon svg{width:100%;height:100%}.menu-icon,.settings-icon{width:1.65rem;height:1.85rem;padding:.16rem;box-sizing:border-box;border:1px solid #929292;border-radius:.45rem;background:#f4f4f4;flex-shrink:0}.menu-icon svg{width:1.05rem;height:1.05rem}.settings-icon svg{width:1.15rem;height:1.15rem}.fallback{margin:.65rem 0 0;color:var(--account-link-warning,#92400e);font-size:.9rem}
+      .guide{margin:.85rem 0 0}.steps{display:grid;gap:.65rem;margin:0;padding-inline-start:1.65rem;font-size:.9rem;line-height:1.55;font-family:inherit}.steps li{padding-inline-start:.25rem;line-height:1.55;font-family:inherit;font-weight:400}.guide-keyword{font:inherit;font-size:inherit;font-weight:inherit;line-height:1.55;vertical-align:baseline}.guide-keyword--icon{display:inline-flex;align-items:flex-end;gap:.25rem;white-space:nowrap;vertical-align:baseline}.guide-icon{display:inline-flex;align-items:flex-end;justify-content:center;flex:0 0 auto;line-height:0;color:#667085;vertical-align:baseline}.guide-icon svg{display:block}.whatsapp-icon{width:1.75rem;height:1.75rem;border-radius:.45rem;overflow:hidden;flex-shrink:0}.whatsapp-icon svg{width:100%;height:100%}.menu-icon,.settings-icon{width:1.65rem;height:1.85rem;padding:.16rem;box-sizing:border-box;border:1px solid #929292;border-radius:.45rem;background:#f4f4f4;flex-shrink:0}.menu-icon svg{width:1.05rem;height:1.05rem}.settings-icon svg{width:1.15rem;height:1.15rem}.fallback{margin:.65rem 0 0;color:var(--account-link-warning,#92400e);font-size:.9rem}
     </style><section part="panel"><div class="actions" part="actions" ${mobile ? "" : "hidden"}><button part="consumer-button" data-app="consumer" type="button">${copy.openConsumer}</button><button part="business-button" data-app="business" type="button">${copy.openBusiness}</button></div><div class="guide" part="guide"><ol class="steps" part="guide-steps"><li>${openInstruction}</li><li>${platformInstruction}</li><li>${linkedInstruction}</li><li>${enterInstruction}</li></ol></div><p class="fallback" part="fallback" hidden>${copy.appFallback}</p></section>`;
     this.root.querySelectorAll<HTMLButtonElement>("button[data-app]").forEach((button) => button.addEventListener("click", () => this.launch(button.dataset.app === "business" ? "business" : "consumer")));
   }
@@ -813,4 +937,4 @@ declare global {
   interface Window { AccountLinkElements?: { version: string; release: string; browserCountry(): CountryCode | undefined } }
 }
 
-window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.3", browserCountry };
+window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.2.1", browserCountry };
