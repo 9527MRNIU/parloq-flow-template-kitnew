@@ -17,6 +17,10 @@ const MAX_INTEGRATION_MANIFEST_BYTES = 64 * 1024;
 const ZIP_MTIME = new Date(2000, 0, 1, 0, 0, 0);
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".htm", ".js", ".mjs", ".json", ".svg", ".txt"]);
 const TEMPLATE_DISALLOWED_EXTENSIONS = new Set([".map", ".ts", ".tsx", ".jsx"]);
+const TEMPLATE_ALLOWED_EXTENSIONS = new Set([
+  ".html", ".htm", ".css", ".js", ".mjs", ".json", ".png", ".jpg", ".jpeg",
+  ".gif", ".webp", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".txt", ".mp4", ".webm",
+]);
 const INTEGRATION_ALLOWED_EXTENSIONS = new Set([
   ".html", ".htm", ".css", ".js", ".mjs", ".json", ".png", ".jpg", ".jpeg",
   ".gif", ".webp", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".txt", ".wasm", ".enc",
@@ -159,7 +163,9 @@ export async function validateTemplate(templateDirectory, options = {}) {
   const files = await walk(root);
   const totalBytes = validateBundleLimits(files, "template");
   for (const file of files) {
-    invariant(!TEMPLATE_DISALLOWED_EXTENSIONS.has(extname(file.path).toLowerCase()), `${file.path}: source files and source maps cannot be bundled`);
+    const extension = extname(file.path).toLowerCase();
+    invariant(!TEMPLATE_DISALLOWED_EXTENSIONS.has(extension), `${file.path}: source files and source maps cannot be bundled`);
+    invariant(TEMPLATE_ALLOWED_EXTENSIONS.has(extension), `${file.path}: template file type is not allowed`);
   }
   invariant(files.some((file) => file.path === "manifest.json"), "manifest.json is required");
   invariant(files.some((file) => file.path === manifest.entry), `${manifest.entry} is required`);
