@@ -1,6 +1,6 @@
 {
   "schema": "promotion-template/v3",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "name": "短剧推广落地页",
   "description": "分层短剧场景：首屏海报与分集缩略图，点击 CTA 后全屏解锁账号关联浮层。",
   "entry": "index.html",

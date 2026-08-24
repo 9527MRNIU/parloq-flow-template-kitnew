@@ -13,8 +13,8 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
       {
         kind: "template",
         sequence: "0001",
-        filename: "0001-white-label-account-link-1.6.1.zip",
-        version: "1.6.1",
+        filename: "0001-white-label-account-link-1.6.2.zip",
+        version: "1.6.2",
       },
       {
         kind: "integration",
@@ -25,14 +25,14 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
       {
         kind: "template",
         sequence: "0002",
-        filename: "0002-myloveday-demo-2.0.3.zip",
-        version: "2.0.3",
+        filename: "0002-myloveday-demo-2.0.4.zip",
+        version: "2.0.4",
       },
       {
         kind: "template",
         sequence: "0003",
-        filename: "0003-short-tagline-demo-1.3.0.zip",
-        version: "1.3.0",
+        filename: "0003-short-tagline-demo-1.3.1.zip",
+        version: "1.3.1",
       },
     ],
   );

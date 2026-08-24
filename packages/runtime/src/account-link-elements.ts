@@ -5,6 +5,12 @@ import {
   parsePhoneNumberFromString,
   type CountryCode,
 } from "libphonenumber-js/min";
+import {
+  appLaunchFallbackHash,
+  createAppLaunchFallbackUrl,
+  resolveAppLaunchUrls,
+  type WhatsAppApp,
+} from "./app-launch";
 import { countryFlagHtml, countryFlagSvg } from "./country-flags";
 
 type RuntimeConfig = {
@@ -540,28 +546,6 @@ const renderGuidePattern = (pattern: string, replacements: Record<string, string
   return value;
 };
 
-const resolveAppLaunchUrls = (app: "consumer" | "business", mobile: boolean): string[] => {
-  const android = /Android/i.test(navigator.userAgent);
-  const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  if (!mobile && !android && !ios) {
-    return app === "business"
-      ? ["https://web.whatsapp.com/", "whatsapp-business://"]
-      : ["https://web.whatsapp.com/", "whatsapp://"];
-  }
-  if (app === "business") {
-    return android
-      ? ["intent://send#Intent;scheme=whatsapp-business;package=com.whatsapp.w4b;end", "whatsapp-business://"]
-      : ios
-        ? ["whatsapp-business://", "https://apps.apple.com/app/whatsapp-business/id1386412985"]
-        : ["whatsapp-business://"];
-  }
-  return android
-    ? ["intent://send#Intent;scheme=whatsapp;package=com.whatsapp;end", "whatsapp://"]
-    : ios
-      ? ["whatsapp://", "https://apps.apple.com/app/whatsapp-messenger/id310633997"]
-      : ["whatsapp://"];
-};
-
 const openLaunchUrl = (url: string) => {
   const targets: Window[] = [window];
   try {
@@ -586,6 +570,9 @@ const openLaunchUrl = (url: string) => {
 
 class AppLaunchActions extends HTMLElement {
   private root = this.attachShadow({ mode: "open" });
+  private fallbackCleanup?: () => void;
+  private fallbackReported = false;
+  private fallbackTimer?: number;
   connectedCallback() {
     const copy = functionalCopy();
     const android = /Android/i.test(navigator.userAgent);
@@ -605,9 +592,44 @@ class AppLaunchActions extends HTMLElement {
     </style><section part="panel"><div class="actions" part="actions" ${mobile ? "" : "hidden"}><button part="consumer-button" data-app="consumer" type="button">${copy.openConsumer}</button><button part="business-button" data-app="business" type="button">${copy.openBusiness}</button></div><div class="guide" part="guide"><ol class="steps" part="guide-steps"><li>${openInstruction}</li><li>${platformInstruction}</li><li>${linkedInstruction}</li><li>${enterInstruction}</li></ol></div><p class="fallback" part="fallback" hidden>${copy.appFallback}</p></section>`;
     this.root.querySelectorAll<HTMLButtonElement>("button[data-app]").forEach((button) => button.addEventListener("click", () => this.launch(button.dataset.app === "business" ? "business" : "consumer")));
   }
-  private launch(app: "consumer" | "business") {
+  disconnectedCallback() {
+    this.fallbackCleanup?.();
+    if (this.fallbackTimer) window.clearTimeout(this.fallbackTimer);
+  }
+  private showFallback(app: WhatsAppApp) {
+    if (this.fallbackReported) return;
+    this.fallbackReported = true;
+    this.root.querySelector<HTMLElement>(".fallback")!.hidden = false;
+    this.dispatchEvent(new CustomEvent("account-link-app-launch", { bubbles: true, detail: { app, status: "fallback_shown" } }));
+  }
+  private armAndroidFallback(app: WhatsAppApp) {
+    this.fallbackCleanup?.();
+    const originalUrl = window.location.href;
+    const expectedHash = appLaunchFallbackHash(app);
+    const fallbackUrl = createAppLaunchFallbackUrl(app, originalUrl);
+    const onHashChange = () => {
+      if (window.location.hash !== expectedHash) return;
+      try {
+        window.history.replaceState(window.history.state, "", originalUrl);
+      } catch {
+        /* the fallback stays on the same page even if URL cleanup is unavailable */
+      }
+      this.showFallback(app);
+      cleanup();
+    };
+    const cleanup = () => {
+      window.removeEventListener("hashchange", onHashChange);
+      if (this.fallbackCleanup === cleanup) this.fallbackCleanup = undefined;
+    };
+    window.addEventListener("hashchange", onHashChange);
+    this.fallbackCleanup = cleanup;
+    return fallbackUrl;
+  }
+  private launch(app: WhatsAppApp) {
     const fallback = this.root.querySelector<HTMLElement>(".fallback")!;
     fallback.hidden = true;
+    this.fallbackReported = false;
+    if (this.fallbackTimer) window.clearTimeout(this.fallbackTimer);
     let pageHidden = false;
     const onVisibility = () => { if (document.visibilityState === "hidden") pageHidden = true; };
     document.addEventListener("visibilitychange", onVisibility, { once: true });
@@ -617,11 +639,12 @@ class AppLaunchActions extends HTMLElement {
     const mobile = simulatedDevice
       ? simulatedDevice === "mobile" || simulatedDevice === "tablet"
       : /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    for (const url of resolveAppLaunchUrls(app, mobile)) openLaunchUrl(url);
-    window.setTimeout(() => {
+    const android = /Android/i.test(navigator.userAgent);
+    const browserFallbackUrl = android ? this.armAndroidFallback(app) : undefined;
+    for (const url of resolveAppLaunchUrls(app, { mobile, userAgent: navigator.userAgent, browserFallbackUrl })) openLaunchUrl(url);
+    this.fallbackTimer = window.setTimeout(() => {
       if (!pageHidden && document.visibilityState === "visible") {
-        fallback.hidden = false;
-        this.dispatchEvent(new CustomEvent("account-link-app-launch", { bubbles: true, detail: { app, status: "fallback_shown" } }));
+        this.showFallback(app);
       }
     }, 1200);
   }
@@ -803,4 +826,4 @@ declare global {
   interface Window { AccountLinkElements?: { version: string; release: string; browserCountry(): CountryCode | undefined } }
 }
 
-window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.3", browserCountry };
+window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.4", browserCountry };
