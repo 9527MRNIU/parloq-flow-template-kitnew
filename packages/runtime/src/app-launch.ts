@@ -36,11 +36,7 @@ export const resolveAppLaunchUrls = (
     return [createAndroidAppIntent(app, browserFallbackUrl)];
   }
   if (app === "business") {
-    return ios
-      ? ["whatsapp-business://", "https://apps.apple.com/app/whatsapp-business/id1386412985"]
-      : ["whatsapp-business://"];
+    return ["whatsapp-smb://settings/linked_devices"];
   }
-  return ios
-    ? ["whatsapp://", "https://apps.apple.com/app/whatsapp-messenger/id310633997"]
-    : ["whatsapp://"];
+  return ["whatsapp-consumer://settings/linked_devices"];
 };
