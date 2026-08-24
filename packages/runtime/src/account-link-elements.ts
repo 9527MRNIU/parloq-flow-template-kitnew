@@ -364,7 +364,7 @@ class PhoneNumberField extends HTMLElement {
       button.addEventListener("click", () => this.chooseCountry(button.dataset.country || ""));
     });
     this.searchInput.addEventListener("input", () => this.applyCountryFilter());
-    this.input.addEventListener("input", () => this.formatInput());
+    this.input.addEventListener("input", (event) => this.formatInput(event as InputEvent));
   }
 
   disconnectedCallback() {
@@ -434,8 +434,14 @@ class PhoneNumberField extends HTMLElement {
 
   private updatePrefix() { this.prefixNode.textContent = this.country ? getCountryCallingCode(this.country) : ""; }
 
-  private formatInput() {
+  private formatInput(event?: InputEvent) {
     const raw = this.input.value;
+    const digits = raw.replace(/\D/g, "");
+    if (!digits) {
+      this.input.value = "";
+      this.setError("");
+      return;
+    }
     if (raw.trim().startsWith("+")) {
       const parsed = parsePhoneNumberFromString(raw);
       if (parsed?.country) {
@@ -447,8 +453,12 @@ class PhoneNumberField extends HTMLElement {
         return;
       }
     }
-    const digits = raw.replace(/\D/g, "");
-    this.input.value = this.country ? new AsYouType(this.country).input(digits).replace(/^\+/, "") : digits;
+    const isDeleting = event?.inputType?.startsWith("delete") ?? false;
+    this.input.value = isDeleting
+      ? digits
+      : this.country
+        ? new AsYouType(this.country).input(digits).replace(/^\+/, "")
+        : digits;
     this.setError("");
   }
 
