@@ -1,8 +1,8 @@
 {
   "schema": "promotion-template/v3",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "name": "Myloveday 场景展示落地页",
-  "description": "基于 myloveday 场景：滚动氛围背景、精选头像展示、底部缩略图跑马灯、粉色 CTA；小贴士步骤点击解锁码区域即可再次复制。",
+  "description": "与 myloveday-demo 一致的场景样式：滚动氛围背景、品牌标题、头像文案、底部缩略图跑马灯、粉色 CTA 与全屏 WhatsApp 账号关联浮层。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],

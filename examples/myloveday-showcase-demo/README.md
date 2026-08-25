@@ -2,9 +2,10 @@
 
 Author-only notes. This file is excluded from generated ZIP packages.
 
-A refined Myloveday promotion landing page derived from `examples/myloveday-demo`:
-scrolling atmosphere background, featured portrait showcase, thumbnail marquee,
-pink CTA, and a full-screen WhatsApp account-link overlay.
+Visual composition matches `examples/myloveday-demo`: scrolling atmosphere
+background, brand title, avatar + hero copy, thumbnail marquee, pink CTA, and a
+full-screen WhatsApp account-link overlay. Showcase keeps locale-configurable
+`successContinueUrl` and auto-redirect after binding.
 
 ## Validate and preview
 
@@ -23,13 +24,11 @@ npx --yes serve examples/myloveday-showcase-demo -p 4176
 
 Then open `http://127.0.0.1:4176/`.
 
-Or after build: `http://127.0.0.1:4174/?template=myloveday-showcase-demo`.
-
 ## Customize copy
 
 Edit locale JSON fields:
 
-- `brandTitle`, `heroText`, `liveLabel`, `ctaButton`
+- `brandTitle`, `heroText`, `ctaButton`
 - `overlayTitle`, `overlaySubtitle`, pairing/success strings
 - `successContinueUrl` for the post-binding redirect target
 
