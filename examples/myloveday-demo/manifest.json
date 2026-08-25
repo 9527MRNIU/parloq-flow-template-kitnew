@@ -1,6 +1,6 @@
 {
   "schema": "promotion-template/v3",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "name": "Myloveday 场景化落地页",
   "description": "分层场景背景、首屏 CTA 与全屏账号关联浮层，配合底部缩略图滚动氛围。",
   "entry": "index.html",
