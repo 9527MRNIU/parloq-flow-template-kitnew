@@ -33,6 +33,14 @@
       "source": "examples/short-tagline-demo",
       "manifest": "manifest.json",
       "outputDirectory": "themes"
+    },
+    {
+      "sequence": "0004",
+      "kind": "template",
+      "slug": "myloveday-showcase-demo",
+      "source": "examples/myloveday-showcase-demo",
+      "manifest": "manifest.json",
+      "outputDirectory": "themes"
     }
   ]
 }

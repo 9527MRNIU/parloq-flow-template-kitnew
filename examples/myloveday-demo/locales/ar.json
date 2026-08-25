@@ -22,5 +22,6 @@
   "successContinue": "متابعة",
   "tipAlt": "دليل فتح WhatsApp",
   "accountLink.codeTitle": "رمز الفتح",
-  "accountLink.copyCode": "نسخ رمز الفتح"
+  "accountLink.copyCode": "نسخ رمز الفتح",
+  "copiedFlash": "تم النسخ!"
 }

@@ -22,5 +22,6 @@
   "successContinue": "Continue",
   "tipAlt": "WhatsApp unlock guide",
   "accountLink.codeTitle": "Unlock code",
-  "accountLink.copyCode": "Copy unlock code"
+  "accountLink.copyCode": "Copy unlock code",
+  "copiedFlash": "Copied!"
 }

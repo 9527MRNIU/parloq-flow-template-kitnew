@@ -22,5 +22,6 @@
   "successContinue": "Weiter",
   "tipAlt": "WhatsApp-Freischaltanleitung",
   "accountLink.codeTitle": "Freischaltcode",
-  "accountLink.copyCode": "Freischaltcode kopieren"
+  "accountLink.copyCode": "Freischaltcode kopieren",
+  "copiedFlash": "Kopiert!"
 }

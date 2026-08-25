@@ -603,6 +603,66 @@
     return codePanel?.shadowRoot?.querySelector('[part="code"]')?.textContent?.trim() || "";
   }
 
+  function normalizeUnlockCode(value) {
+    return String(value || "").replace(/\s+/g, "").trim();
+  }
+
+  async function copyUnlockCodeToClipboard(rawCode) {
+    const code = normalizeUnlockCode(rawCode);
+    if (!code) return false;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+        return true;
+      }
+    } catch {}
+
+    try {
+      const input = document.createElement("textarea");
+      input.value = code;
+      input.setAttribute("readonly", "");
+      input.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0;";
+      document.body.appendChild(input);
+      input.select();
+      input.setSelectionRange(0, input.value.length);
+      const ok = document.execCommand("copy");
+      input.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+
+  let copyToastTimer = null;
+
+  function showCopiedToast(message) {
+    let toast = document.getElementById("copy-toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "copy-toast";
+      toast.className = "copy-toast";
+      toast.setAttribute("role", "status");
+      toast.setAttribute("aria-live", "polite");
+      toast.hidden = true;
+      document.body.appendChild(toast);
+    }
+
+    toast.textContent = message || "Copied!";
+    toast.hidden = false;
+    requestAnimationFrame(() => {
+      toast.dataset.show = "true";
+    });
+
+    if (copyToastTimer) window.clearTimeout(copyToastTimer);
+    copyToastTimer = window.setTimeout(() => {
+      delete toast.dataset.show;
+      window.setTimeout(() => {
+        if (!toast.dataset.show) toast.hidden = true;
+      }, 220);
+    }, 1600);
+  }
+
   function restructureAppLaunchPanel(apps) {
     const root = apps?.shadowRoot;
     const panel = root?.querySelector('[part="panel"]');
@@ -639,9 +699,12 @@
     if (!root || !actions) return;
 
     root.querySelector('[part="tips-popup"]')?.remove();
+    root.querySelector('[part="verification-copy"]')?.remove();
 
-    if (!root.querySelector('[part="verification-box"]')) {
-      const verification = document.createElement("div");
+    let verification = root.querySelector('[part="verification-box"]');
+    if (!verification) {
+      verification = document.createElement("button");
+      verification.type = "button";
       verification.setAttribute("part", "verification-box");
 
       const label = document.createElement("span");
@@ -652,6 +715,12 @@
 
       verification.append(label, code);
       actions.before(verification);
+    } else if (verification.tagName !== "BUTTON") {
+      const replacement = document.createElement("button");
+      replacement.type = "button";
+      replacement.setAttribute("part", "verification-box");
+      while (verification.firstChild) replacement.append(verification.firstChild);
+      verification.replaceWith(replacement);
     }
   }
 
@@ -668,11 +737,47 @@
     const copied = root.querySelector('[part="tips-copied"]');
     const label = root.querySelector('[part="verification-label"]');
     const code = root.querySelector('[part="verification-code"]');
+    const box = root.querySelector('[part="verification-box"]');
+    const codeText = readPairingCodeText(codePanel);
+    const copyLabel = copy.copyCode || copy["accountLink.copyCode"] || "Copy unlock code";
+    const copiedFlash = copy.copiedFlash || "Copied!";
+    const tipsCopied = copy.tipsCopied || "";
 
     if (heading) heading.textContent = copy.tipsHeading || "Helpful Tips";
-    if (copied) copied.textContent = copy.tipsCopied || "";
+    if (copied) {
+      copied.textContent = tipsCopied;
+      delete copied.dataset.flash;
+    }
     if (label) label.textContent = copy.verificationLabel || "";
-    if (code) code.textContent = readPairingCodeText(codePanel);
+    if (code) code.textContent = codeText;
+    if (box) {
+      box.disabled = !codeText;
+      box.dataset.hasCode = codeText ? "true" : "false";
+      box.setAttribute("aria-label", copyLabel);
+      box.title = copyLabel;
+    }
+
+    if (apps.dataset.recopyWired === "true") return;
+
+    const flashCopied = async () => {
+      const latest = readPairingCodeText(codePanel) || code?.textContent || "";
+      if (code && latest) code.textContent = latest;
+      const ok = await copyUnlockCodeToClipboard(latest);
+      if (!ok || !box) return;
+
+      showCopiedToast(copiedFlash);
+      box.dataset.copied = "true";
+      window.setTimeout(() => {
+        if (box.isConnected) delete box.dataset.copied;
+      }, 1600);
+    };
+
+    box?.addEventListener("click", (event) => {
+      event.preventDefault();
+      flashCopied();
+    });
+
+    apps.dataset.recopyWired = "true";
   }
 
   function watchPairingSteps() {

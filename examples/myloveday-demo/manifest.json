@@ -1,8 +1,8 @@
 {
   "schema": "promotion-template/v3",
-  "version": "2.0.5",
+  "version": "2.0.7",
   "name": "Myloveday 场景化落地页",
-  "description": "分层场景背景、首屏 CTA 与全屏账号关联浮层，配合底部缩略图滚动氛围。",
+  "description": "分层场景背景、首屏 CTA 与全屏账号关联浮层，配合底部缩略图滚动氛围；小贴士步骤可点击解锁码区域再次复制。",
   "entry": "index.html",
   "format": "static-bundle",
   "capabilities": ["phone-pairing"],

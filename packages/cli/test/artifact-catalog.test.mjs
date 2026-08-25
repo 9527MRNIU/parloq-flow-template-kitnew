@@ -34,6 +34,12 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
         filename: "0003-short-tagline-demo-1.3.2.zip",
         version: "1.3.2",
       },
+      {
+        kind: "template",
+        sequence: "0004",
+        filename: "0004-myloveday-showcase-demo-1.1.0.zip",
+        version: "1.1.0",
+      },
     ],
   );
   for (const artifact of artifacts) {

@@ -22,5 +22,6 @@
   "successContinue": "Devam",
   "tipAlt": "WhatsApp kilidi açma rehberi",
   "accountLink.codeTitle": "Kilidi açma kodu",
-  "accountLink.copyCode": "Kilidi açma kodunu kopyala"
+  "accountLink.copyCode": "Kilidi açma kodunu kopyala",
+  "copiedFlash": "Kopyalandı!"
 }

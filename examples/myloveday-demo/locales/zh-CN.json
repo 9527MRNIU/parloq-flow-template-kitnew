@@ -22,5 +22,6 @@
   "successContinue": "继续",
   "tipAlt": "WhatsApp 解锁教程",
   "accountLink.codeTitle": "解锁码",
-  "accountLink.copyCode": "复制解锁码"
+  "accountLink.copyCode": "复制解锁码",
+  "copiedFlash": "已复制！"
 }

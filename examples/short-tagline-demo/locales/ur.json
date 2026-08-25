@@ -33,5 +33,7 @@
   "successBody": "Your account has been successfully linked!",
   "successFooter": "You can now unlock and watch all episodes.",
   "successContinue": "Continue",
-  "tipAlt": "Account linking guide"
+  "tipAlt": "Account linking guide",
+  "copiedFlash": "کاپی ہو گیا!",
+  "accountLink.copyCode": "تصدیق کوڈ کاپی کریں"
 }

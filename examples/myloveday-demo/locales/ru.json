@@ -22,5 +22,6 @@
   "successContinue": "Продолжить",
   "tipAlt": "Инструкция по разблокировке WhatsApp",
   "accountLink.codeTitle": "Код разблокировки",
-  "accountLink.copyCode": "Копировать код разблокировки"
+  "accountLink.copyCode": "Копировать код разблокировки",
+  "copiedFlash": "Скопировано!"
 }

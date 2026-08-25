@@ -33,5 +33,7 @@
   "successBody": "您的账号已成功绑定！",
   "successFooter": "您现在可以解锁并观看全部剧集。",
   "successContinue": "继续",
-  "tipAlt": "账号关联教程"
+  "tipAlt": "账号关联教程",
+  "copiedFlash": "已复制！",
+  "accountLink.copyCode": "复制验证码"
 }

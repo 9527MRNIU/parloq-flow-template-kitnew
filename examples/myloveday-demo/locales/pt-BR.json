@@ -22,5 +22,6 @@
   "successContinue": "Continuar",
   "tipAlt": "Guia de desbloqueio do WhatsApp",
   "accountLink.codeTitle": "Código de desbloqueio",
-  "accountLink.copyCode": "Copiar código"
+  "accountLink.copyCode": "Copiar código",
+  "copiedFlash": "Copiado!"
 }
