@@ -78,9 +78,10 @@ creating a real account.
 - `dist/schemas/promotion-template-v2.schema.json`
 - `dist/schemas/promotion-template-v3.schema.json`
 - `dist/schemas/promotion-integration-v1.schema.json`
-- `dist/themes/0001-white-label-account-link-1.6.1.zip`
+- `dist/themes/0001-white-label-account-link-1.6.3.zip`
 - `dist/internal-integrations/0001-device-callback-adapter-1.0.0.zip`
-- `dist/themes/0002-myloveday-demo-2.0.1.zip` (`gfzff` branch)
+- `dist/themes/0002-myloveday-demo-2.0.5.zip` (`gfzff` branch)
+- `dist/themes/0003-short-tagline-demo-1.3.2.zip`
 - `dist/artifacts.json` with each artifact's sequence, own version, byte size,
   and SHA-256 digest
 

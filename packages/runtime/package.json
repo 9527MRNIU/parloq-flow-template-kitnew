@@ -1,6 +1,6 @@
 {
   "name": "@parloq-flow/account-link-runtime",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "private": true,
   "type": "module",
   "sideEffects": true,
