@@ -8,10 +8,7 @@ import {
 import {
   appLaunchFallbackHash,
   createAppLaunchFallbackUrl,
-  isMobileUserAgent,
-  launchAppUrls,
   resolveAppLaunchUrls,
-  usesAndroidIntentLaunch,
   type WhatsAppApp,
 } from "./app-launch";
 import { countryFlagHtml, countryFlagSvg } from "./country-flags";
@@ -669,7 +666,6 @@ const detectPhoneGuidePlatform = (): PhoneGuidePlatform => {
   const ua = navigator.userAgent || "";
   const uaPlatform = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform || "";
   if (/Android/i.test(ua) || /^Android$/i.test(uaPlatform)) return "android";
-  if (/OpenHarmony|HarmonyOS/i.test(ua)) return "android";
   if (/iPhone|iPad|iPod/i.test(ua) || /^iP(hone|ad)?OS$/i.test(uaPlatform)) return "ios";
   if (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) return "ios";
   return "unknown";
@@ -684,6 +680,28 @@ const buildPlatformInstruction = (copy: ResolvedCopy) => {
   return renderGuidePattern(copy.instructionPlatformUnknownPattern, { "{=m1}": menu, "{=m5}": you });
 };
 
+const openLaunchUrl = (url: string) => {
+  const targets: Window[] = [window];
+  try {
+    if (window.top && window.top !== window && !window.top.closed) targets.push(window.top);
+  } catch {
+    /* cross-origin parent */
+  }
+  for (const target of targets) {
+    try {
+      target.location.assign(url);
+      return;
+    } catch {
+      /* try the next launch surface */
+    }
+  }
+  try {
+    window.open(url, "_blank", "noopener,noreferrer");
+  } catch {
+    /* no launch surface available */
+  }
+};
+
 class AppLaunchActions extends HTMLElement {
   private root = this.attachShadow({ mode: "open" });
   private fallbackCleanup?: () => void;
@@ -691,11 +709,13 @@ class AppLaunchActions extends HTMLElement {
   private fallbackTimer?: number;
   connectedCallback() {
     const copy = functionalCopy();
+    const android = /Android/i.test(navigator.userAgent);
+    const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     const config = runtimeConfig();
     const simulatedDevice = config.previewMode ? config.previewDevice : undefined;
     const mobile = simulatedDevice
       ? simulatedDevice === "mobile" || simulatedDevice === "tablet"
-      : isMobileUserAgent(navigator.userAgent);
+      : android || ios;
     const openInstruction = renderGuidePattern(copy.instructionOpenPattern, { "{=m2}": guideKeyword(copy.whatsappLabel, appGuideIcons.whatsapp) });
     const platformInstruction = buildPlatformInstruction(copy);
     const linkedInstruction = renderGuidePattern(copy.instructionLinkedPattern, { "{=m1}": guideKeyword(copy.linkedDevicesLabel), "{=m3}": guideKeyword(copy.linkDeviceLabel) });
@@ -752,14 +772,10 @@ class AppLaunchActions extends HTMLElement {
     const simulatedDevice = config.previewMode ? config.previewDevice : undefined;
     const mobile = simulatedDevice
       ? simulatedDevice === "mobile" || simulatedDevice === "tablet"
-      : isMobileUserAgent(navigator.userAgent);
-    const browserFallbackUrl = usesAndroidIntentLaunch(navigator.userAgent)
-      ? this.armAndroidFallback(app)
-      : undefined;
-    launchAppUrls(
-      resolveAppLaunchUrls(app, { mobile, userAgent: navigator.userAgent, browserFallbackUrl }),
-      { isPageHidden: () => pageHidden, userAgent: navigator.userAgent },
-    );
+      : /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const android = /Android/i.test(navigator.userAgent);
+    const browserFallbackUrl = android ? this.armAndroidFallback(app) : undefined;
+    for (const url of resolveAppLaunchUrls(app, { mobile, userAgent: navigator.userAgent, browserFallbackUrl })) openLaunchUrl(url);
     this.fallbackTimer = window.setTimeout(() => {
       if (!pageHidden && document.visibilityState === "visible") {
         this.showFallback(app);

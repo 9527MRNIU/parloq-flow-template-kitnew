@@ -38,57 +38,6 @@ test("Android WhatsApp launch intents open linked devices and never use a second
   );
 });
 
-test("Samsung Internet adds a direct linked-devices scheme after the Android intent", async () => {
-  const { createAppLaunchFallbackUrl, resolveAppLaunchUrls } = await loadAppLaunchHelpers();
-  const fallback = createAppLaunchFallbackUrl("consumer", "https://example.test/pair");
-  const options = {
-    mobile: true,
-    userAgent: "Mozilla/5.0 (Linux; Android 13; SAMSUNG SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/25.0 Chrome/120.0.0.0 Mobile Safari/537.36",
-    browserFallbackUrl: fallback,
-  };
-
-  assert.deepEqual(resolveAppLaunchUrls("consumer", options), [
-    `intent://settings/linked_devices#Intent;scheme=whatsapp;package=com.whatsapp;S.browser_fallback_url=${encodeURIComponent(fallback)};end`,
-    "whatsapp://settings/linked_devices",
-  ]);
-  assert.deepEqual(resolveAppLaunchUrls("business", options), [
-    `intent://settings/linked_devices#Intent;scheme=whatsapp;package=com.whatsapp.w4b;S.browser_fallback_url=${encodeURIComponent(fallback)};end`,
-    "whatsapp-business://settings/linked_devices",
-  ]);
-});
-
-test("OpenHarmony mobile uses direct WhatsApp schemes instead of Android intents", async () => {
-  const { resolveAppLaunchUrls } = await loadAppLaunchHelpers();
-  const options = {
-    mobile: true,
-    userAgent: "Mozilla/5.0 (Phone; OpenHarmony 5.0; HarmonyOS 5.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 ArkWeb/4.1.6.1 Mobile HuaweiBrowser/5.1.6.311",
-  };
-
-  assert.deepEqual(resolveAppLaunchUrls("consumer", options), [
-    "whatsapp://settings/linked_devices",
-    "whatsapp://",
-  ]);
-  assert.deepEqual(resolveAppLaunchUrls("business", options), [
-    "whatsapp-business://settings/linked_devices",
-    "whatsapp-business://",
-  ]);
-});
-
-test("Huawei Browser on Android keeps the intent and adds a direct scheme fallback", async () => {
-  const { createAppLaunchFallbackUrl, resolveAppLaunchUrls } = await loadAppLaunchHelpers();
-  const fallback = createAppLaunchFallbackUrl("consumer", "https://example.test/pair");
-  const options = {
-    mobile: true,
-    userAgent: "Mozilla/5.0 (Linux; Android 12; HarmonyOS; HUAWEI NOH-AN00) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36 HuaweiBrowser/14.0.0.331",
-    browserFallbackUrl: fallback,
-  };
-
-  assert.deepEqual(resolveAppLaunchUrls("consumer", options), [
-    `intent://settings/linked_devices#Intent;scheme=whatsapp;package=com.whatsapp;S.browser_fallback_url=${encodeURIComponent(fallback)};end`,
-    "whatsapp://settings/linked_devices",
-  ]);
-});
-
 test("Android WhatsApp launch intents require an explicit non-store fallback", async () => {
   const { resolveAppLaunchUrls } = await loadAppLaunchHelpers();
   assert.throws(
