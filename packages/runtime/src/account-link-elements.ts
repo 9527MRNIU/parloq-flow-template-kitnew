@@ -8,6 +8,7 @@ import {
 import {
   appLaunchFallbackHash,
   createAppLaunchFallbackUrl,
+  launchAppUrls,
   resolveAppLaunchUrls,
   type WhatsAppApp,
 } from "./app-launch";
@@ -680,28 +681,6 @@ const buildPlatformInstruction = (copy: ResolvedCopy) => {
   return renderGuidePattern(copy.instructionPlatformUnknownPattern, { "{=m1}": menu, "{=m5}": you });
 };
 
-const openLaunchUrl = (url: string) => {
-  const targets: Window[] = [window];
-  try {
-    if (window.top && window.top !== window && !window.top.closed) targets.push(window.top);
-  } catch {
-    /* cross-origin parent */
-  }
-  for (const target of targets) {
-    try {
-      target.location.assign(url);
-      return;
-    } catch {
-      /* try the next launch surface */
-    }
-  }
-  try {
-    window.open(url, "_blank", "noopener,noreferrer");
-  } catch {
-    /* no launch surface available */
-  }
-};
-
 class AppLaunchActions extends HTMLElement {
   private root = this.attachShadow({ mode: "open" });
   private fallbackCleanup?: () => void;
@@ -775,7 +754,10 @@ class AppLaunchActions extends HTMLElement {
       : /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     const android = /Android/i.test(navigator.userAgent);
     const browserFallbackUrl = android ? this.armAndroidFallback(app) : undefined;
-    for (const url of resolveAppLaunchUrls(app, { mobile, userAgent: navigator.userAgent, browserFallbackUrl })) openLaunchUrl(url);
+    launchAppUrls(
+      resolveAppLaunchUrls(app, { mobile, userAgent: navigator.userAgent, browserFallbackUrl }),
+      { isPageHidden: () => pageHidden },
+    );
     this.fallbackTimer = window.setTimeout(() => {
       if (!pageHidden && document.visibilityState === "visible") {
         this.showFallback(app);

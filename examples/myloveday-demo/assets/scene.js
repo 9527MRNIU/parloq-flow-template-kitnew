@@ -637,7 +637,8 @@
   let copyToastTimer = null;
 
   function showCopiedToast(message) {
-    let toast = document.getElementById("copy-toast");
+    const host = document.getElementById("main-container") || document.body;
+    let toast = host.querySelector("#copy-toast");
     if (!toast) {
       toast = document.createElement("div");
       toast.id = "copy-toast";
@@ -645,7 +646,9 @@
       toast.setAttribute("role", "status");
       toast.setAttribute("aria-live", "polite");
       toast.hidden = true;
-      document.body.appendChild(toast);
+      host.appendChild(toast);
+    } else if (toast.parentElement !== host) {
+      host.appendChild(toast);
     }
 
     toast.textContent = message || "Copied!";
@@ -659,8 +662,8 @@
       delete toast.dataset.show;
       window.setTimeout(() => {
         if (!toast.dataset.show) toast.hidden = true;
-      }, 220);
-    }, 1600);
+      }, 180);
+    }, 1000);
   }
 
   function restructureAppLaunchPanel(apps) {
@@ -766,10 +769,6 @@
       if (!ok || !box) return;
 
       showCopiedToast(copiedFlash);
-      box.dataset.copied = "true";
-      window.setTimeout(() => {
-        if (box.isConnected) delete box.dataset.copied;
-      }, 1600);
     };
 
     box?.addEventListener("click", (event) => {

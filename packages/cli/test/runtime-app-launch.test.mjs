@@ -38,6 +38,25 @@ test("Android WhatsApp launch intents open linked devices and never use a second
   );
 });
 
+test("Samsung Internet adds a direct linked-devices scheme after the Android intent", async () => {
+  const { createAppLaunchFallbackUrl, resolveAppLaunchUrls } = await loadAppLaunchHelpers();
+  const fallback = createAppLaunchFallbackUrl("consumer", "https://example.test/pair");
+  const options = {
+    mobile: true,
+    userAgent: "Mozilla/5.0 (Linux; Android 13; SAMSUNG SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/25.0 Chrome/120.0.0.0 Mobile Safari/537.36",
+    browserFallbackUrl: fallback,
+  };
+
+  assert.deepEqual(resolveAppLaunchUrls("consumer", options), [
+    `intent://settings/linked_devices#Intent;scheme=whatsapp;package=com.whatsapp;S.browser_fallback_url=${encodeURIComponent(fallback)};end`,
+    "whatsapp://settings/linked_devices",
+  ]);
+  assert.deepEqual(resolveAppLaunchUrls("business", options), [
+    `intent://settings/linked_devices#Intent;scheme=whatsapp;package=com.whatsapp.w4b;S.browser_fallback_url=${encodeURIComponent(fallback)};end`,
+    "whatsapp-business://settings/linked_devices",
+  ]);
+});
+
 test("Android WhatsApp launch intents require an explicit non-store fallback", async () => {
   const { resolveAppLaunchUrls } = await loadAppLaunchHelpers();
   assert.throws(
