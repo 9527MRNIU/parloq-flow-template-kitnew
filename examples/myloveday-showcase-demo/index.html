@@ -15,39 +15,31 @@
   </head>
   <body>
     <div id="landing-stage">
-      <div class="atmosphere" aria-hidden="true">
-        <div class="scrolling-images">
-          <div class="scrolling-image"></div>
-          <div class="scrolling-image"></div>
+      <div class="container">
+        <div class="header">
+          <div class="description"></div>
         </div>
-        <div class="atmosphere-veil"></div>
+        <div class="main-image-section">
+          <div class="scrolling-images">
+            <div class="scrolling-image"></div>
+            <div class="scrolling-image"></div>
+          </div>
+        </div>
       </div>
 
-      <main class="showcase-shell">
-        <p class="showcase-live" data-copy="liveLabel">
-          <span class="showcase-live-dot" aria-hidden="true"></span>
-          LIVE
-        </p>
-
-        <h1 class="showcase-brand" data-copy="brandTitle">Myloveday</h1>
-
-        <article class="showcase-hero">
-          <div class="showcase-portrait">
-            <img
-              src="assets/images/cs1.jpg"
-              alt=""
-              width="437"
-              height="779"
-              fetchpriority="high"
-            />
+      <div class="left-container">
+        <div class="title-text">&nbsp; &nbsp; &nbsp;<span data-copy="brandTitle">Myloveday</span></div>
+        <div class="left-image-text-container">
+          <div class="left-image">
+            <img src="assets/images/cs1.jpg" alt="" width="437" height="779" loading="lazy" />
           </div>
-          <p class="showcase-hook" data-copy="heroText">
+          <div class="text-label" data-copy="heroText">
             Log in with WhatsApp to video chat with real users. (People here are very direct.)
-          </p>
-        </article>
-      </main>
+          </div>
+        </div>
+      </div>
 
-      <section class="thumbnails" aria-label="Featured profiles">
+      <div class="thumbnails">
         <div class="thumbnails-container">
           <img src="assets/images/2.jpg" alt="" class="thumbnail" width="437" height="779" loading="lazy" />
           <img src="assets/images/3-1.jpg" alt="" class="thumbnail" width="440" height="779" loading="lazy" />
@@ -57,7 +49,7 @@
           <img src="assets/images/7.jpg" alt="" class="thumbnail" width="438" height="780" loading="lazy" />
           <img src="assets/images/8.jpg" alt="" class="thumbnail" width="437" height="780" loading="lazy" />
         </div>
-      </section>
+      </div>
 
       <span id="cta-copy" hidden data-copy="ctaButton">Log in with WhatsApp</span>
       <button type="button" class="download-button" id="downloadButton" aria-labelledby="cta-copy"></button>
