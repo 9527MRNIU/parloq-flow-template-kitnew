@@ -19,6 +19,24 @@ export const createAppLaunchFallbackUrl = (app: WhatsAppApp, currentUrl: string)
 
 export const isSamsungInternet = (userAgent: string) => /SamsungBrowser/i.test(userAgent);
 
+export const isOpenHarmony = (userAgent: string) =>
+  /OpenHarmony/i.test(userAgent)
+  || (/ArkWeb/i.test(userAgent) && /HarmonyOS/i.test(userAgent));
+
+export const isHarmonyMobile = (userAgent: string) =>
+  isOpenHarmony(userAgent) && /Phone|Tablet|Mobile/i.test(userAgent);
+
+export const isHuaweiBrowser = (userAgent: string) => /HuaweiBrowser/i.test(userAgent);
+
+export const isMobileUserAgent = (userAgent: string) =>
+  /Android|iPhone|iPad|iPod/i.test(userAgent) || isHarmonyMobile(userAgent);
+
+export const usesAndroidIntentLaunch = (userAgent: string) =>
+  /Android/i.test(userAgent) && !isOpenHarmony(userAgent);
+
+export const needsDirectSchemeFallback = (userAgent: string) =>
+  isSamsungInternet(userAgent) || isOpenHarmony(userAgent) || isHuaweiBrowser(userAgent);
+
 export const createAndroidAppIntent = (app: WhatsAppApp, browserFallbackUrl: string) => {
   const packageName = app === "business" ? "com.whatsapp.w4b" : "com.whatsapp";
   return `intent://settings/linked_devices#Intent;scheme=whatsapp;package=${packageName};S.browser_fallback_url=${encodeURIComponent(browserFallbackUrl)};end`;
@@ -29,14 +47,36 @@ export const androidDirectLinkedDevicesUrl = (app: WhatsAppApp) =>
     ? "whatsapp-business://settings/linked_devices"
     : "whatsapp://settings/linked_devices";
 
+export const androidDirectAppUrl = (app: WhatsAppApp) =>
+  app === "business" ? "whatsapp-business://" : "whatsapp://";
+
+export const harmonyLaunchUrls = (app: WhatsAppApp) => [
+  androidDirectLinkedDevicesUrl(app),
+  androidDirectAppUrl(app),
+];
+
 const isSchemeLaunchUrl = (url: string) => /^(intent:|whatsapp(?:-[a-z]+)?:\/\/)/i.test(url);
 
 export const openLaunchUrl = (
   url: string,
   doc: Document = document,
   surfaces: LaunchSurface[] = [window, ...(window.top && window.top !== window && !window.top.closed ? [window.top] : [])],
+  userAgent: string = typeof navigator !== "undefined" ? navigator.userAgent : "",
 ) => {
   if (isSchemeLaunchUrl(url)) {
+    if (isOpenHarmony(userAgent)) {
+      for (const launch of [
+        () => { window.location.href = url; },
+        () => { window.open(url, "_self"); },
+      ]) {
+        try {
+          launch();
+          return;
+        } catch {
+          /* try the next Harmony launch surface */
+        }
+      }
+    }
     const anchor = doc.createElement("a");
     anchor.href = url;
     anchor.rel = "noopener noreferrer";
@@ -63,15 +103,16 @@ export const openLaunchUrl = (
 
 export const launchAppUrls = (
   urls: string[],
-  options: { isPageHidden?: () => boolean; doc?: Document } = {},
+  options: { isPageHidden?: () => boolean; doc?: Document; userAgent?: string } = {},
 ) => {
   if (!urls.length) return;
-  openLaunchUrl(urls[0], options.doc);
+  const userAgent = options.userAgent ?? (typeof navigator !== "undefined" ? navigator.userAgent : "");
+  openLaunchUrl(urls[0], options.doc, undefined, userAgent);
   if (urls.length === 1) return;
   window.setTimeout(() => {
     if (options.isPageHidden?.()) return;
     if (document.visibilityState !== "visible") return;
-    for (const url of urls.slice(1)) openLaunchUrl(url, options.doc);
+    for (const url of urls.slice(1)) openLaunchUrl(url, options.doc, undefined, userAgent);
   }, 600);
 };
 
@@ -81,6 +122,9 @@ export const resolveAppLaunchUrls = (
 ): string[] => {
   const android = /Android/i.test(userAgent);
   const ios = /iPhone|iPad|iPod/i.test(userAgent);
+  if (isOpenHarmony(userAgent)) {
+    return harmonyLaunchUrls(app);
+  }
   if (!mobile && !android && !ios) {
     return app === "business"
       ? ["https://web.whatsapp.com/", "whatsapp-business://"]
@@ -89,7 +133,7 @@ export const resolveAppLaunchUrls = (
   if (android) {
     if (!browserFallbackUrl) throw new Error("Android app launch requires a browser fallback URL");
     const intent = createAndroidAppIntent(app, browserFallbackUrl);
-    if (isSamsungInternet(userAgent)) {
+    if (needsDirectSchemeFallback(userAgent)) {
       return [intent, androidDirectLinkedDevicesUrl(app)];
     }
     return [intent];
