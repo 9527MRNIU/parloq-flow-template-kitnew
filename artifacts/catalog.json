@@ -41,6 +41,22 @@
       "source": "examples/myloveday-showcase-demo",
       "manifest": "manifest.json",
       "outputDirectory": "themes"
+    },
+    {
+      "sequence": "0005",
+      "kind": "template",
+      "slug": "short-tagline-showcase-demo",
+      "source": "examples/short-tagline-showcase-demo",
+      "manifest": "manifest.json",
+      "outputDirectory": "themes"
+    },
+    {
+      "sequence": "0006",
+      "kind": "template",
+      "slug": "myloveday-hotdates-demo",
+      "source": "examples/myloveday-hotdates-demo",
+      "manifest": "manifest.json",
+      "outputDirectory": "themes"
     }
   ]
 }

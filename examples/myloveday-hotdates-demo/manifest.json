@@ -1,0 +1,25 @@
+{
+  "schema": "promotion-template/v3",
+  "version": "1.2.17",
+  "name": "Myloveday 问卷前置场景",
+      "description": "参照约会问卷前置流程（18+ 确认、三步问答、偏好多选），完成后进入 Myloveday 电话号码关联浮层；小贴士步骤可点击验证码区域再次复制。",
+  "entry": "index.html",
+  "format": "static-bundle",
+  "capabilities": ["phone-pairing"],
+  "runtime": "promotion-browser-bridge/v2",
+  "requirements": {
+    "pairingContract": "promotion-public-pairing/v1"
+  },
+  "components": {
+    "contract": "account-link-elements/v1",
+    "entry": "assets/account-link-elements.js"
+  },
+  "interactionProtection": "platform",
+  "defaultLocale": "en",
+  "supportedLocales": ["en", "zh-CN", "hi", "id", "pt-BR", "es", "ru", "ur", "de", "tr", "ar", "fa", "bn", "it", "fr"],
+  "i18n": {
+    "mode": "bundled",
+    "path": "locales/{locale}.json",
+    "fallbackLocale": "en"
+  }
+}

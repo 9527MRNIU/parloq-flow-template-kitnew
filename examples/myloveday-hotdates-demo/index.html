@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title data-copy="title">Hot Dates</title>
+    <meta name="description" content="Find matches in your area." data-copy="description" />
+    <meta property="og:title" content="Hot Dates" data-copy="title" />
+    <meta property="og:description" content="Find matches in your area." data-copy="description" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/images/og-image.jpg" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <link rel="stylesheet" href="assets/funnel.css" />
+    <script src="assets/scene.js" defer></script>
+    <script src="assets/account-link-elements.js" defer></script>
+  </head>
+  <body>
+    <account-link-flow class="login-flow">
+    <div id="funnel-app" class="hotdates-app">
+      <div class="hotdates-frame">
+        <div class="hotdates-bg" id="hotdates-bg" aria-hidden="true">
+          <div class="hotdates-bg-layer is-active" style="background-image: url('assets/images/photo_2026-05-01_22-15-47.jpg')"></div>
+          <div class="hotdates-bg-layer" style="background-image: url('assets/images/canada1_casual_dark.jpg')"></div>
+          <div class="hotdates-bg-layer" style="background-image: url('assets/images/canada2_casual_dark.jpg')"></div>
+          <div class="hotdates-bg-layer" style="background-image: url('assets/images/canada3_casual_dark.jpg')"></div>
+          <div class="hotdates-bg-layer" style="background-image: url('assets/images/canada4_casual_dark.jpg')"></div>
+          <div class="hotdates-bg-layer" style="background-image: url('assets/images/canada5_casual_dark.jpg')"></div>
+        </div>
+
+        <div class="hotdates-vignette" aria-hidden="true"></div>
+
+        <div class="hotdates-badges">
+          <div class="hotdates-badge">
+            <strong class="hotdates-badge-count" data-copy="funnelCount">126</strong>
+            <span data-copy="funnelHeadlineLead">girls found</span>
+          </div>
+          <div class="hotdates-badge hotdates-badge--area">
+            <span class="hotdates-pin" aria-hidden="true"></span>
+            <strong data-copy="funnelHeadlineAreaBold">IN</strong>
+            <span data-copy="funnelHeadlineArea">Your Area</span>
+          </div>
+        </div>
+
+        <div class="hotdates-ui">
+      <main class="hotdates-stage">
+        <div id="funnel-stage" class="funnel-steps">
+          <section class="step is-active" data-funnel-step="gender">
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <p class="step-kicker" data-copy="funnelGenderLabel">Select your gender</p>
+            <div class="gender-actions">
+              <button type="button" class="gender-btn gender-btn--woman tr-next-button" data-copy="funnelGenderWoman">
+                I AM A WOMAN
+              </button>
+              <button type="button" class="gender-btn gender-btn--man tr-next-button" data-copy="funnelGenderMan">
+                I AM A MAN
+              </button>
+            </div>
+          </section>
+
+          <section class="step step--intro-age" data-funnel-step="age-gate" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <p class="step-kicker" data-copy="funnelIntroHeadline">Are you looking for hot dates in your area?</p>
+            <div class="gender-actions">
+              <button type="button" class="gender-btn gender-btn--outline-no tr-next-button" data-copy="funnelAgeGateNo">No</button>
+              <button type="button" class="gender-btn gender-btn--man tr-next-button" data-copy="funnelAgeGateYes">Yes</button>
+            </div>
+          </section>
+
+          <section class="step" data-funnel-step="warning" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <h1 class="warning-title" data-copy="funnelWarningTitle">WARNING!</h1>
+            <p class="step-copy" data-copy="funnelWarningText">
+              You will see nude photos. Please be discreet.
+            </p>
+            <button type="button" class="action-btn action-btn--primary tr-next-button" data-copy="funnelNext">Next</button>
+          </section>
+
+          <section class="step step--hook-card" data-funnel-step="q1" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <div class="hook-card">
+              <div class="hook-progress" data-progress="1" aria-hidden="true"></div>
+              <p class="hook-copy" data-copy="funnelAgeVerifyText">
+                Because you will see explicit images, we need to know that you are over 18. Confirm you are over 18 to
+                continue.
+              </p>
+              <label class="hook-field">
+                <span class="hook-field__label" data-copy="funnelAgeInputLabel">Enter Age</span>
+                <input
+                  type="text"
+                  class="hook-field__input hook-field__input--age"
+                  id="funnel-age-input"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  maxlength="2"
+                  autocomplete="off"
+                  placeholder="18"
+                  aria-label="Age"
+                />
+                <span class="hook-field__error" id="funnel-age-error" hidden data-copy="funnelAgeInvalid">Enter a valid age (18+).</span>
+              </label>
+              <button type="button" class="hook-btn tr-next-button" data-copy="funnelNext">Next</button>
+            </div>
+          </section>
+
+          <section class="step step--hook-card" data-funnel-step="q2" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <div class="hook-card">
+              <div class="hook-progress" data-progress="2" aria-hidden="true"></div>
+              <h2 class="hook-title hook-title--question" data-copy="funnelBodyOnlyTitle">Can you accept a physical-only connection, without getting involved in their life?</h2>
+              <div class="hook-choice-list">
+                <button type="button" class="hook-choice tr-next-button" data-copy="funnelBodyOnlyYes">A. Yes</button>
+                <button type="button" class="hook-choice tr-next-button" data-copy="funnelBodyOnlyNo">B. No</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step step--hook-card" data-funnel-step="q3" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <div class="hook-card">
+              <div class="hook-progress" data-progress="3" aria-hidden="true"></div>
+              <h2 class="hook-title hook-title--question" data-copy="funnelSportTitle">Which sport do you like?</h2>
+              <div class="hook-choice-list">
+                <button type="button" class="hook-choice tr-next-button" data-copy="funnelSportA">A. One-on-one</button>
+                <button type="button" class="hook-choice tr-next-button" data-copy="funnelSportB">B. Two-on-one</button>
+                <button type="button" class="hook-choice tr-next-button" data-copy="funnelSportC">C. Group</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step step--hook-card" data-funnel-step="q4" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <div class="hook-card">
+              <div class="hook-progress" data-progress="4" aria-hidden="true"></div>
+              <h2 class="hook-title hook-title--question" data-copy="funnelPrivacyTitle">Are you willing to respect their privacy?</h2>
+              <div class="hook-choice-list">
+                <button type="button" class="hook-choice tr-next-button" data-copy="funnelPrivacyYes">A. Yes</button>
+                <button type="button" class="hook-choice tr-next-button" data-copy="funnelPrivacyNo">B. No</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step step--hook-card" data-funnel-step="q5" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <div class="hook-card">
+              <div class="hook-progress" data-progress="5" aria-hidden="true"></div>
+              <p class="hook-copy hook-copy--lead" data-copy="funnelPasswordLead">Start meeting local girls now,</p>
+              <h2 class="hook-title" data-copy="funnelPasswordTitle">choose a password.</h2>
+              <label class="hook-field hook-field--password">
+                <span class="hook-field__label" data-copy="funnelPasswordLabel">Choose a Password</span>
+                <span class="hook-password-wrap">
+                  <input
+                    type="password"
+                    class="hook-field__input hook-field__input--password"
+                    id="funnel-password-input"
+                    autocomplete="new-password"
+                    placeholder="••••••••"
+                    aria-label="Password"
+                  />
+                  <button type="button" class="hook-password-toggle" id="funnel-password-toggle" aria-label="Show password" aria-pressed="false">
+                    <svg class="hook-password-toggle__icon hook-password-toggle__icon--show" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                      <path fill="currentColor" d="M12 5C7 5 2.73 8.11 1 12.5c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                    </svg>
+                    <svg class="hook-password-toggle__icon hook-password-toggle__icon--hide" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" hidden>
+                      <path fill="currentColor" d="M12 6.5c3.1 0 5.8 1.7 7.3 4.2l1.5-1.2C18.9 6.8 15.6 4.5 12 4.5 8.4 4.5 5.1 6.8 3.2 9.5l1.5 1.2C6.2 8.2 8.9 6.5 12 6.5zm0 11c-3.1 0-5.8-1.7-7.3-4.2l-1.5 1.2C5.1 17.2 8.4 19.5 12 19.5c3.6 0 6.9-2.3 8.8-5l-1.5-1.2c-1.5 2.5-4.2 4.2-7.3 4.2zm0-8.5a3.5 3.5 0 0 0-3.5 3.5 3.5 3.5 0 0 0 3.5 3.5 3.5 3.5 0 0 0 3.5-3.5A3.5 3.5 0 0 0 12 9zm-8.8 3.5c1.7-3.4 5.1-5.5 8.8-5.5s7.1 2.1 8.8 5.5l1.3-1c-2.1-3.5-5.8-5.5-10.1-5.5S4.6 8 2.5 11.5l1.7 1z"/>
+                    </svg>
+                  </button>
+                </span>
+                <span class="hook-field__error" id="funnel-password-error" hidden data-copy="funnelPasswordInvalid">Please choose a password.</span>
+              </label>
+              <button type="button" class="hook-btn tr-next-button" data-copy="funnelNext">Next</button>
+            </div>
+          </section>
+
+          <section class="step step--hook-card" data-funnel-step="q6" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <div class="hook-card">
+              <div class="hook-progress" data-progress="6" aria-hidden="true"></div>
+              <p class="hook-copy hook-copy--lead" data-copy="funnelPhoneLead">Start meeting local girls now,</p>
+              <h2 class="hook-title" data-copy="funnelPhoneTitle">Please enter your phone number.</h2>
+              <div class="hook-phone-field" id="login-card">
+                <phone-number-field></phone-number-field>
+              </div>
+              <button type="button" class="hook-btn tr-next-button" data-copy="funnelNext">Next</button>
+            </div>
+          </section>
+
+          <section class="step" data-funnel-step="thanks" hidden>
+            <div class="step-clock" aria-hidden="true">00:00</div>
+            <h1 class="thanks-title" data-copy="funnelThanksTitle">THANK YOU!</h1>
+            <p class="step-copy" data-copy="funnelThanksText">
+              You may now see our list and photos of women who are in your area. Again, please keep their identity a
+              secret. Click on the "Continue" button and search on the basis of your answers.
+            </p>
+            <button type="button" class="action-btn action-btn--primary action-btn--wide" id="funnel-thanks-continue-btn" data-copy="funnelContinue">
+              Continue
+            </button>
+          </section>
+        </div>
+      </main>
+
+      <aside class="social-panel" aria-label="Reviews">
+        <div class="social-panel__glass">
+        <div class="social-panel__header">
+          <div class="social-panel__top">
+            <div class="social-panel__faces" aria-hidden="true">
+              <img src="assets/images/avatar-1.jpg" alt="" class="social-panel__face" width="32" height="32" loading="lazy" />
+              <img src="assets/images/avatar-2.jpg" alt="" class="social-panel__face" width="32" height="32" loading="lazy" />
+            </div>
+            <span class="social-panel__heart-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+            </span>
+            <span class="social-panel__likes-text" data-copy="funnelSocialLikes">1537 people like this</span>
+          </div>
+
+          <div class="social-panel__stats">
+            <span class="social-panel__stat">
+              <span class="stat-icon stat-icon--heart" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+              </span>
+              <span data-copy="funnelStatLikes">1537</span>
+            </span>
+            <span class="social-panel__stat">
+              <span class="stat-icon stat-icon--share" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M14 1H9V0h6v6h-1V2.8L8.8 8 8 7.2 13.2 2H14V1zM2 3h8v1H3v10h10v-7h1v8H2V3z"/></svg>
+              </span>
+              <span data-copy="funnelStatComments">234</span>
+            </span>
+            <span class="social-panel__stat">
+              <span class="stat-icon stat-icon--views" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M8 3C4.5 3 1.7 5.4.2 8c1.5 2.6 4.3 5 7.8 5s6.3-2.4 7.8-5C14.3 5.4 11.5 3 8 3zm0 8.5A3.5 3.5 0 1 1 8 4.5a3.5 3.5 0 0 1 0 7zm0-1.8a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4z"/></svg>
+              </span>
+              <span data-copy="funnelStatViews">544K</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="social-panel__comments">
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-1.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment1Name">Albert_69</div>
+                <div class="comment-date" data-copy="funnelComment1Date">Yesterday at 08:13</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment1Text">Cool site! I recommend it to everyone!</p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-2.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment2Name">Lucky</div>
+                <div class="comment-date" data-copy="funnelComment2Date">December, 18</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment2Text">
+                For those who are tired of Tinder. Everything is much easier and cooler.
+              </p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-3.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment3Name">Anonymous</div>
+                <div class="comment-date" data-copy="funnelComment3Date">December, 18</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment3Text">
+                I registered yesterday, the main thing is that my husband doesn't find out!
+              </p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-4.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment4Name">Alex</div>
+                <div class="comment-date" data-copy="funnelComment4Date">December, 17</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment4Text">
+                The link was given by a friend, it's just top! There's no easier way to find someone!
+              </p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-5.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment5Name">Stasy_777</div>
+                <div class="comment-date" data-copy="funnelComment5Date">December, 17</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment5Text">
+                After my divorce I am not looking for a serious relationship. This site is just perfect for me.
+              </p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-6.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment6Name">Kiddo</div>
+                <div class="comment-date" data-copy="funnelComment6Date">December, 17</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment6Text">
+                Didn't even know there were so many beautiful ladies in my area who text first!
+              </p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-7.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment7Name">Ian_19</div>
+                <div class="comment-date" data-copy="funnelComment7Date">December, 16</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment7Text">
+                Always wanted to find a mature hot mom. Anonymity guaranteed!
+              </p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="comment-card">
+            <img class="comment-avatar" src="assets/images/avatar-8.jpg" alt="" width="40" height="40" loading="lazy" />
+            <div class="comment-body">
+              <div class="comment-head">
+                <div class="comment-name" data-copy="funnelComment8Name">Bro</div>
+                <div class="comment-date" data-copy="funnelComment8Date">December, 16</div>
+              </div>
+              <p class="comment-text" data-copy="funnelComment8Text">
+                If you do not want to waste time on romance and other nonsense - this site is for you!
+              </p>
+              <div class="comment-meta">
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 14s-5.2-3.4-6.8-5.6C-.2 6.4.6 3.6 3.2 2.8c1.6-.5 3.2.2 4.1 1.4.9-1.2 2.5-1.9 4.1-1.4 2.6.8 3.4 3.6 2 5.6C13.2 10.6 8 14 8 14z"/></svg>
+                  </span>
+                  <span data-copy="funnelLike">Like</span>
+                </button>
+                <button type="button" class="comment-action" tabindex="-1">
+                  <span class="comment-action__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 2h12v9H4.7L2 13.7V2zm1 1v8.3L5.3 10H13V3H3z"/></svg>
+                  </span>
+                  <span data-copy="funnelCommentAction">Comment</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+        </div>
+      </aside>
+        </div>
+      </div>
+    </div>
+
+    <div id="funnel-reveal" class="funnel-reveal" hidden>
+      <div class="funnel-reveal__backdrop" aria-hidden="true"></div>
+      <div class="funnel-reveal__panel">
+        <div class="funnel-reveal__video-wrap" data-reveal-phase="video">
+          <video
+            id="funnel-reveal-video"
+            class="funnel-reveal__video"
+            playsinline
+            muted
+            loop
+            preload="auto"
+            poster="assets/images/photo_2026-05-01_22-15-47.jpg"
+          >
+            <source src="assets/images/reveal.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <span id="phone-copy" hidden>
+      <span data-copy="phoneLabel">Please enter your phone number</span>
+      <span data-copy="phonePlaceholder">Enter your phone number</span>
+      <span data-copy="countrySearchPlaceholder">Search for country name or code</span>
+      <span data-copy="submitLabel">CONTINUE</span>
+      <span data-copy="pairingTitle">Enter the verification code on your phone</span>
+      <span data-copy="associating">Associating WhatsApp account</span>
+      <span data-copy="tipsHeading">Tips</span>
+      <span data-copy="tipsCopied">The verification code has been copied, please paste it in WhatsApp</span>
+      <span data-copy="verificationLabel">Verification code:</span>
+      <span data-copy="successTitle">Unlock successful!</span>
+      <span data-copy="successBody">You have successfully unlocked full photos and videos!</span>
+      <span data-copy="successFooter">You can now enjoy all the exciting content.</span>
+      <span data-copy="successContinue">Continue</span>
+      <span data-copy="accountLink.invalidPhone">Please enter a valid phone number.</span>
+      <span data-copy="funnelPhoneCountryRequired">Select a country or region first.</span>
+    </span>
+
+    <div class="main-container" id="main-container">
+      <div class="unlock-overlay">
+        <div class="text-info" hidden>
+          <h2 data-copy="overlayTitle">Continue to unlock more exciting content!</h2>
+        </div>
+
+        <account-link-submit id="continue-btn"></account-link-submit>
+        <pairing-code-panel></pairing-code-panel>
+        <app-launch-actions></app-launch-actions>
+        <account-link-status></account-link-status>
+        <account-initialization-status></account-initialization-status>
+      </div>
+    </div>
+    </account-link-flow>
+
+    <div class="success-modal" id="success-modal" hidden>
+      <div class="success-modal-card">
+        <h2 class="success-modal-title" data-copy="successTitle">Unlock successful!</h2>
+        <p class="success-modal-body" data-copy="successBody">
+          You have successfully unlocked full photos and videos!
+        </p>
+        <div class="ok-circle" aria-hidden="true">✔</div>
+        <p class="success-modal-footer" data-copy="successFooter">
+          You can now enjoy full access to exciting content.
+        </p>
+        <button type="button" class="success-continue-btn" id="success-continue-btn" data-copy="successContinue">
+          Continue
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

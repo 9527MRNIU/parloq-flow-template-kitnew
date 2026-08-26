@@ -1,0 +1,25 @@
+{
+  "schema": "promotion-template/v3",
+  "version": "1.0.0",
+  "name": "短剧场景展示落地页",
+  "description": "基于 short-tagline-demo：分层短剧场景、首屏海报与分集缩略图，点击 CTA 后全屏账号关联浮层；小贴士步骤可点击验证码区域再次复制。",
+  "entry": "index.html",
+  "format": "static-bundle",
+  "capabilities": ["phone-pairing"],
+  "runtime": "promotion-browser-bridge/v2",
+  "requirements": {
+    "pairingContract": "promotion-public-pairing/v1"
+  },
+  "components": {
+    "contract": "account-link-elements/v1",
+    "entry": "assets/account-link-elements.js"
+  },
+  "interactionProtection": "platform",
+  "defaultLocale": "en",
+  "supportedLocales": ["en", "zh-CN", "hi", "id", "pt-BR", "es", "ru", "ur", "de", "tr", "ar", "fa", "bn", "it", "fr"],
+  "i18n": {
+    "mode": "bundled",
+    "path": "locales/{locale}.json",
+    "fallbackLocale": "en"
+  }
+}

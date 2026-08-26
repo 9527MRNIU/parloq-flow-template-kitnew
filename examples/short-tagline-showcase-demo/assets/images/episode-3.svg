@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 660" role="img" aria-label="">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b45309"/>
+      <stop offset="45%" stop-color="#9a3412"/>
+      <stop offset="100%" stop-color="#1c1917"/>
+    </linearGradient>
+    <radialGradient id="beam" cx="50%" cy="18%" r="55%">
+      <stop offset="0%" stop-color="#fde68a" stop-opacity="0.75"/>
+      <stop offset="45%" stop-color="#fbbf24" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="stage" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.7"/>
+    </linearGradient>
+  </defs>
+  <rect width="440" height="660" fill="url(#bg3)"/>
+  <rect width="440" height="660" fill="url(#beam)"/>
+  <path d="M120 0 L220 420 L320 0 Z" fill="#fff" opacity="0.06"/>
+  <ellipse cx="220" cy="560" rx="120" ry="18" fill="#000" opacity="0.4"/>
+  <circle cx="220" cy="390" r="44" fill="#292524"/>
+  <path d="M188 560 C200 490 210 460 220 460 C230 460 240 490 252 560" fill="#1c1917"/>
+  <path d="M140 560 L140 470 C140 430 175 400 220 400 C265 400 300 430 300 470 L300 560 Z" fill="#292524" opacity="0.85"/>
+  <rect width="440" height="660" fill="url(#stage)"/>
+</svg>

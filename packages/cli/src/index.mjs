@@ -9,9 +9,9 @@ import { zipSync } from "fflate";
 
 const CLI_FILE = fileURLToPath(import.meta.url);
 const REPO_ROOT = resolve(dirname(CLI_FILE), "../../..");
-const MAX_ZIP_BYTES = 20 * 1024 * 1024;
-const MAX_EXPANDED_BYTES = 50 * 1024 * 1024;
-const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_ZIP_BYTES = 60 * 1024 * 1024;
+const MAX_EXPANDED_BYTES = 100 * 1024 * 1024;
+const MAX_FILE_BYTES = 40 * 1024 * 1024;
 const MAX_FILES = 500;
 const MAX_INTEGRATION_MANIFEST_BYTES = 64 * 1024;
 const ZIP_MTIME = new Date(2000, 0, 1, 0, 0, 0);

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="">
+  <defs>
+    <linearGradient id="og" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="35%" stop-color="#7c2d12"/>
+      <stop offset="70%" stop-color="#9f1239"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <radialGradient id="oglow" cx="72%" cy="38%" r="45%">
+      <stop offset="0%" stop-color="#fde68a" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#fde68a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f0a1a" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#0f0a1a" stop-opacity="0.75"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#og)"/>
+  <rect width="1200" height="630" fill="url(#oglow)"/>
+  <circle cx="860" cy="250" r="110" fill="#1e293b" opacity="0.55"/>
+  <path d="M800 420 C840 330 860 300 860 300 C860 300 880 330 920 420" fill="#334155" opacity="0.7"/>
+  <rect x="120" y="210" width="360" height="22" rx="11" fill="#fff" opacity="0.2"/>
+  <rect x="120" y="255" width="280" height="16" rx="8" fill="#fff" opacity="0.14"/>
+  <rect x="120" y="290" width="200" height="14" rx="7" fill="#fff" opacity="0.1"/>
+  <rect width="1200" height="630" fill="url(#fade)"/>
+</svg>
