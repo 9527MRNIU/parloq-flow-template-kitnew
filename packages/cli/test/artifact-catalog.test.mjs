@@ -50,7 +50,7 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
         kind: "template",
         sequence: "0006",
         filename: "0006-myloveday-hotdates-demo-1.2.17.zip",
-        version: "1.2.5",
+        version: "1.2.17",
       },
     ],
   );
