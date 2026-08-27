@@ -1209,6 +1209,8 @@ pairing-code-panel::part(expiry) {
   font-size: 0.875rem;
   opacity: 0.78;
   color: #888;
+  font-variant-numeric: tabular-nums;
+  min-height: 1.2em;
 }
 
 pairing-code-panel::part(copy-button) {
@@ -1372,6 +1374,10 @@ account-link-status::part(message) {
     max(16px, env(safe-area-inset-left));
   background: rgba(0, 0, 0, 0.9);
   z-index: 10004;
+}
+
+body.success-open.video-backdrop-open .success-modal {
+  background: transparent;
 }
 
 .success-modal:not([hidden]) {

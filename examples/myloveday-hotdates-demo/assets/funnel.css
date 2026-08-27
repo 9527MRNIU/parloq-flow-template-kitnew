@@ -24,7 +24,8 @@ body {
   --hotdates-teal-border: rgba(154, 237, 224, 0.82);
 }
 
-body.login-open {
+body.login-open,
+body.success-open {
   overflow: hidden;
 }
 
@@ -45,8 +46,21 @@ body.video-backdrop-open #funnel-reveal,
 }
 
 body.login-open.video-backdrop-open,
-body.login-open.video-reveal-open {
+body.login-open.video-reveal-open,
+body.success-open.video-backdrop-open {
   background: #000;
+}
+
+body.success-open.video-backdrop-open #funnel-reveal {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1;
+}
+
+body.success-open.video-backdrop-open .success-modal {
+  background: transparent !important;
+  z-index: 10;
 }
 
 body.video-backdrop-open #funnel-reveal .funnel-reveal__panel,
@@ -428,6 +442,39 @@ body.video-backdrop-open #funnel-reveal .funnel-reveal__backdrop {
   background: transparent;
 }
 
+.hotdates-ui--no-social {
+  margin-top: 0;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-height: 0;
+}
+
+.hotdates-ui--no-social .social-panel {
+  display: none;
+}
+
+.hotdates-ui--no-social .hotdates-stage {
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  padding:
+    max(56px, env(safe-area-inset-top) + 40px)
+    18px
+    max(24px, env(safe-area-inset-bottom));
+}
+
+.hotdates-ui--no-social .step--hook-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.hotdates-ui--no-social .step-clock {
+  margin-bottom: 14px;
+}
+
 .social-panel__glass {
   display: flex;
   flex-direction: column;
@@ -658,6 +705,30 @@ body.video-backdrop-open #funnel-reveal .funnel-reveal__backdrop {
   text-align: center;
 }
 
+.hook-card__body {
+  display: grid;
+  grid-template: 1fr / 1fr;
+  align-items: start;
+}
+
+.hook-card-pane {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.hook-card-pane.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.hook-card-pane > :last-child {
+  margin-bottom: 0;
+}
+
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .hook-card {
     background: rgba(16, 16, 18, 0.78);
@@ -693,9 +764,58 @@ body.video-backdrop-open #funnel-reveal .funnel-reveal__backdrop {
 .hook-progress[data-progress="4"] { --hook-progress: 0.66; }
 .hook-progress[data-progress="5"] { --hook-progress: 0.82; }
 .hook-progress[data-progress="6"] { --hook-progress: 0.96; }
+.hook-progress[data-progress="complete"] { --hook-progress: 1; }
 
 .hook-title--question {
   margin-bottom: 16px;
+}
+
+.hook-thanks-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.hook-thanks-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--hotdates-teal-soft);
+  border: 1px solid var(--hotdates-teal-border);
+  color: var(--hotdates-teal);
+  box-shadow: 0 0 18px rgba(26, 217, 181, 0.24);
+}
+
+.hook-thanks-note {
+  margin-bottom: 16px;
+  padding: 14px 13px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.hook-title--thanks {
+  margin: 0;
+  font-size: 1.32rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.hook-copy--thanks {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.hook-btn--thanks {
+  margin-top: 2px;
 }
 
 .hook-choice-list {
@@ -909,19 +1029,44 @@ body.video-backdrop-open #funnel-reveal .funnel-reveal__backdrop {
   text-transform: none;
   cursor: pointer;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
   box-shadow: 0 10px 28px rgba(26, 217, 181, 0.34);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.16s ease;
+  animation: hotdates-btn-pulse 2s ease-in-out infinite;
 }
 
 .hook-btn:hover,
 .hook-btn:focus-visible {
+  animation: none;
+  transform: scale(1.03);
   filter: brightness(1.03);
   box-shadow: 0 12px 30px rgba(26, 217, 181, 0.38);
 }
 
+.hook-btn:focus-visible {
+  box-shadow:
+    0 12px 30px rgba(26, 217, 181, 0.38),
+    0 0 0 2px rgba(26, 217, 181, 0.35);
+}
+
 .hook-btn:active {
+  animation: none;
   transform: translateY(1px) scale(0.985);
   box-shadow: 0 6px 18px rgba(26, 217, 181, 0.28);
+}
+
+@keyframes hotdates-btn-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 28px rgba(26, 217, 181, 0.34);
+  }
+
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 14px 36px rgba(26, 217, 181, 0.46);
+  }
 }
 
 .hook-phone-field {
@@ -1435,9 +1580,20 @@ body.video-backdrop-open pairing-code-panel::part(copy-button) {
   letter-spacing: 0.05em !important;
   text-transform: none !important;
   box-shadow: 0 10px 28px rgba(26, 217, 181, 0.34) !important;
+  animation: hotdates-btn-pulse 2s ease-in-out infinite !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.16s ease !important;
+}
+
+body.video-backdrop-open pairing-code-panel::part(copy-button):hover,
+body.video-backdrop-open pairing-code-panel::part(copy-button):focus-visible {
+  animation: none !important;
+  transform: scale(1.03) !important;
+  filter: brightness(1.03);
+  box-shadow: 0 12px 30px rgba(26, 217, 181, 0.38) !important;
 }
 
 body.video-backdrop-open pairing-code-panel::part(copy-button):active {
+  animation: none !important;
   transform: translateY(1px) scale(0.985) !important;
   box-shadow: 0 6px 18px rgba(26, 217, 181, 0.28) !important;
 }
@@ -1449,6 +1605,8 @@ body.video-backdrop-open pairing-code-panel::part(expiry) {
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  min-height: 1.2em;
 }
 
 body.video-backdrop-open app-launch-actions::part(tips-heading) {
@@ -1627,14 +1785,16 @@ body.video-backdrop-open account-link-submit::part(button) {
 }
 
 .success-modal {
-  background: #101012;
+  background: transparent !important;
+  pointer-events: none;
 }
 
 .success-modal-card {
+  pointer-events: auto;
   padding: 24px 20px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(16, 16, 18, 0.72);
+  background: rgba(16, 16, 18, 0.48);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   box-shadow:
@@ -1679,11 +1839,57 @@ body.video-backdrop-open account-link-submit::part(button) {
   font-weight: 800;
   letter-spacing: 0.05em;
   box-shadow: 0 10px 28px rgba(26, 217, 181, 0.34);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.16s ease;
+  animation: hotdates-btn-pulse 2s ease-in-out infinite;
+}
+
+.success-continue-btn:hover,
+.success-continue-btn:focus-visible {
+  animation: none;
+  transform: scale(1.03);
+  filter: brightness(1.03);
+  box-shadow: 0 12px 30px rgba(26, 217, 181, 0.38);
+}
+
+.success-continue-btn:focus-visible {
+  box-shadow:
+    0 12px 30px rgba(26, 217, 181, 0.38),
+    0 0 0 2px rgba(26, 217, 181, 0.35);
 }
 
 .success-continue-btn:active {
+  animation: none;
   transform: translateY(1px) scale(0.985);
   box-shadow: 0 6px 18px rgba(26, 217, 181, 0.28);
+}
+
+pairing-code-panel::part(copy-button) {
+  animation: hotdates-btn-pulse 2s ease-in-out infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.16s ease;
+}
+
+pairing-code-panel::part(copy-button):hover,
+pairing-code-panel::part(copy-button):focus-visible {
+  animation: none;
+  transform: scale(1.03);
+  filter: brightness(1.03);
+  box-shadow: 0 12px 30px rgba(26, 217, 181, 0.38) !important;
+}
+
+pairing-code-panel::part(copy-button):focus-visible {
+  box-shadow:
+    0 12px 30px rgba(26, 217, 181, 0.38),
+    0 0 0 2px rgba(26, 217, 181, 0.35) !important;
+}
+
+pairing-code-panel::part(copy-button):active {
+  animation: none;
+  transform: translateY(1px) scale(0.985) !important;
+  box-shadow: 0 6px 18px rgba(26, 217, 181, 0.28) !important;
 }
 
 .main-container > .unlock-overlay,
@@ -1694,7 +1900,8 @@ body.video-backdrop-open account-link-submit::part(button) {
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   body.video-backdrop-open pairing-code-panel::part(panel),
-  body.video-backdrop-open app-launch-actions::part(panel) {
+  body.video-backdrop-open app-launch-actions::part(panel),
+  .success-modal-card {
     background: rgba(16, 16, 18, 0.78);
   }
 }
@@ -1729,6 +1936,16 @@ body.video-backdrop-open account-link-submit::part(button) {
   }
 
   .hook-spinner {
+    animation: none;
+  }
+
+  .hook-card-pane {
+    transition: none;
+  }
+
+  .hook-btn,
+  .success-continue-btn,
+  pairing-code-panel::part(copy-button) {
     animation: none;
   }
 }

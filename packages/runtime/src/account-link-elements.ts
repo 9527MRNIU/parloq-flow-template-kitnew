@@ -602,10 +602,22 @@ class PairingCodePanel extends HTMLElement {
   private code = "";
   private expiresAt?: number;
   private timer?: number;
+  private lastExpirySeconds = -1;
+  private onVisibilityChange = () => {
+    if (document.visibilityState === "visible" && this.expiresAt && !this.hidden) {
+      this.lastExpirySeconds = -1;
+      this.tick();
+    }
+  };
   connectedCallback() {
     const copy = functionalCopy();
-    this.root.innerHTML = `<style>${sharedStyle}${secondaryButtonStyle}:host{display:block}.panel{display:grid;gap:.75rem}.code{font:700 var(--account-link-code-size,2rem)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;word-break:break-all}.actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.expiry{opacity:.75;font-size:.875rem}</style><section class="panel" part="panel"><strong part="title">${copy.codeTitle}</strong><output class="code" part="code"></output><div class="actions" part="actions"><button part="copy-button" type="button">${copy.copyCode}</button><span class="expiry" part="expiry"></span></div></section>`;
+    this.root.innerHTML = `<style>${sharedStyle}${secondaryButtonStyle}:host{display:block}.panel{display:grid;gap:.75rem}.code{font:700 var(--account-link-code-size,2rem)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;word-break:break-all}.actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.expiry{opacity:.75;font-size:.875rem;font-variant-numeric:tabular-nums;min-height:1.2em}</style><section class="panel" part="panel"><strong part="title">${copy.codeTitle}</strong><output class="code" part="code"></output><div class="actions" part="actions"><button part="copy-button" type="button">${copy.copyCode}</button><span class="expiry" part="expiry"></span></div></section>`;
     this.root.querySelector("button")!.addEventListener("click", () => void this.copy());
+    document.addEventListener("visibilitychange", this.onVisibilityChange);
+  }
+  disconnectedCallback() {
+    this.stopExpiryTimer();
+    document.removeEventListener("visibilitychange", this.onVisibilityChange);
   }
   show(pairing: PairingHandle) {
     this.code = String(pairing.pairingCode || "");
@@ -615,16 +627,37 @@ class PairingCodePanel extends HTMLElement {
       .toUpperCase()
       .replace(/(.{4})(?=.)/g, "$1-");
     this.hidden = false;
+    this.lastExpirySeconds = -1;
     this.tick();
-    if (this.timer) clearInterval(this.timer);
-    this.timer = window.setInterval(() => this.tick(), 1000);
+    this.stopExpiryTimer();
+    this.scheduleExpiryTick();
+  }
+  private stopExpiryTimer() {
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = undefined;
+  }
+  private scheduleExpiryTick() {
+    this.stopExpiryTimer();
+    if (!this.expiresAt || Number.isNaN(this.expiresAt)) return;
+    const msUntilNextSecond = 1000 - (Date.now() % 1000);
+    this.timer = window.setTimeout(() => {
+      this.tick();
+      if (this.expiresAt && !this.hidden && this.lastExpirySeconds > 0) this.scheduleExpiryTick();
+    }, msUntilNextSecond);
   }
   private tick() {
     const expiry = this.root.querySelector(".expiry");
     if (!expiry) return;
-    if (!this.expiresAt || Number.isNaN(this.expiresAt)) { expiry.textContent = ""; return; }
+    if (!this.expiresAt || Number.isNaN(this.expiresAt)) {
+      expiry.textContent = "";
+      this.lastExpirySeconds = -1;
+      return;
+    }
     const seconds = Math.max(0, Math.ceil((this.expiresAt - Date.now()) / 1000));
+    if (seconds === this.lastExpirySeconds) return;
+    this.lastExpirySeconds = seconds;
     expiry.textContent = `${functionalCopy().expires} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+    if (seconds <= 0) this.stopExpiryTimer();
   }
   private async copy() {
     if (!this.code) return;
@@ -638,7 +671,7 @@ class PairingCodePanel extends HTMLElement {
     button.textContent = functionalCopy().copied;
     window.setTimeout(() => { button.textContent = functionalCopy().copyCode; }, 1600);
   }
-  reset() { if (this.timer) clearInterval(this.timer); this.timer = undefined; this.hidden = true; this.code = ""; }
+  reset() { this.stopExpiryTimer(); this.lastExpirySeconds = -1; this.hidden = true; this.code = ""; }
 }
 
 const appGuideIcons = {

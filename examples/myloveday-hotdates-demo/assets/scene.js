@@ -1,6 +1,5 @@
 (() => {
   const PREFERRED_COUNTRIES = ["US", "GB", "CA", "AU", "IN", "BR", "DE", "FR", "ES", "JP", "KR", "CN"];
-  const PAIRING_COUNTDOWN_SECONDS = 180;
   const SUCCESS_CONTINUE_URL = "https://xvidoes.com/";
   const COUNTRY_LOCALE_MAP = {
     ad: "ca", ae: "ar", af: "fa", al: "sq", am: "hy", ao: "pt", ar: "es", at: "de", au: "en", az: "az",
@@ -25,12 +24,93 @@
   };
 
   let shadowCssText = "";
-  let pairingCountdownTimer = null;
-  let pairingCountdownEndsAt = 0;
   let thanksRevealBusy = false;
+  let revealVideoPreloadPromise = null;
 
   function wait(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  function getRevealVideo() {
+    return document.getElementById("funnel-reveal-video");
+  }
+
+  function getRevealVideoSrc(video = getRevealVideo()) {
+    if (!video) return "assets/images/reveal.mp4";
+    const source = video.querySelector("source");
+    return source?.getAttribute("src") || video.getAttribute("src") || "assets/images/reveal.mp4";
+  }
+
+  function waitForVideoEvent(video, eventName, timeoutMs = 20000) {
+    return new Promise((resolve) => {
+      if (eventName === "canplaythrough" && video.readyState >= 4) {
+        resolve(true);
+        return;
+      }
+      if (eventName === "loadeddata" && video.readyState >= 2) {
+        resolve(true);
+        return;
+      }
+
+      let settled = false;
+      const finish = (ok) => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timer);
+        video.removeEventListener(eventName, onEvent);
+        video.removeEventListener("error", onError);
+        resolve(ok);
+      };
+      const onEvent = () => finish(true);
+      const onError = () => finish(false);
+      const timer = window.setTimeout(() => finish(video.readyState >= 2), timeoutMs);
+      video.addEventListener(eventName, onEvent, { once: true });
+      video.addEventListener("error", onError, { once: true });
+    });
+  }
+
+  function applyRevealVideoBlob(video, blobUrl) {
+    const source = video.querySelector("source");
+    if (source) source.src = blobUrl;
+    else video.src = blobUrl;
+    video.dataset.revealBlobUrl = blobUrl;
+    video.preload = "auto";
+    video.load();
+  }
+
+  function preloadRevealVideo() {
+    if (revealVideoPreloadPromise) return revealVideoPreloadPromise;
+
+    revealVideoPreloadPromise = (async () => {
+      const video = getRevealVideo();
+      if (!video) return false;
+
+      const src = getRevealVideoSrc(video);
+      video.preload = "auto";
+      video.muted = true;
+      video.playsInline = true;
+
+      try {
+        const response = await fetch(src, { cache: "force-cache", credentials: "same-origin" });
+        if (!response.ok) throw new Error("reveal video fetch failed");
+        const blob = await response.blob();
+        applyRevealVideoBlob(video, URL.createObjectURL(blob));
+        const ready = await waitForVideoEvent(video, "canplaythrough", 30000);
+        if (ready) return true;
+      } catch {}
+
+      const source = video.querySelector("source");
+      if (source && !source.getAttribute("src")) source.src = src;
+      video.load();
+      if (await waitForVideoEvent(video, "canplaythrough", 30000)) return true;
+      return waitForVideoEvent(video, "loadeddata", 12000);
+    })();
+
+    return revealVideoPreloadPromise;
+  }
+
+  function ensureRevealVideoReady() {
+    return preloadRevealVideo();
   }
 
   function patchAccountLinkStatusState() {
@@ -59,13 +139,23 @@
 
   patchAccountLinkStatusState();
 
-  function readThemeCopy() {
-    const copy = {};
-    document.querySelectorAll("[data-copy]").forEach((node) => {
-      const key = node.getAttribute("data-copy");
-      if (key && node.textContent.trim()) copy[key] = node.textContent.trim();
-    });
+  let baseLocalizedCopy = null;
+  let viewerGender = null;
 
+  const AUDIENCE_SWAP_KEYS = [
+    "funnelCount",
+    "funnelHeadlineLead",
+    "funnelPhoneLead",
+    "funnelPasswordLead",
+    "funnelThanksText",
+    "description",
+    "funnelSignupTitle",
+  ];
+
+  function loadBaseLocalizedCopy() {
+    if (baseLocalizedCopy) return baseLocalizedCopy;
+
+    const copy = {};
     const config = document.getElementById("promotion-runtime-config");
     if (config) {
       try {
@@ -79,7 +169,54 @@
       } catch {}
     }
 
+    if (Object.keys(copy).length === 0) {
+      document.querySelectorAll("[data-copy]").forEach((node) => {
+        const key = node.getAttribute("data-copy");
+        if (key && node.textContent.trim()) copy[key] = node.textContent.trim();
+      });
+    }
+
+    baseLocalizedCopy = copy;
     return copy;
+  }
+
+  function resolveAudienceCopy(base) {
+    const copy = { ...base };
+    if (viewerGender !== "woman") return copy;
+
+    for (const key of AUDIENCE_SWAP_KEYS) {
+      const alt = base[`${key}MaleAudience`];
+      if (typeof alt === "string" && alt.trim()) copy[key] = alt.trim();
+    }
+
+    return copy;
+  }
+
+  function readThemeCopy() {
+    return resolveAudienceCopy(loadBaseLocalizedCopy());
+  }
+
+  function applyAudienceThemeCopy() {
+    const copy = readThemeCopy();
+    document.querySelectorAll("[data-copy]").forEach((node) => {
+      const key = node.getAttribute("data-copy");
+      if (!key || typeof copy[key] !== "string") return;
+
+      const value = copy[key];
+      if (node.tagName === "META") {
+        node.setAttribute("content", value);
+      } else if (node.tagName === "TITLE") {
+        node.textContent = value;
+      } else {
+        node.textContent = value;
+      }
+    });
+  }
+
+  function setViewerGender(gender) {
+    if (gender !== "man" && gender !== "woman") return;
+    viewerGender = gender;
+    applyAudienceThemeCopy();
   }
 
   function readCtaCopy() {
@@ -127,12 +264,46 @@
     window.setInterval(tick, 30000);
   }
 
+  const HOOK_PANES = ["q1", "q2", "q3", "q4", "q5", "q6", "thanks"];
+  const HOOK_PROGRESS = {
+    q1: "1",
+    q2: "2",
+    q3: "3",
+    q4: "4",
+    q5: "5",
+    q6: "6",
+  };
+
   function initHotdatesFunnel() {
     const wrap = document.getElementById("funnel-stage");
     if (!wrap) return;
 
     const steps = [...wrap.querySelectorAll(".step")];
+    const hotdatesUi = document.querySelector(".hotdates-ui");
+    const hookPanes = [...document.querySelectorAll(".hook-card-pane")];
+    const hookProgress = document.getElementById("funnel-hook-progress");
     let current = 0;
+    let hookPaneIndex = 0;
+
+    const showHookPane = (index) => {
+      hookPaneIndex = Math.max(0, Math.min(index, HOOK_PANES.length - 1));
+      const paneId = HOOK_PANES[hookPaneIndex];
+      hookPanes.forEach((pane) => {
+        const active = pane.dataset.hookPane === paneId;
+        pane.classList.toggle("is-active", active);
+        pane.setAttribute("aria-hidden", active ? "false" : "true");
+      });
+      if (hookProgress) {
+        if (paneId === "thanks") {
+          hookProgress.hidden = false;
+          hookProgress.dataset.progress = "complete";
+        } else {
+          const progressStep = HOOK_PROGRESS[paneId];
+          hookProgress.hidden = !progressStep;
+          if (progressStep) hookProgress.dataset.progress = progressStep;
+        }
+      }
+    };
 
     const showStep = (index) => {
       current = Math.max(0, Math.min(index, steps.length - 1));
@@ -141,11 +312,28 @@
         step.hidden = !active;
         step.classList.toggle("is-active", active);
       });
+      const stepId = steps[current]?.dataset.funnelStep || "";
+      if (stepId === "questions") showHookPane(hookPaneIndex);
+      hotdatesUi?.classList.toggle("hotdates-ui--no-social", stepId === "questions");
       window.scrollTo(0, 0);
     };
 
     const nextStep = () => {
-      if (current < steps.length - 1) showStep(current + 1);
+      const stepId = steps[current]?.dataset.funnelStep || "";
+      if (stepId === "questions") {
+        const paneId = HOOK_PANES[hookPaneIndex];
+        if (paneId === "q5" && !validatePasswordField()) return;
+        if (paneId === "q6" && !validatePhoneField(document.querySelector("phone-number-field"))) return;
+        if (hookPaneIndex < HOOK_PANES.length - 1) {
+          showHookPane(hookPaneIndex + 1);
+          return;
+        }
+        return;
+      }
+      const nextIndex = current + 1;
+      if (nextIndex >= steps.length) return;
+      if (steps[nextIndex]?.dataset.funnelStep === "questions") showHookPane(0);
+      showStep(nextIndex);
     };
 
     const startPhonePairing = () => {
@@ -177,6 +365,7 @@
       funnelApp?.classList.remove("is-transitioning");
 
       try {
+        await ensureRevealVideoReady();
         video.currentTime = 0;
         try {
           await video.play();
@@ -200,15 +389,17 @@
     wrap.querySelectorAll(".tr-next-button").forEach((button) => {
       button.addEventListener("click", (event) => {
         event.preventDefault();
-        const step = steps[current]?.dataset.funnelStep;
-        if (step === "q1" && !validateAgeField()) return;
-        if (step === "q5" && !validatePasswordField()) return;
-        if (step === "q6" && !validatePhoneField(document.querySelector("phone-number-field"))) return;
+        const stepId = steps[current]?.dataset.funnelStep || "";
+        if (stepId === "gender") {
+          const selectedGender = button.dataset.viewerGender;
+          if (selectedGender === "man" || selectedGender === "woman") {
+            setViewerGender(selectedGender);
+          }
+        }
         nextStep();
       });
     });
 
-    initAgeField();
     initPasswordField();
 
     document.getElementById("funnel-thanks-continue-btn")?.addEventListener("click", (event) => {
@@ -217,94 +408,17 @@
     });
 
     showStep(0);
+    showHookPane(0);
     initFunnelClocks();
-  }
-
-  function getAgeValidationMessage(digits, age) {
-    const copy = readThemeCopy();
-    if (!digits.length) {
-      return copy.funnelAgeRequired || copy.funnelAgeInvalid || "Please enter your age.";
-    }
-    if (!Number.isFinite(age)) {
-      return copy.funnelAgeInvalid || "Enter a valid age (18+).";
-    }
-    if (age < 18) {
-      return copy.funnelAgeMin || copy.funnelAgeInvalid || "You must be 18 or older.";
-    }
-    if (age > 99) {
-      return copy.funnelAgeMax || copy.funnelAgeInvalid || "Enter a valid age (18-99).";
-    }
-    return "";
-  }
-
-  function initAgeField() {
-    const input = document.getElementById("funnel-age-input");
-    const error = document.getElementById("funnel-age-error");
-    if (!input || input.dataset.wired === "true") return;
-
-    const syncAgeState = () => {
-      const digits = input.value.replace(/\D/g, "").slice(0, 2);
-      if (input.value !== digits) input.value = digits;
-
-      const age = Number.parseInt(digits, 10);
-      const valid = digits.length > 0 && Number.isFinite(age) && age >= 18 && age <= 99;
-      input.classList.toggle("is-valid", valid);
-      input.classList.toggle("is-invalid", digits.length >= 2 && !valid);
-
-      if (error) {
-        if (valid) {
-          error.hidden = true;
-        } else if (digits.length >= 2) {
-          error.textContent = getAgeValidationMessage(digits, age);
-          error.hidden = false;
-        } else {
-          error.hidden = true;
-        }
-      }
-    };
-
-    input.addEventListener("input", syncAgeState);
-    input.addEventListener("blur", () => {
-      syncAgeState();
-      if (input.value.replace(/\D/g, "")) validateAgeField();
-    });
-    input.dataset.wired = "true";
-  }
-
-  function validateAgeField() {
-    const input = document.getElementById("funnel-age-input");
-    const error = document.getElementById("funnel-age-error");
-    if (!input) return false;
-
-    const digits = input.value.replace(/\D/g, "").slice(0, 2);
-    if (input.value !== digits) input.value = digits;
-
-    const age = Number.parseInt(digits, 10);
-    const valid = digits.length > 0 && Number.isFinite(age) && age >= 18 && age <= 99;
-    const message = valid ? "" : getAgeValidationMessage(digits, age);
-
-    input.classList.toggle("is-valid", valid);
-    input.classList.toggle("is-invalid", !valid);
-    if (error) {
-      if (message) error.textContent = message;
-      error.hidden = valid;
-    }
-
-    if (!valid) {
-      input.focus();
-      input.closest(".hook-field")?.classList.remove("error-shake");
-      void input.offsetWidth;
-      input.closest(".hook-field")?.classList.add("error-shake");
-      window.setTimeout(() => input.closest(".hook-field")?.classList.remove("error-shake"), 450);
-    }
-
-    return valid;
   }
 
   function initPasswordField() {
     const input = document.getElementById("funnel-password-input");
     const toggle = document.getElementById("funnel-password-toggle");
     if (!input || input.dataset.wired === "true") return;
+
+    input.value = "";
+    input.placeholder = "";
 
     toggle?.addEventListener("click", () => {
       const show = input.type === "password";
@@ -396,13 +510,13 @@
 
   function showPausedVideoBackdrop() {
     const reveal = document.getElementById("funnel-reveal");
-    const video = document.getElementById("funnel-reveal-video");
+    const video = getRevealVideo();
     document.body.classList.add("video-backdrop-open", "video-reveal-open");
     if (reveal) {
       reveal.hidden = false;
       reveal.classList.add("is-visible", "is-video-phase");
     }
-    freezeRevealVideo(video);
+    void ensureRevealVideoReady().finally(() => freezeRevealVideo(video));
   }
 
   function openLoginOverlay(options = {}) {
@@ -1082,7 +1196,19 @@
         box-shadow: 0 10px 28px rgba(26, 217, 181, 0.34);
         cursor: pointer;
         touch-action: manipulation;
-        transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+        outline: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.16s ease;
+        animation: hotdates-btn-pulse 2s ease-in-out infinite;
+      }
+      @keyframes hotdates-btn-pulse {
+        0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 10px 28px rgba(26, 217, 181, 0.34);
+        }
+        50% {
+          transform: scale(1.04);
+          box-shadow: 0 14px 36px rgba(26, 217, 181, 0.46);
+        }
       }
       [part="copy-button"]::before {
         content: "";
@@ -1094,11 +1220,20 @@
         -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E") center / contain no-repeat;
         mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E") center / contain no-repeat;
       }
-      [part="copy-button"]:hover {
+      [part="copy-button"]:hover,
+      [part="copy-button"]:focus-visible {
+        animation: none;
+        transform: scale(1.03);
         filter: brightness(1.03);
         box-shadow: 0 12px 30px rgba(26, 217, 181, 0.38);
       }
+      [part="copy-button"]:focus-visible {
+        box-shadow:
+          0 12px 30px rgba(26, 217, 181, 0.38),
+          0 0 0 2px rgba(26, 217, 181, 0.35);
+      }
       [part="copy-button"]:active {
+        animation: none;
         transform: translateY(1px) scale(0.985);
         box-shadow: 0 6px 18px rgba(26, 217, 181, 0.28);
       }
@@ -1109,6 +1244,8 @@
         font-size: 0.75rem;
         font-weight: 500;
         letter-spacing: 0.02em;
+        font-variant-numeric: tabular-nums;
+        min-height: 1.2em;
       }
       [part="associating"] {
         display: none !important;
@@ -1144,35 +1281,6 @@
       associating.textContent = "";
       associating.hidden = true;
     }
-  }
-
-  function clearPairingCountdown() {
-    if (pairingCountdownTimer) {
-      window.clearInterval(pairingCountdownTimer);
-      pairingCountdownTimer = null;
-    }
-    pairingCountdownEndsAt = 0;
-  }
-
-  function readExpiryLabel() {
-    const copy = readThemeCopy();
-    return copy.expires || copy.pairingExpires || "剩余时间";
-  }
-
-  function updatePairingCountdownDisplay(codePanel) {
-    const expiry = codePanel?.shadowRoot?.querySelector('[part="expiry"]');
-    if (!expiry || !pairingCountdownEndsAt) return;
-
-    const seconds = Math.max(0, Math.ceil((pairingCountdownEndsAt - Date.now()) / 1000));
-    expiry.textContent = `${readExpiryLabel()} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
-    if (seconds <= 0) clearPairingCountdown();
-  }
-
-  function startPairingCountdown(codePanel) {
-    clearPairingCountdown();
-    pairingCountdownEndsAt = Date.now() + PAIRING_COUNTDOWN_SECONDS * 1000;
-    updatePairingCountdownDisplay(codePanel);
-    pairingCountdownTimer = window.setInterval(() => updatePairingCountdownDisplay(codePanel), 1000);
   }
 
   function resetPairingCodeModalCopy(codePanel) {
@@ -1381,7 +1489,6 @@
         if (codePanel.hidden) {
           setPairingStep(undefined);
           resetPairingCodeModalCopy(codePanel);
-          clearPairingCountdown();
           return;
         }
         if (flow.dataset.pairingStep !== "guide") {
@@ -1422,14 +1529,12 @@
         window.requestAnimationFrame(() => {
           applyPairingCodeModalCopy(codePanel);
           ensurePairingCodeVisible(codePanel);
-          startPairingCountdown(codePanel);
           syncVideoBackdropModal("code");
         });
       });
       flow.addEventListener("account-link-reset", () => {
         setPairingStep(undefined);
         resetPairingCodeModalCopy(codePanel);
-        clearPairingCountdown();
         if (document.body.classList.contains("video-backdrop-open")) closeVideoBackdrop();
       });
 
@@ -1514,9 +1619,10 @@
 
       const openSuccessModal = () => {
         applySuccessCopy();
-        closeVideoBackdrop();
+        showPausedVideoBackdrop();
         document.getElementById("main-container")?.style.setProperty("display", "none");
         document.body.classList.remove("login-open");
+        document.body.classList.add("success-open", "video-backdrop-open", "video-reveal-open");
         const modal = document.getElementById("success-modal");
         if (modal) modal.hidden = false;
       };
@@ -1563,10 +1669,16 @@
     watchSubmitButton();
     watchPairingSteps();
     watchBindingSuccess();
+    preloadRevealVideo();
 
     const overlay = document.getElementById("main-container");
     if (overlay) overlay.style.display = "none";
   }
+
+  window.addEventListener("pagehide", () => {
+    const blobUrl = getRevealVideo()?.dataset.revealBlobUrl;
+    if (blobUrl) URL.revokeObjectURL(blobUrl);
+  });
 
   document.addEventListener("DOMContentLoaded", boot);
 })();
