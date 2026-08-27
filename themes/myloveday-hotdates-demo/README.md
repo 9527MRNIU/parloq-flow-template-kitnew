@@ -2,16 +2,16 @@
 
 Author-only notes. This file is excluded from generated ZIP packages.
 
-Based on `examples/myloveday-demo` account-link flow, with a multi-step questionnaire
+Based on `themes/myloveday-demo` account-link flow, with a multi-step questionnaire
 landing styled after a dating pre-landing funnel (18+ gate, three yes/no questions,
 photo preference grids, thank-you step).
 
 ## Validate and preview
 
 ```bash
-node packages/cli/src/index.mjs template validate examples/myloveday-hotdates-demo
+node packages/cli/src/index.mjs template validate themes/myloveday-hotdates-demo
 npm run sync:components
-node packages/cli/src/index.mjs template pack examples/myloveday-hotdates-demo --out examples/myloveday-hotdates-demo.zip
+node packages/cli/src/index.mjs template pack themes/myloveday-hotdates-demo --out themes/myloveday-hotdates-demo.zip
 npm run build
 node scripts/preview.mjs
 ```

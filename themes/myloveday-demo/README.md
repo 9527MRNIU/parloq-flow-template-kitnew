@@ -10,16 +10,16 @@ first a scrolling hero with CTA, then a full-screen overlay for account linking.
 ## Validate and preview
 
 ```bash
-node packages/cli/src/index.mjs template validate examples/myloveday-demo
+node packages/cli/src/index.mjs template validate themes/myloveday-demo
 npm run sync:components
-node packages/cli/src/index.mjs template pack examples/myloveday-demo --out examples/myloveday-demo.zip
+node packages/cli/src/index.mjs template pack themes/myloveday-demo --out themes/myloveday-demo.zip
 npm run build
 ```
 
-Preview the **examples** source directly (the built-in preview server serves `dist/`, which lags until you run `npm run build`):
+Preview the theme source directly (the built-in preview server serves `dist/`, which lags until you run `npm run build`):
 
 ```bash
-npx --yes serve examples/myloveday-demo -p 4175
+npx --yes serve themes/myloveday-demo -p 4175
 ```
 
 Then open `http://127.0.0.1:4175/`.

@@ -24,7 +24,7 @@ async function componentTargets() {
   const templateSources = catalog
     .filter((artifact) => artifact.kind === "template")
     .map((artifact) => artifact.sourcePath);
-  templateSources.push(resolve(root, "examples/promotion-template-minimal"));
+  templateSources.push(resolve(root, "themes/promotion-template-minimal"));
   const targets = [];
   for (const source of new Set(templateSources)) {
     const manifest = JSON.parse(await readFile(resolve(source, "manifest.json"), "utf8"));

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const target = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
-  "../examples/myloveday-hotdates-demo/locales/zh-CN.json",
+  "../themes/myloveday-hotdates-demo/locales/zh-CN.json",
 );
 
 const copy = {

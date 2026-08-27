@@ -154,6 +154,6 @@ source domain and a valid current package are distributed.
 The runnable source examples below are intentionally not registered as formal
 artifacts and therefore do not receive numbered ZIPs:
 
-- [`promotion-integration-script-demo`](../examples/promotion-integration-script-demo)
-- [`promotion-integration-iframe-demo`](../examples/promotion-integration-iframe-demo)
-- [`promotion-integration-feedback-demo`](../examples/promotion-integration-feedback-demo)
+- [`promotion-integration-script-demo`](../integrations/promotion-integration-script-demo)
+- [`promotion-integration-iframe-demo`](../integrations/promotion-integration-iframe-demo)
+- [`promotion-integration-feedback-demo`](../integrations/promotion-integration-feedback-demo)

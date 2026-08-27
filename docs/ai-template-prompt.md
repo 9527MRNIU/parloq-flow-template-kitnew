@@ -6,7 +6,7 @@ to create a new visual theme:
 ```text
 Create the presentation files for a static promotion-template/v3 landing-page
 theme. Preserve the exact standard account-link custom-element composition
-from examples/promotion-template-minimal/index.html. Change only surrounding semantic HTML,
+from themes/promotion-template-minimal/index.html. Change only surrounding semantic HTML,
 CSS variables, ::part() styling, local relative media, and customer-facing
 copy. The repository build bundles account-link-elements/v1 into the template
 ZIP, while the platform exposes window.PromotionBridge; do not write direct

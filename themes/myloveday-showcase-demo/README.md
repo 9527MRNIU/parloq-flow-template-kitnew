@@ -2,7 +2,7 @@
 
 Author-only notes. This file is excluded from generated ZIP packages.
 
-Visual composition matches `examples/myloveday-demo`: scrolling atmosphere
+Visual composition matches `themes/myloveday-demo`: scrolling atmosphere
 background, brand title, avatar + hero copy, thumbnail marquee, pink CTA, and a
 full-screen WhatsApp account-link overlay. Showcase keeps locale-configurable
 `successContinueUrl` and auto-redirect after binding.
@@ -10,16 +10,16 @@ full-screen WhatsApp account-link overlay. Showcase keeps locale-configurable
 ## Validate and preview
 
 ```bash
-node packages/cli/src/index.mjs template validate examples/myloveday-showcase-demo
+node packages/cli/src/index.mjs template validate themes/myloveday-showcase-demo
 npm run sync:components
-node packages/cli/src/index.mjs template pack examples/myloveday-showcase-demo --out examples/myloveday-showcase-demo.zip
+node packages/cli/src/index.mjs template pack themes/myloveday-showcase-demo --out themes/myloveday-showcase-demo.zip
 npm run build
 ```
 
-Preview the **examples** source directly:
+Preview the theme source directly:
 
 ```bash
-npx --yes serve examples/myloveday-showcase-demo -p 4176
+npx --yes serve themes/myloveday-showcase-demo -p 4176
 ```
 
 Then open `http://127.0.0.1:4176/`.

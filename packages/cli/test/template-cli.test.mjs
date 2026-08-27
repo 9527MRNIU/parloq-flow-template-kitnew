@@ -8,9 +8,9 @@ import { buildTheme, packTheme, validateTheme } from "../src/index.mjs";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
 const defaultTheme = resolve(repoRoot, "themes/white-label-account-link");
-const minimalTemplate = resolve(repoRoot, "examples/promotion-template-minimal");
-const mylovedayTemplate = resolve(repoRoot, "examples/myloveday-demo");
-const shortTaglineTemplate = resolve(repoRoot, "examples/short-tagline-demo");
+const minimalTemplate = resolve(repoRoot, "themes/promotion-template-minimal");
+const mylovedayTemplate = resolve(repoRoot, "themes/myloveday-demo");
+const shortTaglineTemplate = resolve(repoRoot, "themes/short-tagline-demo");
 const runtimeEntry = resolve(repoRoot, "packages/runtime/src/account-link-elements.ts");
 const validateSourceTheme = (path) => validateTheme(path);
 

@@ -23,9 +23,9 @@ npm run preview
 仓库提供四个可参考或直接构建的模板：
 
 - `themes/white-label-account-link`：完整的白标账号关联模板，包含十五种语言；
-- `examples/myloveday-demo`：Myloveday 场景化落地页，正式产物编号为 `0002`；
-- `examples/short-tagline-demo`：短剧推广场景落地页，正式产物编号为 `0003`；
-- `examples/promotion-template-minimal`：只保留核心结构的最小示例，适合学习目录和组件用法。
+- `themes/myloveday-demo`：Myloveday 场景化落地页，正式产物编号为 `0002`；
+- `themes/short-tagline-demo`：短剧推广场景落地页，正式产物编号为 `0003`；
+- `themes/promotion-template-minimal`：只保留核心结构的最小示例，适合学习目录和组件用法。
 
 正式制作新模板时，建议复制白标模板：
 
@@ -262,9 +262,9 @@ version `1`，与模板使用独立编号。iframe 集成必须由包自身提�
 
 下面三个目录仅作为开发和测试示例，不进入正式产物清单，也不会生成编号 ZIP：
 
-- `examples/promotion-integration-script-demo`
-- `examples/promotion-integration-iframe-demo`
-- `examples/promotion-integration-feedback-demo`
+- `integrations/promotion-integration-script-demo`
+- `integrations/promotion-integration-iframe-demo`
+- `integrations/promotion-integration-feedback-demo`
 
 当前正式托管的集成是 `integrations/device-callback-adapter`，固定编号为
 `0001`。它属于内部产物，可供系统远程仓库导入，但不会附加到公开 Release。

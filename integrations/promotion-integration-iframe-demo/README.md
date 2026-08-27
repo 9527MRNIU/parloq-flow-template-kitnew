@@ -7,8 +7,8 @@ do not read or message the parent template.
 Validate and package it from the repository root:
 
 ```bash
-node packages/cli/src/index.mjs integration validate examples/promotion-integration-iframe-demo
-node packages/cli/src/index.mjs integration pack examples/promotion-integration-iframe-demo
+node packages/cli/src/index.mjs integration validate integrations/promotion-integration-iframe-demo
+node packages/cli/src/index.mjs integration pack integrations/promotion-integration-iframe-demo
 ```
 
 This directory is a source-only contract example. It is intentionally not

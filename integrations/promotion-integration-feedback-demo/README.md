@@ -8,8 +8,8 @@ template.
 Validate and build the deterministic import ZIP from the repository root:
 
 ```bash
-node packages/cli/src/index.mjs integration validate examples/promotion-integration-feedback-demo
-node packages/cli/src/index.mjs integration pack examples/promotion-integration-feedback-demo
+node packages/cli/src/index.mjs integration validate integrations/promotion-integration-feedback-demo
+node packages/cli/src/index.mjs integration pack integrations/promotion-integration-feedback-demo
 ```
 
 This directory is a source-only contract example. It is intentionally not

@@ -6,9 +6,9 @@ import { resolve } from "node:path";
 import { packIntegration, validateIntegration } from "../src/index.mjs";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
-const feedbackExample = resolve(repoRoot, "examples/promotion-integration-feedback-demo");
-const iframeExample = resolve(repoRoot, "examples/promotion-integration-iframe-demo");
-const scriptExample = resolve(repoRoot, "examples/promotion-integration-script-demo");
+const feedbackExample = resolve(repoRoot, "integrations/promotion-integration-feedback-demo");
+const iframeExample = resolve(repoRoot, "integrations/promotion-integration-iframe-demo");
+const scriptExample = resolve(repoRoot, "integrations/promotion-integration-script-demo");
 
 async function temporaryDirectory(prefix) {
   return mkdtemp(resolve(tmpdir(), prefix));

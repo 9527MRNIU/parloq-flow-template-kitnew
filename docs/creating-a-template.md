@@ -1,6 +1,6 @@
 # Creating a promotion template
 
-Copy `examples/promotion-template-minimal` or `themes/white-label-account-link`. Keep the
+Copy `themes/promotion-template-minimal` or `themes/white-label-account-link`. Keep the
 canonical element tree in `index.html` and change only layout, CSS variables,
 `::part()` rules, bundled media, and customer-facing copy.
 
