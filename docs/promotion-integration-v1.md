@@ -151,9 +151,7 @@ then injects iframe entries. Classic scripts use `defer`; module entries use
 integrity metadata. Only enabled integrations with enabled bindings, a ready
 source domain and a valid current package are distributed.
 
-The runnable source examples below are intentionally not registered as formal
-artifacts and therefore do not receive numbered ZIPs:
+The runnable source example below is intentionally not registered as a formal
+artifact and therefore does not receive a numbered ZIP:
 
-- [`promotion-integration-script-demo`](../integrations/promotion-integration-script-demo)
-- [`promotion-integration-iframe-demo`](../integrations/promotion-integration-iframe-demo)
 - [`promotion-integration-feedback-demo`](../integrations/promotion-integration-feedback-demo)

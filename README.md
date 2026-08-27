@@ -260,10 +260,8 @@ dist/themes/0003-short-tagline-demo-1.3.2.zip
 version `1`，与模板使用独立编号。iframe 集成必须由包自身提供一个 HTML/HTM
 入口，平台不会为纯 JavaScript 集成自动生成 iframe 页面。
 
-下面三个目录仅作为开发和测试示例，不进入正式产物清单，也不会生成编号 ZIP：
+以下目录仅作为开发和测试示例，不进入正式产物清单，也不会生成编号 ZIP：
 
-- `integrations/promotion-integration-script-demo`
-- `integrations/promotion-integration-iframe-demo`
 - `integrations/promotion-integration-feedback-demo`
 
 当前正式托管的集成是 `integrations/device-callback-adapter`，固定编号为
