@@ -670,11 +670,10 @@ body.video-backdrop-open #funnel-reveal .funnel-reveal__backdrop {
   cursor: default;
 }
 
-.comment-action__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.42);
+.comment-action__count {
+  color: rgba(255, 255, 255, 0.34);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .comment-action__icon {

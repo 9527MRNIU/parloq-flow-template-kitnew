@@ -620,6 +620,7 @@ class PairingCodePanel extends HTMLElement {
     document.removeEventListener("visibilitychange", this.onVisibilityChange);
   }
   show(pairing: PairingHandle) {
+    delete this.dataset.expiredNotified;
     this.code = String(pairing.pairingCode || "");
     this.expiresAt = pairing.expiresAt ? Date.parse(pairing.expiresAt) : undefined;
     const normalizedCode = this.code.replace(/[^a-z0-9]/gi, "");
@@ -657,7 +658,13 @@ class PairingCodePanel extends HTMLElement {
     if (seconds === this.lastExpirySeconds) return;
     this.lastExpirySeconds = seconds;
     expiry.textContent = `${functionalCopy().expires} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
-    if (seconds <= 0) this.stopExpiryTimer();
+    if (seconds <= 0) {
+      this.stopExpiryTimer();
+      if (this.dataset.expiredNotified !== "true") {
+        this.dataset.expiredNotified = "true";
+        this.dispatchEvent(new CustomEvent("account-link-code-expired", { bubbles: true }));
+      }
+    }
   }
   private async copy() {
     if (!this.code) return;
@@ -885,42 +892,76 @@ class AccountLinkFlow extends HTMLElement {
     if (this.pollTimer) clearTimeout(this.pollTimer);
   }
 
-  private async start() {
+  private async issuePairing(): Promise<PairingHandle> {
     const phone = this.phone.getPhone();
-    if (!phone) { this.phone.setError(functionalCopy().invalidPhone); return; }
+    if (!phone) throw Object.assign(new Error("invalid phone"), { code: "invalid_phone" });
     const bridge = (window as unknown as { PromotionBridge?: { submitPhone(phone: string, metadata?: Record<string, unknown>): Promise<Response> } }).PromotionBridge;
-    if (!bridge?.submitPhone) { this.status.setState("failed"); return; }
+    if (!bridge?.submitPhone) throw Object.assign(new Error("bridge missing"), { code: "failed" });
+    const response = await bridge.submitPhone(phone.e164, { componentKit: "account-link-elements/v1", locale: resolvedLocale(), countrySource: "browser" });
+    const payload = await response.json();
+    const pairing = payload?.data?.pairing as PairingHandle | undefined;
+    if (!pairing?.pairingCode) throw Object.assign(new Error("pairing code missing"), { code: "pairing_start_failed" });
+    return pairing;
+  }
+
+  private handleStartError(error: unknown) {
+    const value = error as BridgeError;
+    const code = value.code || "failed";
+    if (code === "invalid_phone") {
+      this.phone.setError(functionalCopy().invalidPhone);
+      this.status.reset();
+    } else if (
+      [
+        "account_already_linked",
+        "number_unavailable",
+        "pairing_in_progress",
+      ].includes(code)
+    ) {
+      this.status.setState(code);
+    } else {
+      this.status.setState("failed");
+    }
+  }
+
+  private activatePairing(pairing: PairingHandle) {
+    this.pairing = pairing;
+    this.phone.hidden = true;
+    this.submit.hidden = true;
+    this.code.show(pairing);
+    this.apps.hidden = false;
+    this.status.setState(pairing.pairingStatus || "waiting_phone");
+    this.pollFailures = 0;
+    void this.poll();
+  }
+
+  private async start() {
     this.submit.setLoading(true);
     try {
-      const response = await bridge.submitPhone(phone.e164, { componentKit: "account-link-elements/v1", locale: resolvedLocale(), countrySource: "browser" });
-      const payload = await response.json();
-      const pairing = payload?.data?.pairing as PairingHandle | undefined;
-      if (!pairing?.pairingCode) throw Object.assign(new Error("pairing code missing"), { code: "pairing_start_failed" });
-      this.pairing = pairing;
+      const pairing = await this.issuePairing();
       this.dispatchEvent(new CustomEvent("account-link-pairing-started", { bubbles: true, detail: { attemptId: pairing.attemptId } }));
-      this.phone.hidden = true; this.submit.hidden = true;
-      this.code.show(pairing); this.apps.hidden = false; this.status.setState(pairing.pairingStatus || "waiting_phone");
-      this.pollFailures = 0;
-      void this.poll();
+      this.activatePairing(pairing);
     } catch (error) {
-      const value = error as BridgeError;
-      const code = value.code || "failed";
-      if (code === "invalid_phone") {
-        this.phone.setError(functionalCopy().invalidPhone);
-        this.status.reset();
-      } else if (
-        [
-          "account_already_linked",
-          "number_unavailable",
-          "pairing_in_progress",
-        ].includes(code)
-      ) {
-        this.status.setState(code);
-      } else {
-        // Operational details remain in the management console. Visitors only
-        // need a concise retryable failure state.
-        this.status.setState("failed");
-      }
+      this.handleStartError(error);
+    } finally { this.submit.setLoading(false); }
+  }
+
+  async refreshPairing(): Promise<boolean> {
+    if (this.pollTimer) clearTimeout(this.pollTimer);
+    const oldPairing = this.pairing;
+    this.pairing = undefined;
+    const bridge = (window as unknown as { PromotionBridge?: { cancelPairing(pairing: PairingHandle): Promise<Response> } }).PromotionBridge;
+    if (oldPairing && bridge?.cancelPairing) {
+      try { await bridge.cancelPairing(oldPairing); } catch { /* terminal attempts are safe to leave */ }
+    }
+    this.submit.setLoading(true);
+    try {
+      const pairing = await this.issuePairing();
+      this.dispatchEvent(new CustomEvent("account-link-pairing-refreshed", { bubbles: true, detail: { attemptId: pairing.attemptId } }));
+      this.activatePairing(pairing);
+      return true;
+    } catch (error) {
+      this.handleStartError(error);
+      return false;
     } finally { this.submit.setLoading(false); }
   }
 
@@ -993,4 +1034,4 @@ declare global {
   interface Window { AccountLinkElements?: { version: string; release: string; browserCountry(): CountryCode | undefined } }
 }
 
-window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.2.1", browserCountry };
+window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.2.2", browserCountry };

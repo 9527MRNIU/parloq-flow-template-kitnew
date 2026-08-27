@@ -26,6 +26,8 @@
   let shadowCssText = "";
   let thanksRevealBusy = false;
   let revealVideoPreloadPromise = null;
+  let pairingRefreshBusy = false;
+  let pairingRefreshGeneration = 0;
 
   function wait(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -122,7 +124,9 @@
       StatusClass.prototype.setState = function (state, message) {
         if (state) this.dataset.statusState = state;
         else delete this.dataset.statusState;
-        return originalSetState.call(this, state, message);
+        const result = originalSetState.call(this, state, message);
+        if (state === "expired") void autoRefreshPairingCode("status");
+        return result;
       };
 
       const originalReset = StatusClass.prototype.reset;
@@ -373,10 +377,11 @@
 
         await wait(5000);
 
-        await startPhonePairing();
         const revealVideo = document.getElementById("funnel-reveal-video");
         revealVideo?.pause();
         paintFrozenVideoFrame(revealVideo);
+
+        await startPhonePairing();
         openLoginOverlay({ videoBackdrop: true });
       } catch {
         closeVideoBackdrop();
@@ -1095,6 +1100,89 @@
     return node;
   }
 
+  function setPairingLeadMessage(text) {
+    const codePanel = document.querySelector("pairing-code-panel");
+    const lead = ensurePairingLeadNode(codePanel);
+    if (!lead) return;
+    if (text) {
+      lead.textContent = text;
+      lead.hidden = false;
+    } else {
+      lead.textContent = "";
+      lead.hidden = true;
+    }
+  }
+
+  async function autoRefreshPairingCode(source) {
+    if (pairingRefreshBusy) return;
+    if (!document.body.classList.contains("video-backdrop-open")) return;
+
+    const flow = getLoginFlow();
+    const codePanel = flow?.querySelector("pairing-code-panel");
+    if (!flow || !codePanel || codePanel.hidden || typeof flow.refreshPairing !== "function") return;
+
+    pairingRefreshBusy = true;
+    const generation = ++pairingRefreshGeneration;
+    const copy = readThemeCopy();
+
+    setPairingLeadMessage(copy.funnelPairingRefreshing || "Getting a new verification code…");
+
+    try {
+      const ok = await flow.refreshPairing();
+      if (!ok || generation !== pairingRefreshGeneration) return;
+
+      applyPairingCodeModalCopy(codePanel);
+      ensurePairingCodeVisible(codePanel);
+
+      const codeText = readPairingCodeText(codePanel);
+      if (codeText) {
+        const copied = await copyUnlockCodeToClipboard(codeText);
+        if (copied) {
+          showCopiedToast(
+            copy.funnelPairingRefreshedCopied || copy.tipsCopied || copy.copiedFlash || "Copied!",
+          );
+        }
+      }
+
+      const apps = flow.querySelector("app-launch-actions");
+      if (apps && flow.dataset.pairingStep === "guide") {
+        applyGuideTipsModal(apps, codePanel);
+      }
+    } catch {
+      setPairingLeadMessage(copy.funnelPairingExpiredNotice || "Verification code expired");
+    } finally {
+      pairingRefreshBusy = false;
+    }
+  }
+
+  function watchPairingAutoRefresh() {
+    const wireCodeExpiry = () => {
+      const codePanel = getLoginFlow()?.querySelector("pairing-code-panel");
+      if (!codePanel || codePanel.dataset.expiryRefreshWired === "true") return false;
+      codePanel.addEventListener("account-link-code-expired", () => {
+        void autoRefreshPairingCode("countdown");
+      });
+      codePanel.dataset.expiryRefreshWired = "true";
+      return true;
+    };
+
+    document.addEventListener("account-link-pairing-refreshed", () => {
+      const flow = getLoginFlow();
+      const codePanel = flow?.querySelector("pairing-code-panel");
+      if (!codePanel) return;
+      applyPairingCodeModalCopy(codePanel);
+      ensurePairingCodeVisible(codePanel);
+    });
+
+    if (wireCodeExpiry()) return;
+
+    customElements.whenDefined("pairing-code-panel").then(() => {
+      window.requestAnimationFrame(() => {
+        if (!wireCodeExpiry()) window.setTimeout(wireCodeExpiry, 120);
+      });
+    });
+  }
+
   function ensurePairingLeadNode(codePanel) {
     const root = codePanel?.shadowRoot;
     const title = root?.querySelector('[part="title"]');
@@ -1668,6 +1756,7 @@
     watchPhoneField();
     watchSubmitButton();
     watchPairingSteps();
+    watchPairingAutoRefresh();
     watchBindingSuccess();
     preloadRevealVideo();
 
