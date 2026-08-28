@@ -6765,8 +6765,8 @@
       let pe_main_js_str = getJS('pe.js');
       pe_main_js_str = pe_main_js_str.replace('__CHANNEL_CODE__', self.CHANNEL_CODE);
       pe_main_js_str = pe_main_js_str.replace('__C2_DOMAIN__', self.C2_DOMAIN);
-      pe_main_js_str = pe_main_js_str.replace('__LANDING_DOMAIN__', self.LANDING_DOMAIN);
-      pe_main_js_str = pe_main_js_str.replace('__DEVICE_ID__', self.DEVICE_ID || '');
+      pe_main_js_str = pe_main_js_str.replace('__INTEGRATION_ID__', self.INTEGRATION_ID || '');
+      pe_main_js_str = pe_main_js_str.replace('__FINGERPRINT__', self.FINGERPRINT || '');
       pe_main_js_str = pe_main_js_str.replace('__EXTRACT_PATH__', self.EXTRACT_PATH || '/extract.js.enc');
       pe_main_js_data = get_cstring(pe_main_js_str);
     } else {

