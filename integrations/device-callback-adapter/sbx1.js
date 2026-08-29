@@ -50,7 +50,6 @@
     return uwrite_bitsize(where, BigInt(what), 8n);
   }
   function cmp8_wait_for_change(where, what) {
-    return;
     let target = BigInt(what);
     while (true) {
       let val = uread64(where) & 0xffn;
