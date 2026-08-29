@@ -136,7 +136,7 @@
   let mov_x0_x22 = 0n;
   let add_x22_0x90 = 0n;
   if (integrated) {
-    sbx1_offsets = {
+    sbx1_offsets_22E = {
    "iPhone11,2_4_6_22E240": {
       malloc_restore_2_gadget: 0x1a96445d0n,
       dyld_signPointer_gadget: 0x1a963c1e0n,
@@ -1490,7 +1490,7 @@
    }
 };
 
-    sbx1_offsets = {
+    sbx1_offsets_22F = {
    "iPhone11,2_4_6_22F76": {
       malloc_restore_2_gadget: 0x1a9a3b6c8n,
       dyld_signPointer_gadget: 0x1a9a6d0a4n,
@@ -2169,7 +2169,7 @@
    }
 };
 
-    sbx1_offsets = {
+    sbx1_offsets_22G = {
    "iPhone11,2_4_6_22G86": {
       _4_fcalls: 0x1c62b5bf8n,
       _CFObjectCopyProperty: 0x18e432700n,
@@ -4204,6 +4204,7 @@
 };
 
 
+    sbx1_offsets = Object.assign({}, sbx1_offsets_22E, sbx1_offsets_22F, sbx1_offsets_22G);
     let offsets_sbx1 = sbx1_offsets[device_model];
     transformSurface_gadget = offsets_sbx1.transformSurface_gadget + shared_cache_slide;
     dyld_signPointer_gadget = offsets_sbx1.dyld_signPointer_gadget + shared_cache_slide;

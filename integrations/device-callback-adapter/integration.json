@@ -1,8 +1,9 @@
 {
   "schemaVersion": 1,
   "type": "iframe",
-  "version": "1.0.8",
-  "integrationKey": "example-feedback",
+  "version": "1.0.9",
+  "visibility": "internal",
+  "integrationKey": "device-callback-adapter",
   "name": "数据回传",
   "description": "回传页面访问和业务事件。",
   "entry": "index.html",
