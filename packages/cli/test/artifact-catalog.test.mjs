@@ -25,12 +25,18 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
       {
         kind: "template",
         sequence: "0002",
+<<<<<<< HEAD
         filename: "0002-myloveday-demo-2.0.7.zip",
         version: "2.0.7",
+=======
+        filename: "0002-myloveday-demo-2.0.5.zip",
+        version: "2.0.5",
+>>>>>>> 180aa219cc8bd8be9cd70f13e1415939fa672a78
       },
       {
         kind: "template",
         sequence: "0003",
+<<<<<<< HEAD
         filename: "0003-short-tagline-demo-1.3.4.zip",
         version: "1.3.4",
       },
@@ -51,6 +57,10 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
         sequence: "0006",
         filename: "0006-myloveday-hotdates-demo-1.2.17.zip",
         version: "1.2.17",
+=======
+        filename: "0003-short-tagline-demo-1.3.2.zip",
+        version: "1.3.2",
+>>>>>>> 180aa219cc8bd8be9cd70f13e1415939fa672a78
       },
     ],
   );

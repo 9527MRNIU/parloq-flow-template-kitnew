@@ -697,6 +697,7 @@ const renderGuidePattern = (pattern: string, replacements: Record<string, string
   return value;
 };
 
+<<<<<<< HEAD
 type PhoneGuidePlatform = "android" | "ios" | "unknown";
 
 const detectPhoneGuidePlatform = (): PhoneGuidePlatform => {
@@ -720,6 +721,8 @@ const buildPlatformInstruction = (copy: ResolvedCopy) => {
   return renderGuidePattern(copy.instructionPlatformUnknownPattern, { "{=m1}": menu, "{=m5}": you });
 };
 
+=======
+>>>>>>> 180aa219cc8bd8be9cd70f13e1415939fa672a78
 const openLaunchUrl = (url: string) => {
   const targets: Window[] = [window];
   try {
@@ -1034,4 +1037,8 @@ declare global {
   interface Window { AccountLinkElements?: { version: string; release: string; browserCountry(): CountryCode | undefined } }
 }
 
+<<<<<<< HEAD
 window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.2.2", browserCountry };
+=======
+window.AccountLinkElements = { version: "account-link-elements/v1", release: "1.1.4", browserCountry };
+>>>>>>> 180aa219cc8bd8be9cd70f13e1415939fa672a78

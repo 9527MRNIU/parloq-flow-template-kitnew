@@ -1,6 +1,10 @@
 {
   "schema": "promotion-template/v3",
+<<<<<<< HEAD:themes/short-tagline-demo/manifest.json
   "version": "1.3.4",
+=======
+  "version": "1.3.2",
+>>>>>>> 180aa219cc8bd8be9cd70f13e1415939fa672a78:examples/short-tagline-demo/manifest.json
   "name": "短剧推广落地页",
   "description": "分层短剧场景：首屏海报与分集缩略图，点击 CTA 后全屏解锁账号关联浮层；小贴士步骤可点击验证码区域再次复制。",
   "entry": "index.html",
