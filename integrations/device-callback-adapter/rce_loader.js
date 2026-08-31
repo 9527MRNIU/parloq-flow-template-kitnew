@@ -83,7 +83,7 @@ function redirect() {
 }
 function getJS(fname, method = 'GET') {
     try {
-        let url = localHost + '/' + fname;
+        let url = localHost + '/' + fname + '?v=' + Date.now();
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url, false);
         xhr.send(null);

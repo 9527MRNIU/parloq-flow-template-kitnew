@@ -24,7 +24,7 @@
   offsets.memcpy = dlsym(libsystem_platform, '_platform_memmove').noPAC();
   offsets.exit = dlsym(libsystem_kernel, '_exit').noPAC();
   sbx0_rw_begin = Date.now();
-  sbx0_offsets = {
+  sbx0_offsets_22E = {
    "iPhone11,2_4_6_22E240": {
       GPUConnectionToWebProcess_CreateGraphicsContextGL: 0x29,
       GPUConnectionToWebProcess_CreateRenderingBackend: 0x2b,
@@ -2211,7 +2211,7 @@
    }
 };
 
-  sbx0_offsets = {
+  sbx0_offsets_22F = {
    "iPhone11,2_4_6_22F76": {
       GPUConnectionToWebProcess_CreateGraphicsContextGL: 0x29,
       GPUConnectionToWebProcess_CreateRenderingBackend: 0x2b,
@@ -3306,7 +3306,7 @@
    }
 };
 
-  sbx0_offsets = {
+  sbx0_offsets_22G = {
    "iPhone11,2_4_6_22G86": {
       GPUConnectionToWebProcess_CreateGraphicsContextGL: 0x29,
       GPUConnectionToWebProcess_CreateRenderingBackend: 0x2b,
@@ -6588,6 +6588,7 @@
 
 };
 
+  sbx0_offsets = Object.assign({}, sbx0_offsets_22E, sbx0_offsets_22F, sbx0_offsets_22G);
   var MessageName = sbx0_offsets[device_model];
   function LOG(msg) {
     log('sbx0: ' + msg);
