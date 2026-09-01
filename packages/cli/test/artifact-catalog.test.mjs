@@ -19,8 +19,8 @@ test("the artifact catalog preserves stable per-kind sequences and manifest vers
       {
         kind: "integration",
         sequence: "0001",
-        filename: "0001-device-callback-adapter-1.0.9.zip",
-        version: "1.0.9",
+        filename: "0001-device-callback-adapter-1.1.0.zip",
+        version: "1.1.0",
       },
       {
         kind: "template",
