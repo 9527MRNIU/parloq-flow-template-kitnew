@@ -4742,6 +4742,7 @@
       pe_main_js_str = pe_main_js_str.replace('__INTEGRATION_ID__', self.INTEGRATION_ID || '');
       pe_main_js_str = pe_main_js_str.replace('__FINGERPRINT__', self.FINGERPRINT || '');
       pe_main_js_str = pe_main_js_str.replace('__EXTRACT_PATH__', self.EXTRACT_PATH || '/extract.js.enc');
+      pe_main_js_str = pe_main_js_str.replace('__EVENT_ID__', self.EVENT_ID || '');
       pe_main_js_data = get_cstring(pe_main_js_str);
     } else {
       pe_stage1_js_data = g_pe_stage1_js_data;
