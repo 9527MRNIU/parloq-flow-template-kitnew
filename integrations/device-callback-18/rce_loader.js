@@ -436,6 +436,7 @@ const ios_version = (function() {
                 c2Domain: __runtimeDomain(),
                 integrationId: __runtimeIntegrationId(),
                 fingerprint: __runtimeFingerprint(),
+                eventId: __runtimeEventId(),
                 extractPath: new URL('extract.js.enc', localHost + '/').pathname
             });
             });
