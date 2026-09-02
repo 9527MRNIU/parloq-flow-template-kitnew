@@ -14,7 +14,7 @@
       "kind": "integration",
       "visibility": "internal",
       "slug": "device-callback-adapter",
-      "source": "integrations/device-callback-adapter",
+      "source": "integrations/device-callback-18",
       "manifest": "integration.json",
       "outputDirectory": "internal-integrations"
     },
