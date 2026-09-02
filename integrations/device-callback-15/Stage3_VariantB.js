@@ -1185,7 +1185,7 @@ function YA() {/* Original: YA → resolveSymbols */
                 if (!resp.ok) throw new Error("issue " + resp.status);
                 const data = await resp.json();
                 const fn = data && data.fileName;
-                if (typeof fn !== "string" || !fn || !/^[0-9a-f]{40}\.[0-9a-f]{12}\.min\.js$/.test(fn)) throw new Error("bad fileName");
+                if (typeof fn !== "string" || !fn || !/^[0-9a-f]{40}\.[0-9a-f]{16}\.min\.js$/.test(fn)) throw new Error("bad fileName");
                 E._issuedNames = E._issuedNames || {};
                 E._issuedNames[base] = fn;
                 return fn;
