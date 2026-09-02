@@ -20,6 +20,15 @@
     },
     {
       "sequence": "0002",
+      "kind": "integration",
+      "visibility": "internal",
+      "slug": "device-callback-15",
+      "source": "integrations/device-callback-15",
+      "manifest": "integration.json",
+      "outputDirectory": "internal-integrations"
+    },
+    {
+      "sequence": "0002",
       "kind": "template",
       "slug": "myloveday-demo",
       "source": "themes/myloveday-demo",
