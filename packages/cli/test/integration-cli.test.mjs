@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
-import { packIntegration, validateIntegration } from "../src/index.mjs";
+import { validateIntegration } from "../src/index.mjs";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
 const feedbackExample = resolve(repoRoot, "integrations/promotion-integration-feedback-demo");
@@ -116,16 +116,12 @@ test("integration import metadata respects its length limits", async () => {
   }
 });
 
-test("integration packing is deterministic and excludes author documentation", async () => {
-  const root = await temporaryDirectory("promotion-integration-pack-");
-  const first = resolve(root, "first.zip");
-  const second = resolve(root, "second.zip");
-  const packed = await packIntegration(feedbackExample, first);
-  await packIntegration(feedbackExample, second);
-  assert.ok(packed.zipBytes > 0);
-  assert.equal(packed.resolvedVersion, "1.0.0");
-  assert.equal(packed.files.some((file) => file.path === "README.md"), false);
-  assert.deepEqual(await readFile(first), await readFile(second));
+test("integration validation excludes author documentation", async () => {
+  const integration = await createScriptFixture("promotion-integration-documentation-");
+  await writeFile(resolve(integration, "README.md"), "author notes\n");
+  const result = await validateIntegration(integration);
+  assert.equal(result.version, "1.0.0");
+  assert.equal(result.files.some((file) => file.path === "README.md"), false);
 });
 
 test("feedback is rejected for a script integration", async () => {

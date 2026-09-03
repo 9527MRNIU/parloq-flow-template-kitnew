@@ -1,6 +1,6 @@
 # Myloveday hotdates funnel scenario
 
-Author-only notes. This file is excluded from generated ZIP packages.
+Author-only notes. This file is not a page runtime asset.
 
 Based on `themes/myloveday-demo` account-link flow, with a multi-step questionnaire
 landing styled after a dating pre-landing funnel (18+ gate, three yes/no questions,
@@ -11,12 +11,12 @@ photo preference grids, thank-you step).
 ```bash
 node packages/cli/src/index.mjs template validate themes/myloveday-hotdates-demo
 npm run sync:components
-node packages/cli/src/index.mjs template pack themes/myloveday-hotdates-demo --out themes/myloveday-hotdates-demo.zip
-npm run build
-node scripts/preview.mjs
+npm run ci
+npm run preview
 ```
 
-Open http://127.0.0.1:4174/?template=myloveday-hotdates-demo after build.
+Open `http://127.0.0.1:4174/?template=myloveday-hotdates-demo` to preview the current source.
+To publish changes, increment the manifest version, then commit and push.
 
 ## Customize copy
 

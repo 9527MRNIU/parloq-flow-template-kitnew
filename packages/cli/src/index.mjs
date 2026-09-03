@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
-import { readFile, writeFile, mkdir, rm, copyFile, lstat, readdir } from "node:fs/promises";
+import { readFile, lstat, readdir } from "node:fs/promises";
 import { dirname, extname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
-import { zipSync } from "fflate";
 
 const CLI_FILE = fileURLToPath(import.meta.url);
 const REPO_ROOT = resolve(dirname(CLI_FILE), "../../..");
-const MAX_ZIP_BYTES = 60 * 1024 * 1024;
 const MAX_EXPANDED_BYTES = 100 * 1024 * 1024;
 const MAX_FILE_BYTES = 40 * 1024 * 1024;
 const MAX_FILES = 500;
 const MAX_INTEGRATION_MANIFEST_BYTES = 64 * 1024;
-const ZIP_MTIME = new Date(2000, 0, 1, 0, 0, 0);
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".htm", ".js", ".mjs", ".json", ".svg", ".txt"]);
 const TEMPLATE_DISALLOWED_EXTENSIONS = new Set([".map", ".ts", ".tsx", ".jsx"]);
 const TEMPLATE_ALLOWED_EXTENSIONS = new Set([
@@ -331,112 +327,26 @@ export async function validateIntegration(integrationDirectory) {
   };
 }
 
-async function copyBundle(source, outputDirectory, validator, generatedAssets = []) {
-  const output = resolve(outputDirectory);
-  invariant(output !== source.root, "build output must differ from the source directory");
-  await rm(output, { recursive: true, force: true });
-  for (const file of source.files) {
-    const destination = resolveInside(output, file.path);
-    await mkdir(dirname(destination), { recursive: true });
-    await copyFile(file.absolute, destination);
-  }
-  for (const asset of generatedAssets) {
-    const path = normalizeBundlePath(asset.path, "generated asset");
-    const destination = resolveInside(output, path);
-    await mkdir(dirname(destination), { recursive: true });
-    await copyFile(resolve(asset.source), destination);
-  }
-  return validator(output);
-}
-
-function archiveFiles(files) {
-  return Promise.all(files.map(async (file) => [
-    file.path,
-    [new Uint8Array(await readFile(file.absolute)), { mtime: ZIP_MTIME }],
-  ])).then((entries) => zipSync(Object.fromEntries(entries), { level: 9 }));
-}
-
-async function writeArchive(source, outputFile) {
-  const archive = await archiveFiles(source.files);
-  invariant(archive.byteLength <= MAX_ZIP_BYTES, `${source.kind} ZIP exceeds ${MAX_ZIP_BYTES} bytes`);
-  const output = resolve(outputFile);
-  await mkdir(dirname(output), { recursive: true });
-  await writeFile(output, archive);
-  return {
-    ...source,
-    output,
-    zipBytes: archive.byteLength,
-    sha256: createHash("sha256").update(archive).digest("hex"),
-  };
-}
-
-export async function buildTemplate(templateDirectory, outputDirectory, options = {}) {
-  const generatedAssets = options.generatedAssets || [];
-  const source = await validateTemplate(templateDirectory, {
-    allowGeneratedComponents: generatedAssets.length > 0,
-  });
-  return copyBundle(source, outputDirectory, validateTemplate, generatedAssets);
-}
-
-export async function packTemplate(templateDirectory, outputFile) {
-  return writeArchive(await validateTemplate(templateDirectory), outputFile);
-}
-
-export async function packIntegration(integrationDirectory, outputFile) {
-  const result = await writeArchive(await validateIntegration(integrationDirectory), outputFile);
-  return { ...result, resolvedVersion: result.version || result.sha256.slice(0, 12) };
-}
-
 export const validateTheme = validateTemplate;
-export const buildTheme = buildTemplate;
-export const packTheme = packTemplate;
-
-function option(args, name, fallback) {
-  const index = args.indexOf(name);
-  return index >= 0 && args[index + 1] ? args[index + 1] : fallback;
-}
-
-function baseName(path) {
-  return path.split(/[\\/]/).filter(Boolean).at(-1);
-}
 
 async function main() {
   const argv = process.argv.slice(2);
   const explicitKind = ["template", "integration"].includes(argv[0]);
   const kind = explicitKind ? argv.shift() : "template";
   const [command, input, ...args] = argv;
-  const commands = kind === "integration" ? ["validate", "pack"] : ["validate", "build", "pack"];
-  if (!command || !input || !commands.includes(command)) {
-    console.error("Usage: promotion-kit <template|integration> <validate|build|pack> <directory> [--out path]");
-    console.error("Legacy template form remains supported: promotion-kit <validate|build|pack> <directory> [--out path]");
+  if (command !== "validate" || !input || args.length > 0) {
+    console.error("Usage: promotion-kit <template|integration> validate <directory>");
+    console.error("Legacy template form remains supported: promotion-kit validate <directory>");
     process.exitCode = 2;
     return;
   }
   if (kind === "integration") {
-    if (command === "validate") {
-      const result = await validateIntegration(input);
-      console.log(`valid ${result.type} integration: ${result.assets.length} assets, ${result.entries.length} entries`);
-      return;
-    }
-    const output = option(args, "--out", resolve("dist/integrations", `${baseName(input)}.zip`));
-    const result = await packIntegration(input, output);
-    console.log(`packed ${result.assets.length} integration assets (${result.zipBytes} bytes) at ${result.output}`);
+    const result = await validateIntegration(input);
+    console.log(`valid ${result.type} integration: ${result.assets.length} assets, ${result.entries.length} entries`);
     return;
   }
-    if (command === "validate") {
-      const result = await validateTemplate(input);
-    console.log(`valid ${result.manifest.schema} template: ${result.files.length} files, ${result.locales.length} locales`);
-    return;
-  }
-  if (command === "build") {
-    const output = option(args, "--out", resolve("dist/themes", baseName(input)));
-    const result = await buildTemplate(input, output);
-    console.log(`built ${result.files.length} files at ${output}`);
-    return;
-  }
-  const output = option(args, "--out", `${resolve(input)}.zip`);
-  const result = await packTemplate(input, output);
-  console.log(`packed ${result.files.length} files (${result.zipBytes} bytes) at ${result.output}`);
+  const result = await validateTemplate(input);
+  console.log(`valid ${result.manifest.schema} template: ${result.files.length} files, ${result.locales.length} locales`);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === CLI_FILE) {

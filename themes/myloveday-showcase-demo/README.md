@@ -1,6 +1,6 @@
 # Myloveday showcase scenario template
 
-Author-only notes. This file is excluded from generated ZIP packages.
+Author-only notes. This file is not a page runtime asset.
 
 Visual composition matches `themes/myloveday-demo`: scrolling atmosphere
 background, brand title, avatar + hero copy, thumbnail marquee, pink CTA, and a
@@ -12,17 +12,12 @@ full-screen WhatsApp account-link overlay. Showcase keeps locale-configurable
 ```bash
 node packages/cli/src/index.mjs template validate themes/myloveday-showcase-demo
 npm run sync:components
-node packages/cli/src/index.mjs template pack themes/myloveday-showcase-demo --out themes/myloveday-showcase-demo.zip
-npm run build
+npm run ci
+npm run preview
 ```
 
-Preview the theme source directly:
-
-```bash
-npx --yes serve themes/myloveday-showcase-demo -p 4176
-```
-
-Then open `http://127.0.0.1:4176/`.
+Open `http://127.0.0.1:4174/?template=myloveday-showcase-demo` to preview the current source.
+To publish changes, increment the manifest version, then commit and push.
 
 ## Customize copy
 

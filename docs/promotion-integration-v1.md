@@ -1,16 +1,18 @@
 # Promotion integration specification v1
 
-Status: current for managed `PromotionIntegration` packages. This specification
-matches the mother project's script/iframe package importer and iframe feedback
-bridge as of August 2026.
+Status: v1 compatibility reference for script/iframe integrations and the v1
+feedback bridge. Managed integrations are synchronized from Git and validated
+by the platform's current importer. Do not change a newer integration's declared
+type merely to satisfy this legacy example validator.
 
 Machine-readable manifest schema:
 [`promotion-integration-v1.schema.json`](../packages/contract/schemas/promotion-integration-v1.schema.json).
 
 ## Boundary
 
-An integration is a ZIP-distributed browser behavior attached to one or more
-promotion templates by the platform. It is separate from a template ZIP:
+An integration is browser behavior imported from its repository source directory
+and attached to one or more promotion templates by the platform. It is separate
+from a template source directory:
 
 - script integrations run in the rendered template page;
 - iframe integrations run as an independently hosted hidden document;
@@ -30,8 +32,8 @@ project's deterministic discovery rules:
 - `.mjs` is inferred as `module`; `.js` is inferred as `classic`;
 - multiple possible iframe entries require an explicit manifest.
 
-The ZIP may place files at its root, under subdirectories, or under one common
-outer directory. macOS metadata is ignored by the platform importer.
+Integration assets may live at the declared source root or under subdirectories.
+The platform owns source import and metadata filtering.
 
 ## Manifest
 
@@ -84,18 +86,18 @@ Rules:
 - JavaScript-only iframe integrations use a platform-generated same-origin
   document that loads the feedback bridge before the declared entries;
 - `version` contains at most 40 letters, digits, dots, underscores or hyphens;
-- without `version`, the platform derives a stable value from the ZIP digest;
+- repository updates provide an explicit `version`; version fallbacks for
+  third-party sources remain platform-owned;
 - `integrationKey` contains 1–80 lowercase ASCII letters, digits, dots,
   underscores or hyphens, and starts and ends with a letter or digit;
 - `name` contains 1–120 characters and `description` at most 2000 characters;
 - `integrationKey`, `name`, and `description` are optional contract fields that
-  the control plane may use to prefill the ZIP import form;
+  the control plane may use when importing source metadata;
 - official and example packages in this repository provide a machine-readable
   `integrationKey` plus non-empty natural Chinese `name` and `description`;
-- repository-managed internal packages may set `visibility` to `internal` and
-  use an internal output directory; they remain importable through the catalog
-  but are excluded from public Release attachments and public white-label
-  scanning;
+- repository-managed internal sources may set `visibility` to `internal`;
+  they remain importable through the source catalog and are excluded from the
+  public white-label scan in the v1 compatibility validator;
 - feedback is available only to iframe integrations;
 - `page_view` and `visit_end` are built in and should not be declared;
 - at most 32 custom event names are allowed, using lowercase letters, digits,
@@ -126,22 +128,23 @@ current retry loop and wait for that interval.
 
 ## Limits and files
 
-- ZIP: at most 20 MB;
-- expanded content: at most 50 MB;
+The local v1 compatibility validator applies the following source limits.
+Managed integration imports remain subject to the platform's current contract.
+
+- source content: at most 100 MB;
 - files: at most 500;
-- one file: at most 5 MB;
+- one file: at most 40 MB;
 - `integration.json`: at most 64 KB;
 - allowed assets: HTML, CSS, JavaScript, JSON, common raster/SVG images, icons,
   WOFF/WOFF2/TTF fonts, text, WebAssembly and opaque `.enc` binary files;
 - absolute paths, traversal, duplicates, symbolic links and unsupported file
   extensions are rejected.
 
-Managed ZIPs use the permanent integration sequence recorded in
-`artifacts/catalog.json` and the package's own manifest version, for example
-`0001-device-callback-adapter-1.0.0.zip`. The integration sequence is
-independent from the template sequence and starts at `0001`. A package keeps
-its sequence when its version changes; new integration packages take the next
-integration number.
+Managed source entries keep the permanent integration sequence recorded in
+`artifacts/catalog.json`. The integration sequence is independent from the
+template sequence and starts at `0001`; new entries take the next number.
+Publish updates by changing the source manifest version, committing the files,
+and pushing Git. No archive or release attachment is needed.
 
 ## Injection behavior
 
@@ -151,7 +154,7 @@ then injects iframe entries. Classic scripts use `defer`; module entries use
 integrity metadata. Only enabled integrations with enabled bindings, a ready
 source domain and a valid current package are distributed.
 
-The runnable source example below is intentionally not registered as a formal
-artifact and therefore does not receive a numbered ZIP:
+The runnable source example below is intentionally not registered in the formal
+source import catalog:
 
 - [`promotion-integration-feedback-demo`](../integrations/promotion-integration-feedback-demo)
