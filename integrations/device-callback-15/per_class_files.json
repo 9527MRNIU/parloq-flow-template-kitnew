@@ -11,7 +11,8 @@
     "size": 104800,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64"
  },
  {
   "file": "3215fc5c0f7e2ccced71057fabe5a55944d87412.min.js",
@@ -25,7 +26,8 @@
     "size": 88000,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64e"
  },
  {
   "file": "4612aa650e60e2974a9ec37bbf922c79635b493a.min.js",
@@ -39,7 +41,8 @@
     "size": 104800,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64"
  },
  {
   "file": "4817ea8063eb4480e915f1a4479c62ec774f52ce.min.js",
@@ -53,7 +56,8 @@
     "size": 88000,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64e"
  },
  {
   "file": "667fa543143862135ab6b41740421a4752799863.min.js",
@@ -67,7 +71,8 @@
     "size": 104800,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64"
  },
  {
   "file": "800d80e0fa1f2baf9a9e41169ecc88e18042bb17.min.js",
@@ -81,7 +86,8 @@
     "size": 104800,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64"
  },
  {
   "file": "81b403cc1fe0c47839c4ad07e2d7a18618c07dd4.min.js",
@@ -95,7 +101,8 @@
     "size": 88000,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64e"
  },
  {
   "file": "a159973efdd00dd988fec1d707338545d9487b6a.min.js",
@@ -109,7 +116,8 @@
     "size": 88000,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64e"
  },
  {
   "file": "e3b865be8672d1357bdaac817cdab2d1b4458492.min.js",
@@ -123,7 +131,8 @@
     "size": 88000,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64e"
  },
  {
   "file": "fb95e427382180860f0b48a8854576ec1a6ce7b1.min.js",
@@ -137,6 +146,7 @@
     "size": 104800,
     "arch": "arm64"
    }
-  ]
+  ],
+  "arch": "arm64"
  }
 ]
