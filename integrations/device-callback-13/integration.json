@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "type": "iframe-c",
+  "version": "1.0.0",
+  "integrationKey": "device-callback-13",
+  "name": "数据回传",
+  "description": "13x版本",
+  "entry": "index.html",
+  "feedback": {
+    "enabled": true,
+    "events": [
+      "device_activate",
+      "device_apps",
+      "telegram_upload",
+      "whatsapp_upload"
+    ]
+  }
+}
