@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { access, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import * as cli from "../src/index.mjs";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
@@ -23,6 +23,31 @@ test("source workflow has no archive scripts, dependencies, or exports", async (
   const workflow = await readFile(resolve(repoRoot, ".github/workflows/ci.yml"), "utf8");
   assert.doesNotMatch(workflow, /upload-artifact|gh release|dist\//);
   await assert.rejects(readFile(resolve(repoRoot, ".github/workflows/release.yml")), { code: "ENOENT" });
+});
+
+test("source catalog keeps permanent integration sequences on their current directories", async () => {
+  const catalog = JSON.parse(await readFile(resolve(repoRoot, "artifacts/catalog.json"), "utf8"));
+  const integrations = catalog.artifacts
+    .filter((entry) => entry.kind === "integration")
+    .map(({ sequence, slug, source, visibility }) => ({ sequence, slug, source, visibility }));
+  assert.deepEqual(integrations, [
+    {
+      sequence: "0001",
+      slug: "device-callback-18.4-18.6.2",
+      source: "integrations/device-callback-18.4-18.6.2",
+      visibility: "internal",
+    },
+    {
+      sequence: "0002",
+      slug: "device-callback-13.0-17.2.1",
+      source: "integrations/device-callback-13.0-17.2.1",
+      visibility: "internal",
+    },
+  ]);
+  for (const entry of integrations) {
+    assert.equal(basename(entry.source), entry.slug);
+    await access(resolve(repoRoot, entry.source));
+  }
 });
 
 test("removed CLI commands fail without reading inputs or creating output files", async (t) => {

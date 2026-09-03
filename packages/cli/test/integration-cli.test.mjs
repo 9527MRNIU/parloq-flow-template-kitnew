@@ -1,15 +1,32 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, cp, mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { validateIntegration } from "../src/index.mjs";
 
-const repoRoot = resolve(import.meta.dirname, "../../..");
-const feedbackExample = resolve(repoRoot, "integrations/promotion-integration-feedback-demo");
-
 async function temporaryDirectory(prefix) {
   return mkdtemp(resolve(tmpdir(), prefix));
+}
+
+async function createFeedbackFixture(prefix) {
+  const root = await temporaryDirectory(prefix);
+  const integration = resolve(root, "integration");
+  await mkdir(integration);
+  await Promise.all([
+    writeFile(resolve(integration, "integration.json"), `${JSON.stringify({
+      schemaVersion: 1,
+      type: "iframe",
+      version: "1.0.0",
+      integrationKey: "feedback-frame-fixture",
+      name: "内嵌框架回传测试",
+      description: "用于验证兼容契约的动态测试夹具。",
+      entry: "index.html",
+      feedback: { enabled: true, events: ["ready", "completed", "failed"] },
+    }, null, 2)}\n`),
+    writeFile(resolve(integration, "index.html"), "<!doctype html><title>Fixture</title>\n"),
+  ]);
+  return integration;
 }
 
 async function createScriptFixture(prefix) {
@@ -35,20 +52,18 @@ async function createScriptFixture(prefix) {
   return integration;
 }
 
-test("the iframe feedback example matches the managed integration contract", async () => {
-  const result = await validateIntegration(feedbackExample);
+test("the iframe feedback fixture matches the v1 integration contract", async () => {
+  const result = await validateIntegration(await createFeedbackFixture("promotion-integration-feedback-contract-"));
   assert.equal(result.type, "iframe");
   assert.deepEqual(result.entries.map((entry) => entry.path), ["index.html"]);
   assert.deepEqual(result.feedback.events, ["page_view", "visit_end", "ready", "completed", "failed"]);
-  assert.equal(result.manifest.integrationKey, "promotion-integration-feedback-demo");
-  assert.equal(result.manifest.name, "内嵌框架独立回传集成示例");
+  assert.equal(result.manifest.integrationKey, "feedback-frame-fixture");
+  assert.equal(result.manifest.name, "内嵌框架回传测试");
   assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
 });
 
-test("the standalone iframe example does not require the feedback bridge", async () => {
-  const root = await temporaryDirectory("promotion-integration-iframe-");
-  const integration = resolve(root, "integration");
-  await cp(feedbackExample, integration, { recursive: true });
+test("a standalone iframe fixture does not require the feedback bridge", async () => {
+  const integration = await createFeedbackFixture("promotion-integration-iframe-");
   const manifestPath = resolve(integration, "integration.json");
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
   delete manifest.feedback;

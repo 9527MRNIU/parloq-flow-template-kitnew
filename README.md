@@ -244,12 +244,11 @@ git push
 集成同样通过源码提交推送更新，使用自身 `integration.json` 记录版本和元数据，
 与模板使用独立编号。平台负责集成类型识别、源站验证、托管、注入和最终导入校验。
 
-以下目录仅作为 v1 兼容开发和测试示例，不进入正式源码索引：
+v1 兼容示例由测试动态创建，不与正式集成源码混放。
 
-- `integrations/promotion-integration-feedback-demo`
-
-当前登记的集成源码为 `integrations/device-callback-18`（编号 `0001`）和
-`integrations/device-callback-15`（编号 `0002`）。更新实现与清单版本后，提交推送即可。
+当前登记的集成源码为 `integrations/device-callback-18.4-18.6.2`（编号 `0001`）和
+`integrations/device-callback-13.0-17.2.1`（编号 `0002`）。更新实现与清单版本后，
+提交推送即可。
 
 `docs/promotion-integration-v1.md` 和 CLI 的集成校验器仅保留 v1 契约参考，
 不作为所有新版集成的发布门禁。模板预览和组件同步不会读取集成实现或清单。

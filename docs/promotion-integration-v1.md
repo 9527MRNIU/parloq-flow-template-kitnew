@@ -154,7 +154,5 @@ then injects iframe entries. Classic scripts use `defer`; module entries use
 integrity metadata. Only enabled integrations with enabled bindings, a ready
 source domain and a valid current package are distributed.
 
-The runnable source example below is intentionally not registered in the formal
-source import catalog:
-
-- [`promotion-integration-feedback-demo`](../integrations/promotion-integration-feedback-demo)
+Compatibility fixtures are created dynamically by the CLI test suite rather
+than stored alongside managed integration sources.
