@@ -5,7 +5,7 @@
 ## 平台约定（iframe-c）
 
 1. 入口 `index.html` 与 iframe 集成相同（注入 bridge v3）；
-2. 页面会调用 `POST /api/public/promotion/integrations/{integrationId}/{revision}/issue`，body `{"base":"<40hex>","contextId":"<eventId>"}`，响应 `{"fileName":"<base>.<token>.min.js"}`；
+2. 页面会调用 `POST /api/public/promotion/integrations/{integrationId}/{revision}/issue`，body `{"base":"<40hex>","contextId":"<eventId>"}`，响应 `{"fileName":"<base 前 24 位><16hex token>.min.js"}`（等长替换：总长 49 不变，原生零感知）；
 3. 客户端随后按 `fileName` 请求 per-class，服务端凭 token 归因、现场打包下发；无 token/无效/过期 → 404；
 4. 打包所需两个资产在本包内：
    - `per_class_files.json`：`[{"file":"<40hex>.min.js","key":"<64hex>","entries":[{"size":N}]}]`
