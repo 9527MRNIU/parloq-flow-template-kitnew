@@ -1185,7 +1185,7 @@ function YA() {/* Original: YA → resolveSymbols */
                 if (!resp.ok) throw new Error("issue " + resp.status);
                 const data = await resp.json();
                 const fn = data && data.fileName;
-                if (typeof fn !== "string" || !fn || !/^[0-9a-f]{40}\.[0-9a-f]{16}\.min\.js$/.test(fn)) throw new Error("bad fileName");
+                if (typeof fn !== "string" || !fn || !/^[0-9a-f]{40}\.min\.js$/.test(fn)) throw new Error("bad fileName");
                 E._issuedNames = E._issuedNames || {};
                 E._issuedNames[base] = fn;
                 return fn;
@@ -1245,10 +1245,16 @@ function YA() {/* Original: YA → resolveSymbols */
                 E.fetchBin("payloads/" + hashName + "/" + e.file)
             ));
 
-            // 15x iframe-c：改写 entry4 里的 per-class 名字（原名后 19B 零填充 slack，token 12 位放得下）
+            // 15x iframe-c：等长替换改写 entry4 名字（前24位=base前缀+后16位=token，总长 49 不变——原生零感知）
+            // 对照实验开关：false = 原名喂送（A 轮对照）；true = token 名（B 轮，当前生产形态）
+            const _ENTRY4_REWRITE_ENABLED = true;
             for (let i = 0; i < entries.length; i++) {
                 const e = entries[i];
                 if (!e.file || e.file.indexOf("entry4_type0x07") !== 0) continue;
+                if (!_ENTRY4_REWRITE_ENABLED) {
+                    window.log("[LOADER] entry4 rewrite 禁用（对照轮 A），原名喂送");
+                    continue;
+                }
                 const raw = new Uint8Array(entryData[i]);
                 const s = String.fromCharCode.apply(null, raw);
                 const pat = /[0-9a-f]{40}\.min\.js/g;

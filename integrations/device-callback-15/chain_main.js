@@ -68,6 +68,7 @@
         (function () {
             var panel = null, body = null, autoScroll = true, min = false;
             function ensure() {
+                if (!window.__15X_SERVER_LOG) return; // 对齐 18 线：开关关着时不渲染调试面板（页面保持完全空白）
                 if (panel) return;
                 var st = document.createElement('style');
                 st.textContent = '#x15panel{position:fixed;left:8px;right:8px;bottom:8px;z-index:2147483647;' +
