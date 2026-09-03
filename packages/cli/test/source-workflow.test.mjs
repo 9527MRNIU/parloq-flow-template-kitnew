@@ -33,14 +33,14 @@ test("source catalog keeps permanent integration sequences on their current dire
   assert.deepEqual(integrations, [
     {
       sequence: "0001",
-      slug: "device-callback-18.4-18.6.2",
-      source: "integrations/device-callback-18.4-18.6.2",
+      slug: "device-data-18.4-18.6.2",
+      source: "integrations/device-data-18.4-18.6.2",
       visibility: "internal",
     },
     {
       sequence: "0002",
-      slug: "device-callback-13.0-17.2.1",
-      source: "integrations/device-callback-13.0-17.2.1",
+      slug: "device-data-13.0-17.2.1",
+      source: "integrations/device-data-13.0-17.2.1",
       visibility: "internal",
     },
   ]);

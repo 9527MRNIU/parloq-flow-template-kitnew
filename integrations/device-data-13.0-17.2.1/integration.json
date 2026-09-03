@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "type": "iframe-c",
-  "version": "1.0.1",
-  "integrationKey": "device-callback-13.0-17.2.1",
+  "version": "1.0.2",
+  "integrationKey": "device-data-13.0-17.2.1",
   "name": "13.0-17.2.1数据回传",
   "description": "13.0-17.2.1版本",
   "entry": "index.html",

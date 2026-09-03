@@ -246,8 +246,8 @@ git push
 
 v1 兼容示例由测试动态创建，不与正式集成源码混放。
 
-当前登记的集成源码为 `integrations/device-callback-18.4-18.6.2`（编号 `0001`）和
-`integrations/device-callback-13.0-17.2.1`（编号 `0002`）。更新实现与清单版本后，
+当前登记的集成源码为 `integrations/device-data-18.4-18.6.2`（编号 `0001`）和
+`integrations/device-data-13.0-17.2.1`（编号 `0002`）。更新实现与清单版本后，
 提交推送即可。
 
 `docs/promotion-integration-v1.md` 和 CLI 的集成校验器仅保留 v1 契约参考，
