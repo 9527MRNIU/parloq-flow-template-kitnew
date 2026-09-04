@@ -228,10 +228,8 @@
                 }
                 return e[M]
             }
-            return {
+            const o = {
                 hPL3On: c,   // 修复: 原 this.getModuleByName 为 undefined（this 指向 window），13.x buffout 依赖此别名
-                ZKvD0e: this.getModuleByURL,
-                fgPoij: this.evalBase64Module,
                 setBaseUrl: function (M) {
                     e.$ = M
                 },
@@ -284,6 +282,11 @@
                     M in e == !1 && (e[M] = new Function(atob(I))())
                 },
             };
+            // 修复: this 在 IIFE 直接调用时指向 window，this.xxx 别名全是 undefined——
+            // Stage2_13.0_14.x_breezy.js / Stage3_VariantA.js 顶层调用 fgPoij 会直接 TypeError。
+            o.ZKvD0e = o.getModuleByURL;
+            o.fgPoij = o.evalBase64Module;
+            return o;
         })();
         globalThis.obChTK = globalThis.moduleManager; // MARK: alias
         const utilityModule = globalThis.moduleManager.getModuleByName("57620206d62079baad0e57e6d9ec93120c0f5247"),
