@@ -50,20 +50,20 @@ class k {
         this.yr = !1
     }
     ir(t) {
-        // window.log(`[Stage 1] k.ir() - reading 32-bit from Int64`);
+        
         this.yr = !0;
         const i = this.br(t.W());
         return this.yr = !1, i
     }
     Ur(t) {
-        // window.log(`[Stage 1] k.Ur() - reading Int64 from Int64`);
+        
         this.yr = !0;
         const i = this.br(t.W()),
             n = this.br(t.H(4).W());
         return this.yr = !1, new m(i, n)
     }
     mr(t) {
-        // window.log(`[Stage 1] k.mr() - reading double as pointer`);
+        
         this.yr = !0;
         const i = this.br(t.W()),
             n = this.br(t.H(4).W());
@@ -145,7 +145,7 @@ class k {
         return n
     }
     tr(t) {
-        // window.log(`[Stage 1] k.tr() - addrof primitive called`);
+        
         this._r.a = t;
         const i = this.nr(this.Wr);
         return this._r.a = null, i
@@ -153,14 +153,14 @@ class k {
     zr() { }
     cleanup() { window.log(`[Stage 1] k.cleanup() called`), this.zr() }
     pr(t) {
-        // window.log(`[Stage 1] k.pr() - fakeobj from string`);
+        
         const i = new DataView(new ArrayBuffer(t.length + 1));
         x.D(i);
         for (let n = 0; n < t.length; n++) i.setUint8(n, t.charCodeAt(n));
         return this.Mr(i)
     }
     Or(t, i = !1) {
-        // window.log(`[Stage 1] k.Or() - allocControlledBuffer size=${t}, i=${i}`);
+        
         const n = new ArrayBuffer(t),
             r = new Uint8Array(n);
         x.D(n);
@@ -175,13 +175,13 @@ class k {
         return o
     }
     Mr(t, i = !1) {
-        // window.log(`[Stage 1] k.Mr() - fakeobj called`);
+        
         t instanceof ArrayBuffer && (t = new Int8Array(t));
         const n = this.tr(t);
         return window.log(`[Stage 1] k.Mr() - addrof result: ${x.N(n)}`), this.Dr(n + P.zn.versionFlags.oGn3OG, i)
     }
     Br(t, ...i) {
-        // window.log(`[Stage 1] k.Br() - withTempOverrides called, ${i.length} overrides`);
+        
         const n = new Array(i.length + 10);
         for (let t = 0; t < i.length; t++) n[t] = this.readInt64FromOffset(i[t].Ir);
         try {

