@@ -1,8 +1,7 @@
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
-import { loadTemplateCatalog } from "./template-catalog.mjs";
-import { validateTemplate } from "../packages/cli/src/index.mjs";
+import { loadPublicArtifactCatalog } from "./artifact-catalog.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const port = Number.parseInt(process.env.TEMPLATE_PREVIEW_PORT || "4174", 10);
@@ -57,17 +56,17 @@ const contentTypes = {
   ".enc": "application/octet-stream",
 };
 
-const catalog = await loadTemplateCatalog(root);
+const catalog = await loadPublicArtifactCatalog(root);
 const templates = await Promise.all(
   catalog
+    .filter((artifact) => artifact.kind === "template")
     .map(async (artifact) => {
-      const themeRoot = artifact.sourcePath;
-      const { manifest, files } = await validateTemplate(themeRoot);
+      const themeRoot = resolve(root, "dist", artifact.outputDirectory, artifact.slug);
+      const manifest = JSON.parse(await readFile(resolve(themeRoot, "manifest.json"), "utf8"));
       return {
         slug: artifact.slug,
         name: String(manifest.name || artifact.name || artifact.slug),
         root: themeRoot,
-        assetPaths: new Set(files.map((file) => file.path)),
         entry: String(manifest.entry || "index.html"),
         defaultLocale: String(manifest.defaultLocale || "en"),
         supportedLocales: Array.isArray(manifest.supportedLocales)
@@ -79,7 +78,7 @@ const templates = await Promise.all(
 );
 
 if (templates.length === 0) {
-  throw new Error("没有可预览的模板，请先在 artifacts/catalog.json 中登记模板源码目录");
+  throw new Error("没有可预览的模板，请先在 artifacts/catalog.json 中登记模板并运行 npm run build");
 }
 
 const templateBySlug = new Map(templates.map((template) => [template.slug, template]));
@@ -217,7 +216,7 @@ async function serveFile(response, file) {
   }
 }
 
-const server = createServer(async (request, response) => {
+createServer(async (request, response) => {
   const url = new URL(request.url || "/", `http://${request.headers.host || "127.0.0.1"}`);
   if (url.pathname === "/") return send(response, 200, previewHost(), "text/html; charset=utf-8");
   if (url.pathname === "/theme") {
@@ -261,7 +260,6 @@ const server = createServer(async (request, response) => {
       !template
       || parts.length === 0
       || parts.some((part) => !part || part === "." || part === ".." || part.startsWith("."))
-      || !template.assetPaths.has(parts.join("/"))
     ) {
       return send(response, 404, "Not found");
     }
@@ -270,8 +268,6 @@ const server = createServer(async (request, response) => {
     return serveFile(response, file);
   }
   return send(response, 404, "Not found");
-});
-
-server.listen(port, "127.0.0.1", () => {
-  console.log(`模板预览：http://127.0.0.1:${server.address().port}`);
+}).listen(port, "127.0.0.1", () => {
+  console.log(`模板预览：http://127.0.0.1:${port}`);
 });

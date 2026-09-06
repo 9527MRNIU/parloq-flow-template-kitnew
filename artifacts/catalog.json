@@ -13,17 +13,8 @@
       "sequence": "0001",
       "kind": "integration",
       "visibility": "internal",
-      "slug": "device-data-18.4-18.6.2",
-      "source": "integrations/device-data-18.4-18.6.2",
-      "manifest": "integration.json",
-      "outputDirectory": "internal-integrations"
-    },
-    {
-      "sequence": "0002",
-      "kind": "integration",
-      "visibility": "internal",
-      "slug": "device-data-13.0-17.2.1",
-      "source": "integrations/device-data-13.0-17.2.1",
+      "slug": "device-callback-adapter",
+      "source": "integrations/device-callback-adapter",
       "manifest": "integration.json",
       "outputDirectory": "internal-integrations"
     },

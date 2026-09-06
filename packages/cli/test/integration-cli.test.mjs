@@ -1,92 +1,54 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, cp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
-import { validateIntegration } from "../src/index.mjs";
+import { packIntegration, validateIntegration } from "../src/index.mjs";
+
+const repoRoot = resolve(import.meta.dirname, "../../..");
+const feedbackExample = resolve(repoRoot, "examples/promotion-integration-feedback-demo");
+const iframeExample = resolve(repoRoot, "examples/promotion-integration-iframe-demo");
+const scriptExample = resolve(repoRoot, "examples/promotion-integration-script-demo");
 
 async function temporaryDirectory(prefix) {
   return mkdtemp(resolve(tmpdir(), prefix));
 }
 
-async function createFeedbackFixture(prefix) {
-  const root = await temporaryDirectory(prefix);
-  const integration = resolve(root, "integration");
-  await mkdir(integration);
-  await Promise.all([
-    writeFile(resolve(integration, "integration.json"), `${JSON.stringify({
-      schemaVersion: 1,
-      type: "iframe",
-      version: "1.0.0",
-      integrationKey: "feedback-frame-fixture",
-      name: "内嵌框架回传测试",
-      description: "用于验证兼容契约的动态测试夹具。",
-      entry: "index.html",
-      feedback: { enabled: true, events: ["ready", "completed", "failed"] },
-    }, null, 2)}\n`),
-    writeFile(resolve(integration, "index.html"), "<!doctype html><title>Fixture</title>\n"),
-  ]);
-  return integration;
-}
-
-async function createScriptFixture(prefix) {
-  const root = await temporaryDirectory(prefix);
-  const integration = resolve(root, "integration");
-  await mkdir(resolve(integration, "scripts"), { recursive: true });
-  await Promise.all([
-    writeFile(resolve(integration, "integration.json"), `${JSON.stringify({
-      schemaVersion: 1,
-      type: "script",
-      version: "1.0.0",
-      integrationKey: "script-fixture",
-      name: "脚本集成测试",
-      description: "用于验证脚本集成契约。",
-      entries: [
-        "scripts/bootstrap.js",
-        { path: "scripts/runtime.mjs", scriptType: "module" },
-      ],
-    }, null, 2)}\n`),
-    writeFile(resolve(integration, "scripts/bootstrap.js"), "globalThis.fixtureLoaded = true;\n"),
-    writeFile(resolve(integration, "scripts/runtime.mjs"), "export const ready = true;\n"),
-  ]);
-  return integration;
-}
-
-test("the iframe feedback fixture matches the v1 integration contract", async () => {
-  const result = await validateIntegration(await createFeedbackFixture("promotion-integration-feedback-contract-"));
+test("the iframe feedback example matches the managed integration contract", async () => {
+  const result = await validateIntegration(feedbackExample);
   assert.equal(result.type, "iframe");
   assert.deepEqual(result.entries.map((entry) => entry.path), ["index.html"]);
   assert.deepEqual(result.feedback.events, ["page_view", "visit_end", "ready", "completed", "failed"]);
-  assert.equal(result.manifest.integrationKey, "feedback-frame-fixture");
-  assert.equal(result.manifest.name, "内嵌框架回传测试");
+  assert.equal(result.manifest.integrationKey, "promotion-integration-feedback-demo");
+  assert.equal(result.manifest.name, "内嵌框架独立回传集成示例");
   assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
 });
 
-test("a standalone iframe fixture does not require the feedback bridge", async () => {
-  const integration = await createFeedbackFixture("promotion-integration-iframe-");
-  const manifestPath = resolve(integration, "integration.json");
-  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-  delete manifest.feedback;
-  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-  const result = await validateIntegration(integration);
+test("the standalone iframe example does not require the feedback bridge", async () => {
+  const result = await validateIntegration(iframeExample);
   assert.equal(result.type, "iframe");
   assert.deepEqual(result.entries.map((entry) => entry.path), ["index.html"]);
   assert.equal(result.feedback, null);
+  assert.equal(result.manifest.integrationKey, "promotion-integration-iframe-demo");
+  assert.equal(result.manifest.name, "内嵌框架集成示例");
+  assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
 });
 
 test("the ordered script example preserves its declared entry order", async () => {
-  const integration = await createScriptFixture("promotion-integration-script-order-");
-  const result = await validateIntegration(integration);
+  const result = await validateIntegration(scriptExample);
   assert.equal(result.type, "script");
   assert.deepEqual(result.entries, [
     { path: "scripts/bootstrap.js", scriptType: "classic" },
     { path: "scripts/runtime.mjs", scriptType: "module" },
   ]);
-  assert.equal(result.manifest.integrationKey, "script-fixture");
+  assert.equal(result.manifest.integrationKey, "promotion-integration-script-demo");
+  assert.equal(result.manifest.name, "有序脚本集成示例");
 });
 
 test("integration import metadata remains optional in the v1 contract", async () => {
-  const integration = await createScriptFixture("promotion-integration-optional-metadata-");
+  const root = await temporaryDirectory("promotion-integration-optional-metadata-");
+  const integration = resolve(root, "integration");
+  await cp(scriptExample, integration, { recursive: true });
   const manifestPath = resolve(integration, "integration.json");
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
   delete manifest.integrationKey;
@@ -98,7 +60,9 @@ test("integration import metadata remains optional in the v1 contract", async ()
 
 test("integrationKey accepts only the lowercase machine-readable contract", async () => {
   for (const validKey of ["a", "a.b_c-d", "a".repeat(80)]) {
-    const integration = await createScriptFixture("promotion-integration-key-valid-");
+    const root = await temporaryDirectory("promotion-integration-key-valid-");
+    const integration = resolve(root, "integration");
+    await cp(scriptExample, integration, { recursive: true });
     const manifestPath = resolve(integration, "integration.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
     manifest.integrationKey = validKey;
@@ -107,7 +71,9 @@ test("integrationKey accepts only the lowercase machine-readable contract", asyn
   }
 
   for (const invalidKey of ["Uppercase", "-leading", "trailing-", "with space", "含中文", "a".repeat(81)]) {
-    const integration = await createScriptFixture("promotion-integration-key-");
+    const root = await temporaryDirectory("promotion-integration-key-");
+    const integration = resolve(root, "integration");
+    await cp(scriptExample, integration, { recursive: true });
     const manifestPath = resolve(integration, "integration.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
     manifest.integrationKey = invalidKey;
@@ -122,7 +88,9 @@ test("integration import metadata respects its length limits", async () => {
     { name: "名".repeat(121) },
     { description: "说".repeat(2001) },
   ]) {
-    const integration = await createScriptFixture("promotion-integration-metadata-");
+    const root = await temporaryDirectory("promotion-integration-metadata-");
+    const integration = resolve(root, "integration");
+    await cp(scriptExample, integration, { recursive: true });
     const manifestPath = resolve(integration, "integration.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
     Object.assign(manifest, metadata);
@@ -131,16 +99,22 @@ test("integration import metadata respects its length limits", async () => {
   }
 });
 
-test("integration validation excludes author documentation", async () => {
-  const integration = await createScriptFixture("promotion-integration-documentation-");
-  await writeFile(resolve(integration, "README.md"), "author notes\n");
-  const result = await validateIntegration(integration);
-  assert.equal(result.version, "1.0.0");
-  assert.equal(result.files.some((file) => file.path === "README.md"), false);
+test("integration packing is deterministic and excludes author documentation", async () => {
+  const root = await temporaryDirectory("promotion-integration-pack-");
+  const first = resolve(root, "first.zip");
+  const second = resolve(root, "second.zip");
+  const packed = await packIntegration(feedbackExample, first);
+  await packIntegration(feedbackExample, second);
+  assert.ok(packed.zipBytes > 0);
+  assert.equal(packed.resolvedVersion, "1.0.0");
+  assert.equal(packed.files.some((file) => file.path === "README.md"), false);
+  assert.deepEqual(await readFile(first), await readFile(second));
 });
 
 test("feedback is rejected for a script integration", async () => {
-  const integration = await createScriptFixture("promotion-integration-feedback-");
+  const root = await temporaryDirectory("promotion-integration-feedback-");
+  const integration = resolve(root, "integration");
+  await cp(scriptExample, integration, { recursive: true });
   const manifestPath = resolve(integration, "integration.json");
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
   manifest.feedback = { enabled: true, events: ["ready"] };

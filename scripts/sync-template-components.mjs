@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
-import { loadTemplateCatalog } from "./template-catalog.mjs";
+import { loadPublicArtifactCatalog } from "./artifact-catalog.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -20,8 +20,10 @@ async function compiledRuntime() {
 }
 
 async function componentTargets() {
-  const catalog = await loadTemplateCatalog(root);
-  const templateSources = catalog.map((template) => template.sourcePath);
+  const catalog = await loadPublicArtifactCatalog(root);
+  const templateSources = catalog
+    .filter((artifact) => artifact.kind === "template")
+    .map((artifact) => artifact.sourcePath);
   templateSources.push(resolve(root, "examples/promotion-template-minimal"));
   const targets = [];
   for (const source of new Set(templateSources)) {

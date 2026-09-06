@@ -3,13 +3,13 @@ import assert from "node:assert/strict";
 import { mkdtemp, cp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
-import { validateTheme } from "../src/index.mjs";
+import { build as bundle } from "esbuild";
+import { buildTheme, packTheme, validateTheme } from "../src/index.mjs";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
 const defaultTheme = resolve(repoRoot, "themes/white-label-account-link");
 const minimalTemplate = resolve(repoRoot, "examples/promotion-template-minimal");
-const mylovedayTemplate = resolve(repoRoot, "examples/myloveday-demo");
-const shortTaglineTemplate = resolve(repoRoot, "examples/short-tagline-demo");
+const runtimeEntry = resolve(repoRoot, "packages/runtime/src/account-link-elements.ts");
 const validateSourceTheme = (path) => validateTheme(path);
 
 async function copiedTheme() {
@@ -32,18 +32,6 @@ test("the minimal template example carries Chinese import metadata", async () =>
   const result = await validateSourceTheme(minimalTemplate);
   assert.equal(result.manifest.name, "最小推广模板示例");
   assert.match(result.manifest.description, /[\u3400-\u9fff]/u);
-});
-
-test("the numbered campaign templates satisfy the self-contained v3 contract", async () => {
-  const myloveday = await validateSourceTheme(mylovedayTemplate);
-  const shortTagline = await validateSourceTheme(shortTaglineTemplate);
-  assert.equal(myloveday.manifest.version, "2.0.7");
-  assert.equal(shortTagline.manifest.version, "1.3.4");
-  assert.equal(myloveday.locales.length, 15);
-  assert.equal(shortTagline.locales.length, 15);
-  assert.match(myloveday.manifest.name, /[\u3400-\u9fff]/u);
-  assert.match(shortTagline.manifest.name, /[\u3400-\u9fff]/u);
-  assert.ok(shortTagline.files.some((file) => file.path === "assets/images/poster.mp4"));
 });
 
 test("template import metadata remains optional in the public contract", async () => {
@@ -87,20 +75,40 @@ test("validation rejects an incomplete bundled locale set", async () => {
   await assert.rejects(validateSourceTheme(theme), /locale ja is not valid JSON/);
 });
 
-test("template validation includes runtime assets and excludes author documentation", async () => {
-  const { theme } = await copiedTheme();
+test("build and pack create an importable ZIP without source documentation", async () => {
+  const { root, theme } = await copiedTheme();
   await writeFile(resolve(theme, "README.md"), "author notes");
-  const result = await validateTheme(theme);
-  assert.equal(result.files.some((file) => file.path === "README.md"), false);
-  assert.equal(result.files.some((file) => file.path === "assets/account-link-elements.js"), true);
-  assert.match(await readFile(resolve(theme, "index.html"), "utf8"), /assets\/account-link-elements\.js/);
+  const output = resolve(root, "built");
+  const runtime = resolve(root, "account-link-elements.js");
+  const archive = resolve(root, "theme.zip");
+  const secondArchive = resolve(root, "theme-second.zip");
+  await bundle({
+    entryPoints: [runtimeEntry],
+    outfile: runtime,
+    bundle: true,
+    format: "iife",
+    target: "es2020",
+    minify: true,
+    legalComments: "none",
+  });
+  const built = await buildTheme(theme, output, {
+    generatedAssets: [{ source: runtime, path: "assets/account-link-elements.js" }],
+  });
+  const packed = await packTheme(output, archive);
+  await packTheme(output, secondArchive);
+  assert.equal(built.files.some((file) => file.path === "README.md"), false);
+  assert.equal(built.files.some((file) => file.path === "assets/account-link-elements.js"), true);
+  assert.match(await readFile(resolve(output, "index.html"), "utf8"), /assets\/account-link-elements\.js/);
+  assert.ok(packed.zipBytes > 0);
+  assert.deepEqual([...new Uint8Array(await readFile(archive)).slice(0, 2)], [0x50, 0x4b]);
+  assert.deepEqual(await readFile(archive), await readFile(secondArchive));
 });
 
-test("validation rejects a v3 source tree before its component bundle is generated", async () => {
-  const { theme } = await copiedTheme();
+test("packing rejects a v3 source tree before its component bundle is generated", async () => {
+  const { root, theme } = await copiedTheme();
   await rm(resolve(theme, "assets/account-link-elements.js"));
   await assert.rejects(
-    validateTheme(theme),
+    packTheme(theme, resolve(root, "invalid.zip")),
     /bundled component entry does not exist/,
   );
 });

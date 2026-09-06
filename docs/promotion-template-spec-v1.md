@@ -1,7 +1,7 @@
 # Parloq 推广模板规范 v1
 
 状态：兼容版本（`promotion-template/v1`）。新模板应使用
-[`promotion-template/v3`](promotion-template-spec-v3.md)，由 v2 桥接层统一处理
+[`promotion-template/v2`](promotion-template-spec-v2.md)，由 v2 桥接层统一处理
 状态查询、取消和鉴权。
 
 机器可读 schema：[`promotion-template-v1.schema.json`](../packages/contract/schemas/promotion-template-v1.schema.json)
@@ -13,13 +13,13 @@
 - 模板不得直接调用 Parloq 私有 API，也不得保存号码。
 - 模板通过 `promotion-browser-bridge/v1` 完成号码提交和配对。
 - 模板必须同时支持真实渠道渲染和无副作用的后台预览。
-- 模板源码目录必须自包含。字体、图片、CSS、JavaScript 和语言包都随源码提供。
-- 模板不得自行加入第三方统计、隐藏 iframe、指纹采集或外部脚本；平台可按租户策略统一注入设备识别与匿名关联组件。
+- 模板 ZIP 必须自包含。字体、图片、CSS、JavaScript 和语言包都随包提供。
+- 模板 ZIP 不得自行加入第三方统计、隐藏 iframe、指纹采集或外部脚本；平台可按租户策略统一注入设备识别与匿名关联组件。
 - “禁右键/快捷键”只用于降低普通访问者的随手查看成本，不能作为凭据或源码保护手段。
 
-## 2. 模板源码目录
+## 2. ZIP 目录
 
-平台从 Git 仓库导入模板源码，不要求生成下载文件。模板根目录必须符合：
+ZIP 可以直接包含文件，也可以有一层构建目录（例如 `dist/`）。解压后的模板根目录必须符合：
 
 ```text
 index.html                  必须，且只能有一个
@@ -40,7 +40,7 @@ locales/
 - 页面引用资源必须使用相对路径，例如 `assets/app.css`。
 - Vite 项目应设置相对资源基址，产物不得依赖部署根路径。
 - 不允许 `..`、绝对文件系统路径、符号链接或多个 `index.html`。
-- 文件大小、总量和数量以目标平台的源码导入限制为准。
+- 单个文件不超过 5 MB，ZIP 不超过 20 MB，解压总量不超过 50 MB，文件数不超过 500。
 - 不上传 source map；生产构建必须关闭 `sourcemap`。
 
 ## 3. manifest.json
@@ -276,7 +276,7 @@ window.PromotionBridge.submitPhone(
 
 ## 11. 交付验收清单
 
-- [ ] 源码已提交推送，manifest 通过对应契约校验
+- [ ] ZIP 可导入，manifest 通过 v1 校验
 - [ ] 所有资源为相对路径且无外部依赖
 - [ ] 后台预览能完成模拟提交、配对码和成功状态
 - [ ] 真实测试渠道能产生 `page_view`、`phone_submit` 和配对状态

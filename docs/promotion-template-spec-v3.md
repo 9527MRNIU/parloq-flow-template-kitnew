@@ -7,7 +7,7 @@ Machine-readable schema:
 
 ## Boundary
 
-A v3 source directory owns the complete visitor-facing template: HTML, CSS, local media,
+A v3 ZIP owns the complete visitor-facing template: HTML, CSS, local media,
 localization and the compiled account-link components. The platform still owns
 channel resolution, authentication, pairing, routing, analytics persistence,
 account storage, sandboxing and CSP.
@@ -47,9 +47,9 @@ external scripts or control-plane branding.
 ```
 
 `components.entry` is required, must be a safe relative JavaScript path and
-must be loaded by `index.html`. `npm run sync:components` generates the file
-from `packages/runtime`; commit it with the template. Source validation rejects
-a missing component script.
+must be loaded by `index.html`. Official builds generate the file from
+`packages/runtime`; the final ZIP validator rejects a missing component
+bundle.
 
 ## Component composition
 
@@ -80,12 +80,12 @@ interface PromotionBridgeV2 {
 }
 ```
 
-## Source import and security
+## Packaging and security
 
-- The source directory contains one `index.html`, `manifest.json`, the declared component
+- The ZIP contains one `index.html`, `manifest.json`, the declared component
   entry and all relative assets.
-- File counts, sizes and types must pass local validation and the target
-  platform's source import limits.
+- ZIP size is at most 20 MB, expanded content at most 50 MB, at most 500 files
+  and at most 5 MB per file.
 - Source maps, source files, external resources, direct API paths, credentials
   and platform identifiers are forbidden.
 - Visible phone numbers never include a leading plus sign.
@@ -95,7 +95,3 @@ interface PromotionBridgeV2 {
 The platform imports, stores and serves the bundle without replacing or
 injecting its component implementation. It injects only runtime configuration,
 `PromotionBridge`, tracking and interaction protection.
-
-Updates are delivered by incrementing the template manifest version and
-committing and pushing source changes. Repository CI does not build downloads
-or publish release attachments.

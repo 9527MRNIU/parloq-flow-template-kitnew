@@ -8,8 +8,8 @@ Create the presentation files for a static promotion-template/v3 landing-page
 theme. Preserve the exact standard account-link custom-element composition
 from examples/promotion-template-minimal/index.html. Change only surrounding semantic HTML,
 CSS variables, ::part() styling, local relative media, and customer-facing
-copy. The repository's sync:components command maintains account-link-elements/v1
-in the template source directory, while the platform exposes window.PromotionBridge; do not write direct
+copy. The repository build bundles account-link-elements/v1 into the template
+ZIP, while the platform exposes window.PromotionBridge; do not write direct
 pairing requests, status polling,
 authentication headers, API URLs, protocol IDs, analytics SDKs, or phone-number
 persistence. Do not put the control-plane product name in the public bundle.

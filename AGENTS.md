@@ -2,7 +2,8 @@
 
 - Public template and integration bundles must remain white-label. Do not place
   the control-plane product name, protocol IDs, gateway URLs, access tokens, or
-  direct API paths in `themes/` or public integration source directories.
+  direct API paths in `themes/`, `examples/promotion-integration-*`, or
+  generated public ZIP files.
 - Templates own presentation and localization only. Pairing, routing,
   authentication, analytics, and account persistence belong to the platform.
 - Integrations may own their declared script/iframe browser behavior. Hosting,
@@ -18,17 +19,12 @@
 - Official/example manifests provide natural Chinese `name` and `description`;
   integration manifests also provide a lowercase machine-readable
   `integrationKey`.
-- Publish updates by changing the relevant manifest version, committing source
-  files, and pushing Git. Do not build downloadable archives, upload CI
-  artifacts, or create release attachments as part of this workflow.
-- `artifacts/catalog.json` remains the platform's source import index. Keep its
-  schema, source paths, and permanent per-kind sequences compatible; new entries
-  take the next sequence. It is not a download or archive manifest.
-- Template CI, component synchronization, and preview read template sources
-  only. Managed integration validation belongs to the platform; do not force
-  new integrations through the legacy v1 example validator to publish them.
+- Numbered downloadable ZIP sequences are permanent in
+  `artifacts/catalog.json`. New artifacts take the next sequence; version
+  suffixes come from each artifact's own manifest.
+- Public GitHub Releases attach only numbered template/integration ZIPs. Build
+  manifests and aggregate archives remain internal CI outputs.
 - Keep the 15 baseline locales complete and preserve RTL behavior for Arabic,
   Persian, and Urdu.
 - Run `npm run ci` before committing a change that affects runtime, contracts,
-  CLI validation, or template/integration source. CI runs source checks and
-  tests only; it must not package or publish files.
+  CLI validation, or a bundled template/integration.

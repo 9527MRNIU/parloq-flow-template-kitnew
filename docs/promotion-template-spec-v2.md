@@ -50,15 +50,16 @@ new pairing attempts; the template contract does not change.
 example packages in this repository must provide natural Chinese values even
 though third-party v2 manifests may omit both fields.
 
-The source and localization requirements are unchanged from v1: one `index.html`,
-self-contained relative assets, no source maps or external scripts. Directory
-and file limits are enforced by the target platform's importer.
+The ZIP and localization constraints are unchanged from v1: one `index.html`,
+self-contained relative assets, no source maps or external scripts, ZIP at most
+20 MB, expanded content at most 50 MB, at most 500 files and at most 5 MB per
+file.
 
-Source imports use the permanent template sequence in `artifacts/catalog.json`
-and this manifest's own `version`, not the repository package version. Template
-and integration sequences independently start at `0001`; existing entries keep
-their sequences across version changes. Publish source changes by committing
-and pushing Git; the old download-build workflow is retired.
+Official release filenames use the permanent template sequence in
+`artifacts/catalog.json` and this manifest's own `version`, not the repository
+package version. The template sequence starts at `0001` independently from the
+integration sequence. Existing artifacts keep their sequence across version
+changes.
 
 ## Runtime bridge
 
@@ -91,7 +92,7 @@ pairing success.
 ## White-label account-link elements
 
 New visual themes should require `account-link-elements/v1` and compose the
-platform-owned elements below instead of copying pairing logic into template source:
+platform-owned elements below instead of copying pairing logic into the ZIP:
 
 ```html
 <account-link-flow>
