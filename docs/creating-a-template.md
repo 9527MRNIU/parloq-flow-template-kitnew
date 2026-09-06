@@ -16,7 +16,7 @@ canonical element tree in `index.html` and change only layout, CSS variables,
 ```
 
 `name` contains 1–120 characters. `description` contains at most 2000
-characters. The control plane may use both to prefill its ZIP import form. They
+characters. The control plane may use both when importing repository sources. They
 are optional for third-party templates, but official and example packages in
 this repository must provide non-empty natural Chinese values.
 
@@ -34,8 +34,8 @@ this repository must provide non-empty natural Chinese values.
 ```
 
 V3 templates declare `components.entry` and load that local script from
-`index.html`. The repository build generates the component bundle from
-`packages/runtime`; authors do not copy or edit the compiled file manually.
+`index.html`. Run `npm run sync:components` to generate the component script from
+`packages/runtime` and commit it with the template; do not edit it manually.
 The platform injects the resolved visitor locale. Add the optional
 `account-link-locale-switcher` only when the product explicitly requires a
 manual language control.
@@ -53,19 +53,23 @@ manual language control.
 The baseline component copy supports `en`, `zh-CN`, `hi`, `id`, `pt-BR`, `es`,
 `ru`, `ur`, `de`, `tr`, `ar`, `fa`, `bn`, `it`, and `fr`.
 
-## Validate and package
+## Validate and publish source changes
 
 ```bash
 node packages/cli/src/index.mjs template validate path/to/theme
-npm run build
+npm run ci
+git add path/to/theme artifacts/catalog.json
+git commit -m "update template sources"
+git push
 ```
 
 Validation checks the manifest Schema, required components, locale coverage,
 file limits, white-label output, external asset references, source maps, and
 direct platform/gateway integration.
 
-Repository release artifacts are built with `npm run build`. Templates use an
-independent stable four-digit sequence starting at `0001`; it comes from
-`artifacts/catalog.json`, and the filename version comes from the template's own
-`manifest.json`. Do not manually renumber an existing artifact when its version
-changes.
+Increment the template's own `manifest.json` version before committing. The
+platform imports its source directory from Git, using `artifacts/catalog.json`
+as the source index. Templates keep an independent stable four-digit sequence
+starting at `0001`; never renumber existing entries when their versions change.
+There is no archive-build or release-attachment step. `npm run preview` serves
+the checked-in template assets directly without a generated output directory.

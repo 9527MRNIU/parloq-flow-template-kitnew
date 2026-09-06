@@ -2,19 +2,19 @@
 
 ## Repository boundary
 
-This repository publishes two sibling artifact classes whose names match the
+This repository maintains two sibling source classes whose names match the
 mother project:
 
 1. `PromotionTemplate`: static landing-page presentation, assets and localized
    copy composed around the platform account-link elements.
-2. `PromotionIntegration`: managed script or iframe behavior packaged as a ZIP
-   and attached to templates by the control plane.
+2. `PromotionIntegration`: managed browser behavior imported from Git and
+   attached to templates by the control plane.
 
-It also owns the portable contract types, JSON Schemas, validators, deterministic
-packaging, reference bundles and authoring guidance for those artifacts.
-`artifacts/catalog.json` owns each downloadable package's permanent four-digit
+It also owns portable contract types, JSON Schemas, source validators, reference
+templates and authoring guidance. `artifacts/catalog.json` retains each source's permanent four-digit
 sequence. Templates and integrations have independent sequences, each starting
-at `0001`; build filenames derive their version from the package manifest.
+at `0001`; each source manifest owns its version. The catalog remains compatible
+with platform repository imports and is not a download manifest.
 
 The control plane remains authoritative for channel/domain resolution,
 protocol-node routing, account assignment, pairing authentication, integration
@@ -27,23 +27,27 @@ enabled iframes receive `window.PromotionIntegrationBridge`; they report only
 events declared in `integration.json` and do not read or message the parent
 template.
 
-## Build flow
+## Source update flow
 
 ```text
-account-link runtime ──bundle into template────> template ZIP
-contract schemas ──────copy/pin────────────────> uploader and CI
-template source ───────validate/build/pack─────> template registry
-integration source ────validate/pack───────────> integration registry
+account-link runtime ──sync:components────────> checked-in template assets
+template source ───────source checks + tests──> commit and push
+integration source ────manifest version───────> commit and push
+Git source + catalog ──platform import────────> template/integration registry
 ```
 
 `manifest.components.entry` identifies the compiled account-link runtime
-inside each v3 template ZIP. The source remains shared in this repository, but
-every released template is self-contained and deterministic.
+inside each v3 template source directory. The runtime source remains shared;
+each template commits its own compiled script and stays self-contained.
 
-An integration ZIP may contain either ordered `.js`/`.mjs` entries or one iframe
-HTML entry with relative assets. The platform hosts those assets on the verified
-source domain and injects scripts before iframes. Authentication and feedback
-transport stay in the platform-injected iframe bridge, not in the ZIP.
+The platform imports integration source, validates its declared contract, and
+hosts its assets on the verified source domain. Authentication and feedback
+transport stay in the platform-injected bridge, not in integration source.
+
+CI runs source checks and tests only. Local preview reads template sources
+directly. Neither operation packages sources or reads managed integration
+manifests. The v1 integration validator remains available for compatibility
+examples; it is not a publication gate for newer platform integration types.
 
 ## Compatibility
 
@@ -52,6 +56,6 @@ transport stay in the platform-injected iframe bridge, not in the ZIP.
 - Minor releases may add optional manifest properties or bridge fields.
 - Breaking template, integration, bridge or runtime behavior receives a new
   contract version.
-- Existing command names and template aliases remain available during the
-  transition from the template-only kit to the promotion kit.
+- The legacy template validation alias remains available. Archive build and
+  publication commands have been retired; publish source changes through Git.
 - The control plane rejects bundles that require unsupported contract versions.
