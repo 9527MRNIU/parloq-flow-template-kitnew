@@ -39,13 +39,8 @@ test("the minimal template example carries Chinese import metadata", async () =>
 test("the numbered campaign templates satisfy the self-contained v3 contract", async () => {
   const myloveday = await validateSourceTheme(mylovedayTemplate);
   const shortTagline = await validateSourceTheme(shortTaglineTemplate);
-<<<<<<< HEAD
   assert.equal(myloveday.manifest.version, "2.0.7");
   assert.equal(shortTagline.manifest.version, "1.3.4");
-=======
-  assert.equal(myloveday.manifest.version, "2.0.5");
-  assert.equal(shortTagline.manifest.version, "1.3.2");
->>>>>>> 180aa219cc8bd8be9cd70f13e1415939fa672a78
   assert.equal(myloveday.locales.length, 15);
   assert.equal(shortTagline.locales.length, 15);
   assert.match(myloveday.manifest.name, /[\u3400-\u9fff]/u);

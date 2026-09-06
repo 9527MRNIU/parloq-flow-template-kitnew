@@ -1,10 +1,6 @@
 {
   "schema": "promotion-template/v3",
-<<<<<<< HEAD:themes/myloveday-demo/manifest.json
   "version": "2.0.7",
-=======
-  "version": "2.0.5",
->>>>>>> 180aa219cc8bd8be9cd70f13e1415939fa672a78:examples/myloveday-demo/manifest.json
   "name": "Myloveday 场景化落地页",
   "description": "分层场景背景、首屏 CTA 与全屏账号关联浮层，配合底部缩略图滚动氛围；小贴士步骤可点击解锁码区域再次复制。",
   "entry": "index.html",
