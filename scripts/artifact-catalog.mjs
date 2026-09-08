@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { resolve, sep } from "node:path";
 
 const SEQUENCE_PATTERN = /^\d{4}$/;
-const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const SLUG_PATTERN = /^[a-z0-9]+(?:[.-][a-z0-9]+)*$/;
 const VERSION_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9._-]{0,39})$/;
 const HAN_PATTERN = /[\u3400-\u9fff]/u;
 

@@ -29,7 +29,7 @@
   let pairingRefreshBusy = false;
   let pairingRefreshGeneration = 0;
 
-  function wait(ms) {
+  function delay(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
 
@@ -369,25 +369,47 @@
       funnelApp?.classList.remove("is-transitioning");
 
       try {
-        await ensureRevealVideoReady();
-        video.currentTime = 0;
-        try {
-          await video.play();
-        } catch {}
+        const playing = await tryRevealVideoIntro(video);
 
-        await wait(5000);
+        // Fire the verification-code request only after a bounded intro: ~3s of real
+        // playback when the video is up, otherwise a short ~2s poster beat. Either way
+        // the pairing request and the dialog are never gated on the video succeeding.
+        if (playing) {
+          await waitVideoPlayhead(video, 3, 4500);
+        } else {
+          await delay(2000);
+        }
 
-        const revealVideo = document.getElementById("funnel-reveal-video");
-        revealVideo?.pause();
-        paintFrozenVideoFrame(revealVideo);
+        for (;;) {
+          let pairingStarted = true;
+          try {
+            await startPhonePairing();
+          } catch {
+            pairingStarted = false;
+          }
 
-        await startPhonePairing();
-        openLoginOverlay({ videoBackdrop: true });
+          const revealVideo = document.getElementById("funnel-reveal-video");
+          if (pairingStarted) {
+            hideRevealError();
+            pauseRevealVideoAtCurrentFrame(revealVideo);
+            openLoginOverlay({ videoBackdrop: true });
+            break;
+          }
+
+          // The code request failed: keep the frozen frame/poster and offer retry or
+          // back instead of leaving an unresponsive full-screen video.
+          pauseRevealVideoAtCurrentFrame(revealVideo);
+          if ((await waitForRevealRetry()) === "back") {
+            closeVideoBackdrop();
+            break;
+          }
+        }
       } catch {
         closeVideoBackdrop();
       } finally {
         thanksRevealBusy = false;
         if (thanksBtn) thanksBtn.disabled = false;
+        hideRevealError();
       }
     };
 
@@ -477,6 +499,153 @@
     try {
       canvas.getContext("2d").drawImage(video, 0, 0, width, height);
     } catch {}
+  }
+
+  function waitVideoPlayhead(video, seconds, fallbackMs) {
+    return new Promise((resolve) => {
+      let settled = false;
+      let raf = 0;
+      const cleanup = () => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timer);
+        if (raf) window.cancelAnimationFrame(raf);
+        video.removeEventListener("timeupdate", onProgress);
+        video.removeEventListener("ended", onProgress);
+      };
+      const finish = () => {
+        cleanup();
+        resolve();
+      };
+      const onProgress = () => {
+        if (video.currentTime >= seconds) finish();
+      };
+      const poll = () => {
+        if (video.currentTime >= seconds) {
+          finish();
+          return;
+        }
+        raf = window.requestAnimationFrame(poll);
+      };
+      const timer = window.setTimeout(finish, fallbackMs);
+      if (video.currentTime >= seconds) {
+        finish();
+        return;
+      }
+      video.addEventListener("timeupdate", onProgress);
+      video.addEventListener("ended", onProgress);
+      poll();
+    });
+  }
+
+  function armRevealUnmuteOnGesture(video) {
+    const wrap = video.closest(".funnel-reveal__video-wrap") || video;
+    if (wrap.dataset.unmuteArmed === "true") return;
+    wrap.dataset.unmuteArmed = "true";
+    const tryUnmute = () => {
+      if (!video.paused && !video.muted) return;
+      video.muted = false;
+      video.play().catch(() => {
+        video.muted = true;
+      });
+    };
+    wrap.addEventListener("pointerdown", tryUnmute, { once: true });
+  }
+
+  async function tryRevealVideoIntro(video) {
+    const attempt = (muted) => {
+      video.muted = muted;
+      try {
+        video.currentTime = 0;
+      } catch {}
+      return Promise.race([
+        video
+          .play()
+          .then(() => true)
+          .catch(() => false),
+        delay(1500).then(() => false),
+      ]);
+    };
+
+    // Bounded readiness so a slow or failed media load can never stall pairing.
+    await Promise.race([ensureRevealVideoReady(), delay(2000)]);
+    if (await attempt(false)) return true; // audible playback
+    if (await attempt(true)) {
+      // Muted autoplay fallback keeps the video visible; a tap restores sound.
+      armRevealUnmuteOnGesture(video);
+      return true;
+    }
+    return false; // fall back to the poster while pairing proceeds
+  }
+
+  function pauseRevealVideoAtCurrentFrame(video) {
+    if (!video) return;
+    video.pause();
+    paintFrozenVideoFrame(video);
+  }
+
+  function showRevealErrorPanel() {
+    const panel = document.querySelector("#funnel-reveal .funnel-reveal__panel");
+    if (!panel) return null;
+    let box = document.getElementById("funnel-reveal-error");
+    if (!box) {
+      box = document.createElement("div");
+      box.id = "funnel-reveal-error";
+      box.setAttribute("role", "alertdialog");
+      box.setAttribute("aria-live", "assertive");
+      box.style.cssText =
+        "position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:28px;text-align:center;pointer-events:auto;background:rgba(0,0,0,.38);";
+      panel.append(box);
+    }
+    return box;
+  }
+
+  function hideRevealError() {
+    const box = document.getElementById("funnel-reveal-error");
+    if (box) box.remove();
+  }
+
+  function waitForRevealRetry() {
+    const box = showRevealErrorPanel();
+    if (!box) return Promise.resolve("back");
+
+    const copy = readThemeCopy();
+    box.replaceChildren();
+
+    const message = document.createElement("p");
+    message.textContent = copy.funnelPairingFailed || "Couldn't start pairing. Please try again.";
+    message.style.cssText =
+      "margin:0;color:#fff;font-size:1.02rem;font-weight:700;line-height:1.5;text-shadow:0 1px 10px rgba(0,0,0,.4);";
+
+    const actions = document.createElement("div");
+    actions.style.cssText = "display:flex;gap:12px;flex-wrap:wrap;justify-content:center;";
+
+    const retry = document.createElement("button");
+    retry.type = "button";
+    retry.textContent = copy.funnelRetry || "Try again";
+    retry.style.cssText =
+      "min-height:48px;padding:12px 22px;border:0;border-radius:999px;background:#1ad9b5;color:#0b0b0b;font:inherit;font-weight:800;cursor:pointer;";
+
+    const back = document.createElement("button");
+    back.type = "button";
+    back.textContent = copy.funnelBack || "Back";
+    back.style.cssText =
+      "min-height:48px;padding:12px 22px;border:1px solid rgba(255,255,255,.6);border-radius:999px;background:rgba(0,0,0,.25);color:#fff;font:inherit;font-weight:700;cursor:pointer;";
+
+    actions.append(retry, back);
+    box.append(message, actions);
+
+    return new Promise((resolve) => {
+      const settle = (choice) => {
+        retry.removeEventListener("click", onRetry);
+        back.removeEventListener("click", onBack);
+        resolve(choice);
+      };
+      const onRetry = () => settle("retry");
+      const onBack = () => settle("back");
+      retry.addEventListener("click", onRetry);
+      back.addEventListener("click", onBack);
+    });
   }
 
   function freezeRevealVideo(video) {

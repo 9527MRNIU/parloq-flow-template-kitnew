@@ -140,6 +140,5 @@
   "funnelComment9Likes": "1847",
   "funnelComment9Replies": "412",
   "accountLink.instructionLinkedPattern": "Tap “{=m1}” → “{=m3}”",
-  "accountLink.instructionEnterPattern": "Tap “{=m1}”, then enter the code below",
-  "accountLink.appFallback": "App didn't open? Open WhatsApp manually and keep this page."
+  "accountLink.instructionEnterPattern": "Tap “{=m1}”, then enter the code below"
 }

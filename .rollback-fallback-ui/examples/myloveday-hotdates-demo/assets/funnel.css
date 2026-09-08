@@ -1977,29 +1977,3 @@ body.video-backdrop-open app-launch-actions::part(guide-steps) {
   gap: 0.55rem;
   padding-inline-start: 1.4rem;
 }
-
-/* WhatsApp app-launch fallback notice: pin it out of flow as a top "tip dock" so
-   showing/hiding it never reflows the guide card, code box, or CTA buttons.
-   Template-owned presentation only (styles the component's exposed ::part). */
-body.video-backdrop-open app-launch-actions::part(fallback) {
-  position: fixed;
-  top: max(16px, env(safe-area-inset-top));
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(calc(100vw - 32px), 320px);
-  box-sizing: border-box;
-  margin: 0;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: rgba(24, 20, 28, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #f4e9d0;
-  font-size: 0.82rem;
-  line-height: 1.45;
-  font-weight: 500;
-  text-align: center;
-  z-index: 40;
-  pointer-events: auto;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-}
