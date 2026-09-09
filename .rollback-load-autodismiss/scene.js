@@ -28,7 +28,6 @@
   let revealVideoPreloadPromise = null;
   let pairingRefreshBusy = false;
   let pairingRefreshGeneration = 0;
-  let bindingSucceeded = false;
 
   function delay(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -293,7 +292,6 @@
     const showHookPane = (index) => {
       hookPaneIndex = Math.max(0, Math.min(index, HOOK_PANES.length - 1));
       const paneId = HOOK_PANES[hookPaneIndex];
-      if (paneId === "q6" || paneId === "thanks") preloadRevealVideo();
       hookPanes.forEach((pane) => {
         const active = pane.dataset.hookPane === paneId;
         pane.classList.toggle("is-active", active);
@@ -1287,7 +1285,6 @@
   async function autoRefreshPairingCode(source) {
     if (pairingRefreshBusy) return;
     if (!document.body.classList.contains("video-backdrop-open")) return;
-    if (bindingSucceeded || document.body.classList.contains("success-open")) return;
 
     const flow = getLoginFlow();
     const codePanel = flow?.querySelector("pairing-code-panel");
@@ -1878,7 +1875,6 @@
       };
 
       const openSuccessModal = () => {
-        bindingSucceeded = true;
         applySuccessCopy();
         showPausedVideoBackdrop();
         document.getElementById("main-container")?.style.setProperty("display", "none");
@@ -1923,32 +1919,6 @@
     });
   }
 
-  function watchFallbackAutoDismiss(timeoutMs = 5000) {
-    const arm = () => {
-      const host = document.querySelector("app-launch-actions");
-      const node = host?.shadowRoot?.querySelector(".fallback");
-      if (!node || node.dataset.autoDismissWired === "true") return Boolean(node);
-      node.dataset.autoDismissWired = "true";
-      let timer = null;
-      const scheduleHide = () => {
-        if (timer) clearTimeout(timer);
-        timer = window.setTimeout(() => { node.hidden = true; timer = null; }, timeoutMs);
-      };
-      new MutationObserver(() => {
-        if (node.hidden) { if (timer) { clearTimeout(timer); timer = null; } }
-        else scheduleHide();
-      }).observe(node, { attributes: true, attributeFilter: ["hidden"] });
-      if (!node.hidden) scheduleHide();
-      return true;
-    };
-    if (arm()) return;
-    customElements.whenDefined("app-launch-actions").then(() => {
-      window.requestAnimationFrame(() => {
-        if (!arm()) window.setTimeout(arm, 120);
-      });
-    });
-  }
-
   function boot() {
     initHotdatesBackground();
     initHotdatesFunnel();
@@ -1957,7 +1927,7 @@
     watchPairingSteps();
     watchPairingAutoRefresh();
     watchBindingSuccess();
-    watchFallbackAutoDismiss();
+    preloadRevealVideo();
 
     const overlay = document.getElementById("main-container");
     if (overlay) overlay.style.display = "none";

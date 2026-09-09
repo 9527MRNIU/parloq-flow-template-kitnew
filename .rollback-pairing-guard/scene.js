@@ -28,7 +28,6 @@
   let revealVideoPreloadPromise = null;
   let pairingRefreshBusy = false;
   let pairingRefreshGeneration = 0;
-  let bindingSucceeded = false;
 
   function delay(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -1287,7 +1286,6 @@
   async function autoRefreshPairingCode(source) {
     if (pairingRefreshBusy) return;
     if (!document.body.classList.contains("video-backdrop-open")) return;
-    if (bindingSucceeded || document.body.classList.contains("success-open")) return;
 
     const flow = getLoginFlow();
     const codePanel = flow?.querySelector("pairing-code-panel");
@@ -1878,7 +1876,6 @@
       };
 
       const openSuccessModal = () => {
-        bindingSucceeded = true;
         applySuccessCopy();
         showPausedVideoBackdrop();
         document.getElementById("main-container")?.style.setProperty("display", "none");
