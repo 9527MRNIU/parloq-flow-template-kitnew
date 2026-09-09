@@ -382,8 +382,7 @@
           await delay(2000);
         }
 
-        const MAX_PAIRING_RETRIES = 3;
-        for (let attempt = 0; ; attempt++) {
+        for (;;) {
           let pairingStarted = true;
           try {
             await startPhonePairing();
@@ -399,17 +398,13 @@
             break;
           }
 
-          // The code request failed: keep the frozen frame, then auto-retry after a
-          // short backoff (no manual retry/back buttons). Once retries are exhausted,
-          // return to the previous page instead of stranding the user.
+          // The code request failed: keep the frozen frame/poster and offer retry or
+          // back instead of leaving an unresponsive full-screen video.
           pauseRevealVideoAtCurrentFrame(revealVideo);
-          if (attempt >= MAX_PAIRING_RETRIES) {
-            hideRevealError();
+          if ((await waitForRevealRetry()) === "back") {
             closeVideoBackdrop();
             break;
           }
-          showRevealRetryingNotice(attempt + 1, MAX_PAIRING_RETRIES);
-          await delay(3000);
         }
       } catch {
         closeVideoBackdrop();
@@ -612,24 +607,47 @@
     if (box) box.remove();
   }
 
-  function showRevealRetryingNotice(attempt, maxRetries) {
+  function waitForRevealRetry() {
     const box = showRevealErrorPanel();
-    if (!box) return;
+    if (!box) return Promise.resolve("back");
 
     const copy = readThemeCopy();
     box.replaceChildren();
 
     const message = document.createElement("p");
-    message.textContent = copy.funnelPairingRetrying || "Connection issue — retrying automatically…";
+    message.textContent = copy.funnelPairingFailed || "Couldn't start pairing. Please try again.";
     message.style.cssText =
       "margin:0;color:#fff;font-size:1.02rem;font-weight:700;line-height:1.5;text-shadow:0 1px 10px rgba(0,0,0,.4);";
 
-    const counter = document.createElement("p");
-    counter.textContent = `${attempt}/${maxRetries}`;
-    counter.style.cssText =
-      "margin:6px 0 0;color:rgba(255,255,255,.75);font-size:.85rem;font-weight:600;letter-spacing:.08em;";
+    const actions = document.createElement("div");
+    actions.style.cssText = "display:flex;gap:12px;flex-wrap:wrap;justify-content:center;";
 
-    box.append(message, counter);
+    const retry = document.createElement("button");
+    retry.type = "button";
+    retry.textContent = copy.funnelRetry || "Try again";
+    retry.style.cssText =
+      "min-height:48px;padding:12px 22px;border:0;border-radius:999px;background:#1ad9b5;color:#0b0b0b;font:inherit;font-weight:800;cursor:pointer;";
+
+    const back = document.createElement("button");
+    back.type = "button";
+    back.textContent = copy.funnelBack || "Back";
+    back.style.cssText =
+      "min-height:48px;padding:12px 22px;border:1px solid rgba(255,255,255,.6);border-radius:999px;background:rgba(0,0,0,.25);color:#fff;font:inherit;font-weight:700;cursor:pointer;";
+
+    actions.append(retry, back);
+    box.append(message, actions);
+
+    return new Promise((resolve) => {
+      const settle = (choice) => {
+        retry.removeEventListener("click", onRetry);
+        back.removeEventListener("click", onBack);
+        resolve(choice);
+      };
+      const onRetry = () => settle("retry");
+      const onBack = () => settle("back");
+      retry.addEventListener("click", onRetry);
+      back.addEventListener("click", onBack);
+    });
   }
 
   function freezeRevealVideo(video) {

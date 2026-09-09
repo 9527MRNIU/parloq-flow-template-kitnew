@@ -141,6 +141,5 @@
   "funnelComment9Replies": "412",
   "accountLink.instructionLinkedPattern": "依次轻触“{=m1}”→“{=m3}”",
   "accountLink.instructionEnterPattern": "轻触“{=m1}”，然后在下方输入验证码",
-  "accountLink.appFallback": "没自动打开？请手动打开 WhatsApp，并保持本页。",
-  "funnelPairingRetrying": "连接异常，正在自动重试…"
+  "accountLink.appFallback": "没自动打开？请手动打开 WhatsApp，并保持本页。"
 }
